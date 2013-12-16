@@ -45,13 +45,13 @@ public class CachePopulatorTest {
 //        instance.populate();
 //    }
 
-    @Test
-    public void oregon() {
-        System.out.println("oregon");
-        CachePopulator instance = new CachePopulator(
-                "http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}",
-                41.951320, -124.584961, 46.346928, -116.345215,
-                9, 15);
-        instance.populate(2);
-    }
+//    @Test
+//    public void oregon() {
+//        System.out.println("oregon");
+//        CachePopulator instance = new CachePopulator(
+//                "http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}",
+//                41.951320, -124.584961, 46.346928, -116.345215,
+//                9, 15);
+//        instance.populate(2);
+//    }
 }
