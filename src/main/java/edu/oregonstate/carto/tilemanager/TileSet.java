@@ -13,6 +13,7 @@ public abstract class TileSet {
      * tiles, we need to know which type of tile to construct.
      */
     public enum TileType {
+
         IMAGE, GRID
     }
     /**
@@ -24,38 +25,44 @@ public abstract class TileSet {
      * The constructor also sets the schema. once this is set, the TileSchema
      * methods will compute the correct tile relative to a given input tile.
      */
-    private TileSchema schema;
+    private final TileSchema schema;
     /**
      * The cache is a content addressable object that will return a given tile
      * if it already has been created.
      */
-    private MemCache cache = MemCache.getInstance();
-    
+    private final Cache cache;
     /**
      * It should be set in the constructor if we have a source schema that is
-     * different from our internal and served tile schema. In this case, we
-     * need to transform the y coordinate when we fetch the tile from file 
-     * or HTTP but maintain the intended y coordinate internally.
+     * different from our internal and served tile schema. In this case, we need
+     * to transform the y coordinate when we fetch the tile from file or HTTP
+     * but maintain the intended y coordinate internally.
      */
-    protected boolean sourceSchemaOpposite = false;
+    protected final boolean sourceSchemaOpposite;
+
+    public TileSet(Cache cache, TileSchema schema, TileType type, boolean sourceSchemaOpposite) {
+        this.type = type;
+        this.cache = cache;
+        this.schema = schema;
+        this.sourceSchemaOpposite = sourceSchemaOpposite;
+    }
 
     /**
-     * Almost all tile sets on the internet use Google Tile schema, including
+     * Almost all tile sets on the Internet use Google Tile schema, including
      * OpenStreetMap, MapQuest, MapBox, and Esri. We also have the tile type be
      * an image by default.
      */
     public TileSet() {
-        schema = new GoogleTileSchema();
-        type = TileType.IMAGE;
-    }
-    
-    
-    public TileSet(boolean sourceSchemaOpposite) {
-        this();
-        this.sourceSchemaOpposite = sourceSchemaOpposite;
+        this(MemCache.getInstance(), new GoogleTileSchema(), TileType.IMAGE, false);
     }
 
-    
+    public TileSet(Cache cache) {
+        this(cache, new GoogleTileSchema(), TileType.IMAGE, false);
+    }
+
+    public TileSet(boolean sourceSchemaOpposite) {
+        this(MemCache.getInstance(), new GoogleTileSchema(), TileType.IMAGE, sourceSchemaOpposite);
+    }
+
     /**
      * You can specify a TMS tile schema by passing in a TMSTileSchema object.
      * For example:
@@ -67,13 +74,11 @@ public abstract class TileSet {
      * @param schema
      */
     public TileSet(TileSchema schema) {
-        this.schema = schema;
-        type = TileType.IMAGE;
+        this(MemCache.getInstance(), schema, TileType.IMAGE, false);
     }
-    
+
     public TileSet(TileSchema schema, boolean sourceSchemaOpposite) {
-        this(schema);
-        this.sourceSchemaOpposite = sourceSchemaOpposite;
+        this(MemCache.getInstance(), schema, TileType.IMAGE, sourceSchemaOpposite);
     }
 
     /**
@@ -83,13 +88,11 @@ public abstract class TileSet {
      * @param type
      */
     public TileSet(TileType type) {
-        schema = new GoogleTileSchema();
-        this.type = type;
+        this(MemCache.getInstance(), new GoogleTileSchema(), type, false);
     }
-    
+
     public TileSet(TileType type, boolean sourceSchemaOpposite) {
-        this(type);
-        this.sourceSchemaOpposite = sourceSchemaOpposite;
+        this(MemCache.getInstance(), new GoogleTileSchema(), type, sourceSchemaOpposite);
     }
 
     /**
@@ -99,13 +102,11 @@ public abstract class TileSet {
      * @param type
      */
     public TileSet(TileSchema schema, TileType type) {
-        this.schema = schema;
-        this.type = type;
+        this(MemCache.getInstance(), schema, type, false);
     }
-    
+
     public TileSet(TileSchema schema, TileType type, boolean sourceSchemaOpposite) {
-        this(schema, type);
-        this.sourceSchemaOpposite = sourceSchemaOpposite;
+        this(MemCache.getInstance(), schema, type, sourceSchemaOpposite);
     }
 
     /**
@@ -126,10 +127,10 @@ public abstract class TileSet {
         int z = coord.Z;
         int x = coord.X;
         int y = coord.Y;
-        
+
         return urlForZXY(z, x, y);
     }
-    
+
     /**
      * Returns a properly formatted URL for tile coordinates (z, x, y).
      *
@@ -161,17 +162,17 @@ public abstract class TileSet {
 
     /**
      * Sometimes the source tile is of the opposite schema than what we want to
-     * have represented internal and serve. In this situation, we should fetch
-     * a tile with a y coordinate with the alternate schema but internally
+     * have represented internal and serve. In this situation, we should fetch a
+     * tile with a y coordinate with the alternate schema but internally
      * represent it with our desired schema.
-     * 
+     *
      * @param y
-     * @return 
+     * @return
      */
     protected int flipY(int z, int y) {
-        return (int) ( (Math.pow(2, z) - 1) - (double)y );
+        return (int) ((Math.pow(2, z) - 1) - (double) y);
     }
-    
+
     /**
      * Gets the tile with the corresponding coordinates from the cache. If not,
      * a new tile is created.
@@ -182,7 +183,7 @@ public abstract class TileSet {
     public Tile getTile(TileCoord coord) {
         return getTile(coord.Z, coord.X, coord.Y);
     }
-    
+
     /**
      * Gets the tile with the corresponding coordinates from the cache. If not,
      * a new tile is created.
@@ -199,7 +200,7 @@ public abstract class TileSet {
         }
         return t;
     }
-    
+
     public Tile[] getTilesForBBoxZoomRange(double minLat, double minLng, double maxLat, double maxLng, int minZoom, int maxZoom) {
         TileCoord[] tileCoords = schema.getTileCoordsForBBoxZoomRange(minLat, minLng, maxLat, maxLng, minZoom, maxZoom);
         Tile[] tiles = new Tile[tileCoords.length];
