@@ -54,59 +54,12 @@ public abstract class TileSet {
     public TileSet() {
         this(MemCache.getInstance(), new GoogleTileSchema(), TileType.IMAGE, false);
     }
-
-    public TileSet(Cache cache) {
-        this(cache, new GoogleTileSchema(), TileType.IMAGE, false);
-    }
-
+    
     public TileSet(boolean sourceSchemaOpposite) {
-        this(MemCache.getInstance(), new GoogleTileSchema(), TileType.IMAGE, sourceSchemaOpposite);
-    }
-
-    /**
-     * You can specify a TMS tile schema by passing in a TMSTileSchema object.
-     * For example:
-     *
-     * new TileSet(new TMSTileSchema());
-     *
-     * The tile type is image by default.
-     *
-     * @param schema
-     */
-    public TileSet(TileSchema schema) {
-        this(MemCache.getInstance(), schema, TileType.IMAGE, false);
-    }
-
-    public TileSet(TileSchema schema, boolean sourceSchemaOpposite) {
-        this(MemCache.getInstance(), schema, TileType.IMAGE, sourceSchemaOpposite);
-    }
-
-    /**
-     * You can specify the type of tile: IMAGE or GRID. This constructor sets
-     * the schema to GoogleTile by default.
-     *
-     * @param type
-     */
-    public TileSet(TileType type) {
-        this(MemCache.getInstance(), new GoogleTileSchema(), type, false);
-    }
-
-    public TileSet(TileType type, boolean sourceSchemaOpposite) {
-        this(MemCache.getInstance(), new GoogleTileSchema(), type, sourceSchemaOpposite);
-    }
-
-    /**
-     * This constructor explicitly sets both the type and schema.
-     *
-     * @param schema
-     * @param type
-     */
-    public TileSet(TileSchema schema, TileType type) {
-        this(MemCache.getInstance(), schema, type, false);
-    }
-
-    public TileSet(TileSchema schema, TileType type, boolean sourceSchemaOpposite) {
-        this(MemCache.getInstance(), schema, type, sourceSchemaOpposite);
+        this.cache = MemCache.getInstance();
+        this.schema = new GoogleTileSchema();
+        this.type = TileType.IMAGE;
+        this.sourceSchemaOpposite = sourceSchemaOpposite;
     }
 
     /**

@@ -41,58 +41,13 @@ public class FileTileSet extends TileSet {
         this.rootDirectory = new File(rootDir).toURI().toURL();
     }
     
-    /**
-     * You can specify a TMS tile schema by passing in a TMSTileSchema object.
-     * For example:
-     *
-     * new FileTileSet(formatString, new TMSTileSchema());
-     *
-     * The tile type is image by default.
-     *
-     * @param rootDir 
-     * @param schema
-     */
-    public FileTileSet(String rootDir, TileSchema schema) throws MalformedURLException {
-        super(schema);
-        this.rootDirectory = new File(rootDir).toURI().toURL();
-    }
-    
-    public FileTileSet(String rootDir, TileSchema schema, boolean sourceSchemaOpposite) throws MalformedURLException {
-        super(schema, sourceSchemaOpposite);
-        this.rootDirectory = new File(rootDir).toURI().toURL();
-    }
-
-    /**
-     * You can specify the type of tile: IMAGE or GRID. This constructor sets
-     * the schema to GoogleTile by default.
-     *
-     * @param rootDir
-     * @param type
-     */
-    public FileTileSet(String rootDir, TileType type) throws MalformedURLException {
-        super(type);
-        this.rootDirectory = new File(rootDir).toURI().toURL();
-    }
-    
-    public FileTileSet(String rootDir, TileType type, boolean sourceSchemaOpposite) throws MalformedURLException {
-        super(type, sourceSchemaOpposite);
-        this.rootDirectory = new File(rootDir).toURI().toURL();
-    }
-
-    /**
-     * This constructor explicitly sets both the type and schema.
-     *
-     * @param rootDir 
-     * @param schema
-     * @param type
-     */
-    public FileTileSet(String rootDir, TileSchema schema, TileType type) throws MalformedURLException {
-        super(schema, type);
-        this.rootDirectory = new File(rootDir).toURI().toURL();
-    }
-    
-    public FileTileSet(String rootDir, TileSchema schema, TileType type, boolean sourceSchemaOpposite) throws MalformedURLException {
-        super(schema, type, sourceSchemaOpposite);
+    public FileTileSet(String rootDir, 
+            Cache cache,
+            TileSchema schema, 
+            TileType type, 
+            boolean sourceSchemaOpposite) throws MalformedURLException {
+        
+        super(cache, schema, type, sourceSchemaOpposite);
         this.rootDirectory = new File(rootDir).toURI().toURL();
     }
 
