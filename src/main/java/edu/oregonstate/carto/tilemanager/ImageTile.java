@@ -1,15 +1,11 @@
 package edu.oregonstate.carto.tilemanager;
 
-import edu.oregonstate.carto.mapcomposer.Map;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 
 /**
  *
