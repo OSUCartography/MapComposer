@@ -11,6 +11,7 @@ import edu.oregonstate.carto.mapcomposer.map.style.Emboss;
 import edu.oregonstate.carto.mapcomposer.map.style.Shadow;
 import edu.oregonstate.carto.mapcomposer.map.style.Tint;
 import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
+import edu.oregonstate.carto.tilemanager.ImageTileMerger;
 import edu.oregonstate.carto.tilemanager.Tile;
 import edu.oregonstate.carto.tilemanager.TileSet;
 import java.awt.AlphaComposite;
@@ -116,7 +117,7 @@ public class Layer {
         if (imageTileSet != null) {
             Tile tile = imageTileSet.getTile(z, x, y);
             try {
-                image = (BufferedImage) tile.createMegaTile();
+                image = ImageTileMerger.createMegaTile(tile);
                 // convert to ARGB. All following manipulations are optimized for 
                 // this modus.
                 image = ImageUtils.convertImageToARGB(image);
@@ -157,7 +158,7 @@ public class Layer {
         if (maskTileSet != null) {
             Tile tile = maskTileSet.getTile(z, x, y);
             try {
-                maskImage = (BufferedImage) tile.createMegaTile();
+                maskImage = ImageTileMerger.createMegaTile(tile);
                 // convert to ARGB. All following manipulations are optimized for 
                 // this modus.
                 maskImage = ImageUtils.convertImageToARGB(maskImage);

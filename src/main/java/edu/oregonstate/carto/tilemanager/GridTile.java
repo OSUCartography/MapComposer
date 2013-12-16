@@ -4,8 +4,6 @@ import edu.oregonstate.carto.importer.BinaryGridReader;
 import edu.oregonstate.carto.tilemanager.util.Grid;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -32,13 +30,7 @@ public class GridTile extends Tile {
         if (grid == null) {
             URL url = tileSet.urlForTile(this);
             grid = BinaryGridReader.read(url);
-
         }
         return grid;
-    }
-
-    @Override
-    public Object createMegaTile() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

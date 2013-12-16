@@ -23,7 +23,7 @@ public abstract class Tile<TileData> {
     /**
      * Tiles are always 256px x 256px.
      */
-    protected final int TILE_SIZE = 256;
+    protected final static int TILE_SIZE = 256;
     
     protected int megaTileSize = TILE_SIZE * 3;
     
@@ -51,12 +51,6 @@ public abstract class Tile<TileData> {
      * @return BufferedImage or Grid
      */
     public abstract TileData fetch() throws IOException;
-    
-    /**
-     * 
-     * @return a BufferedImage or Grid that is 3x3 tiles
-     */
-    public abstract TileData createMegaTile() throws IOException;
     
     public Tile getTopLeftTile() {
         return tileSet.getTopLeftTile(this);
