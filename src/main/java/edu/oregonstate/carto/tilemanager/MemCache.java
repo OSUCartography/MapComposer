@@ -54,7 +54,7 @@ public class MemCache {
      */
     public Tile get(URL url) {
         Tile tile = (Tile) map.get(url.toString());
-        System.out.println( "MemCache Size: " + map.size() );
+//        System.out.println( "MemCache Size: " + map.size() );
 //        Tile tile = map.getIfPresent(url.toString());
         return tile;
     }

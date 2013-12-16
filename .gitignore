@@ -1,3 +1,6 @@
+# We don't want to commit the cache, because it may get big during dev
+data/cache.db
+
 # generic files to ignore
 *~
 *.lock

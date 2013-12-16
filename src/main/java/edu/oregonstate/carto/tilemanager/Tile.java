@@ -1,6 +1,7 @@
 package edu.oregonstate.carto.tilemanager;
 
 import java.io.IOException;
+import java.net.URL;
 
 /**
  *
@@ -125,6 +126,10 @@ public abstract class Tile<TileData> {
      */
     public void setMegaTileSize(int pixels) {
         this.megaTileSize = pixels;
+    }
+    
+    public URL getURL() {
+        return tileSet.urlForTile(this);
     }
 
 }
