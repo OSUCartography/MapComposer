@@ -8,7 +8,7 @@ import java.net.URL;
  * @author Nicholas Hallahan nick@theoutpost.io
  */
 public abstract class Tile<TileData> {
-
+   
     /**
      * Internal coordinates addressing the tile.
      */
@@ -24,13 +24,11 @@ public abstract class Tile<TileData> {
      * Tiles are always 256px x 256px.
      */
     protected final static int TILE_SIZE = 256;
-    
-    protected int megaTileSize = TILE_SIZE * 3;
-    
+        
     /**
      * A tile needs to be in a set so it can find its neighbors.
      */
-    protected final TileSet tileSet;
+    private TileSet tileSet;
 
     
     public Tile(TileSet tileSet, int z, int x, int y) {
@@ -107,23 +105,24 @@ public abstract class Tile<TileData> {
     public int getY() {
         return y;
     }
-
-    /**
-     * @return the megaTileSize
-     */
-    public int getMegaTileSize() {
-        return megaTileSize;
-    }
-
-    /**
-     * @param megaTileSize the megaTileSize to set
-     */
-    public void setMegaTileSize(int pixels) {
-        this.megaTileSize = pixels;
-    }
     
     public URL getURL() {
         return tileSet.urlForTile(this);
     }
 
+    /**
+     * @return the tileSet
+     */
+    protected TileSet getTileSet() {
+        return tileSet;
+    }
+
+    /**
+     * @param tileSet the tileSet to set
+     */
+    protected void setTileSet(TileSet tileSet) {
+        this.tileSet = tileSet;
+    }
+    
+    protected abstract void toBinary(java.io.DataOutputStream out) throws IOException;
 }

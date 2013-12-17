@@ -146,7 +146,7 @@ public abstract class TileSet {
      */
     public synchronized Tile getTile(int z, int x, int y) {
         URL url = urlForZXY(z, x, y);
-        Tile t = cache.get(url);
+        Tile t = cache.get(url, this);
         if (t == null) {
             t = createTile(z, x, y);
             cache.put(url, t);

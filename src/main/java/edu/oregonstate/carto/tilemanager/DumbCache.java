@@ -14,7 +14,7 @@ public class DumbCache implements Cache {
     }
 
     @Override
-    public Tile get(URL url) {
+    public Tile get(URL url, TileSet tileSet) {
         return null;
     }
     

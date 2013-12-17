@@ -2,6 +2,7 @@ package edu.oregonstate.carto.tilemanager;
 
 import edu.oregonstate.carto.importer.BinaryGridReader;
 import edu.oregonstate.carto.tilemanager.util.Grid;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
@@ -28,9 +29,14 @@ public class GridTile extends Tile {
     @Override
     public synchronized Grid fetch() throws IOException {
         if (grid == null) {
-            URL url = tileSet.urlForTile(this);
+            URL url = getTileSet().urlForTile(this);
             grid = BinaryGridReader.read(url);
         }
         return grid;
+    }
+
+    @Override
+    protected void toBinary(DataOutputStream out) throws IOException {
+        // FIXME
     }
 }

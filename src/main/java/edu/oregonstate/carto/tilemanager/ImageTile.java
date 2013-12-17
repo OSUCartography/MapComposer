@@ -1,11 +1,10 @@
 package edu.oregonstate.carto.tilemanager;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.URL;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -27,13 +26,31 @@ public class ImageTile extends Tile {
         super(tileSet, coord);
     }
 
+    public ImageTile(TileSet tileSet, DataInputStream inStream) throws IOException {
+        super(tileSet, inStream.readInt(), inStream.readInt(), inStream.readInt());
+        img = ImageIO.read(inStream);
+    }
+
     @Override
     public synchronized BufferedImage fetch() throws IOException {
         if (img == null) {
-            URL url = tileSet.urlForTile(this);
-            img = sqlite.fetchImage(url);
+            URL url = getTileSet().urlForTile(this);
+            img = ImageIO.read(url);
+            // FIXME
+            // replace object in DB
             System.out.println("fetched: " + url.toString());
         }
         return img;
+    }
+
+    @Override
+    protected void toBinary(java.io.DataOutputStream out) throws IOException {
+        out.writeInt(getZ());
+        out.writeInt(getX());
+        out.writeInt(getY());
+        if (img != null) {
+            ImageIO.write(img, "png", out);
+        }
+        out.flush();
     }
 }

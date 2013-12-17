@@ -53,10 +53,7 @@ public class MemCache implements Cache {
      * @return a tile or null
      */
     @Override
-    public Tile get(URL url) {
-        Tile tile = (Tile) map.get(url.toString());
-//        System.out.println( "MemCache Size: " + map.size() );
-//        Tile tile = map.getIfPresent(url.toString());
-        return tile;
+    public Tile get(URL url, TileSet tileSet) {
+        return (Tile) map.get(url.toString());
     }
 }

@@ -9,5 +9,5 @@ import java.net.URL;
 public interface Cache {
     public void put(URL url, Tile tile);
      
-    public Tile get(URL url);
+    public Tile get(URL url, TileSet tileSet);
 }
