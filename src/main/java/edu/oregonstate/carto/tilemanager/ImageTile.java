@@ -36,8 +36,13 @@ public class ImageTile extends Tile {
         if (img == null) {
             URL url = getTileSet().urlForTile(this);
             img = ImageIO.read(url);
-            // FIXME
-            // replace object in DB
+            
+            // no need to do this for MemCache
+            Cache cache = tileSet.getCache();
+            if (cache instanceof SQLiteCache) {
+                cache.put(this);
+            }
+            
             System.out.println("fetched: " + url.toString());
         }
         return img;

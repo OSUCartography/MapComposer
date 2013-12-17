@@ -37,7 +37,7 @@ public class SQLiteCache implements Cache {
             Driver driver = (Driver) Class.forName(DRIVER_NAME).newInstance();
             DriverManager.registerDriver(driver);
             con = DriverManager.getConnection(DB_URL);
-            insertStmt = con.prepareStatement("INSERT INTO cache VALUES(?, ?)");
+            insertStmt = con.prepareStatement("INSERT OR REPLACE INTO cache VALUES(?, ?)");
             fetchStmt = con.prepareStatement("SELECT * FROM cache WHERE cache.url=?");
         } catch (Exception ex) {
             // FIXME
@@ -50,7 +50,8 @@ public class SQLiteCache implements Cache {
     }
 
     @Override
-    public void put(URL url, Tile tile) {
+    public void put(Tile tile) {
+        URL url = tile.getURL();
         ByteArrayOutputStream outStream = null;
         try {
             outStream = new ByteArrayOutputStream();
@@ -89,7 +90,7 @@ public class SQLiteCache implements Cache {
             Tile tile = new ImageTile(tileSet, dataInputStream);
             return tile;
         } catch (SQLException ex) {
-            return null;
+            return null; // We should return null if the tile is not in the cache.
         } catch (IOException ex) {
             Logger.getLogger(SQLiteCache.class.getName()).log(Level.SEVERE, null, ex);
         }

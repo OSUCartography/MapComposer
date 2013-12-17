@@ -149,7 +149,7 @@ public abstract class TileSet {
         Tile t = cache.get(url, this);
         if (t == null) {
             t = createTile(z, x, y);
-            cache.put(url, t);
+            cache.put(t);
         }
         return t;
     }
@@ -203,5 +203,9 @@ public abstract class TileSet {
     public Tile getBottomRightTile(Tile tile) {
         TileCoord coord = schema.getBottomRightTile(tile);
         return getTile(coord);
+    }
+    
+    public Cache getCache() {
+        return cache;
     }
 }

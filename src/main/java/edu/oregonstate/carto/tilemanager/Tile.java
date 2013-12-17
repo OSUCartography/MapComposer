@@ -15,12 +15,6 @@ public abstract class Tile<TileData> {
     private final int z, x, y;
     
     /**
-     * fetch() uses the SQLite cache to look for tiles before requesting
-     * via HTTP or File URL.
-     */
-    protected SQLiteCache sqlite = SQLiteCache.getInstance();
-    
-    /**
      * Tiles are always 256px x 256px.
      */
     protected final static int TILE_SIZE = 256;
@@ -28,7 +22,7 @@ public abstract class Tile<TileData> {
     /**
      * A tile needs to be in a set so it can find its neighbors.
      */
-    private TileSet tileSet;
+    protected TileSet tileSet;
 
     
     public Tile(TileSet tileSet, int z, int x, int y) {

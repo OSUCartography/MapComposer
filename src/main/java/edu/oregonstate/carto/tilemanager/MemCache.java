@@ -41,7 +41,8 @@ public class MemCache implements Cache {
     }
 
     @Override
-    public void put(URL url, Tile tile) {
+    public void put(Tile tile) {
+        URL url = tile.getURL();
         String urlStr = url.toString();
         map.put(urlStr, tile);
     }
