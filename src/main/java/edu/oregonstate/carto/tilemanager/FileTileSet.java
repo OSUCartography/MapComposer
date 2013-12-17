@@ -42,17 +42,16 @@ public class FileTileSet extends TileSet {
     
     public FileTileSet(String rootDir, 
             Cache cache,
-            TileSchema schema, 
             TileType type, 
             boolean sourceSchemaOpposite) throws MalformedURLException {
         
-        super(cache, schema, type, sourceSchemaOpposite);
+        super(cache, type, sourceSchemaOpposite);
         this.rootDirectory = new File(rootDir).toURI().toURL();
     }
 
     @Override
     public URL urlForZXY(int z, int x, int y) {
-        if (sourceSchemaOpposite) {
+        if (tmsSchema) {
             y = flipY(z, y);
         }
         

@@ -46,17 +46,16 @@ public class HTTPTileSet extends TileSet {
     
     public HTTPTileSet(String httpFormatString, 
             Cache cache,
-            TileSchema schema, 
             TileType type, 
             boolean sourceSchemaOpposite) {
         
-        super(cache, schema, type, sourceSchemaOpposite);
+        super(cache, type, sourceSchemaOpposite);
         this.httpFormatString = httpFormatString;
     }
     
     @Override
     public URL urlForZXY(int z, int x, int y) {
-        if (sourceSchemaOpposite) {
+        if (tmsSchema) {
             y = flipY(z, y);
         }
         

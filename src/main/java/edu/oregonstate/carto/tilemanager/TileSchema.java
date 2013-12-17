@@ -4,7 +4,7 @@ package edu.oregonstate.carto.tilemanager;
  *
  * @author Nicholas Hallahan nick@theoutpost.io
  */
-public abstract class TileSchema {
+public class TileSchema {
 
     protected static final double INITIAL_RESOLUTION = 2 * Math.PI * 6378137 / Tile.TILE_SIZE;
     protected static final double ORIGIN_SHIFT = 2 * Math.PI * 6378137 / 2.0;
@@ -39,6 +39,10 @@ public abstract class TileSchema {
         // pixels to tile
         int xTile = (int) (Math.ceil(xPixels / (double) Tile.TILE_SIZE) - 1);
         int yTile = (int) (Math.ceil(yPixels / (double) Tile.TILE_SIZE) - 1);
+        
+        // FIXME
+        // Convert TMS y coord to Google y coord, should be done in math above...
+        yTile = (int) ( (Math.pow(2, zoom) - 1) - (double)yTile );
 
         return new TileCoord(zoom, xTile, yTile);
     }
@@ -66,26 +70,11 @@ public abstract class TileSchema {
 
         TileCoord[] tileCoords = new TileCoord[(difX + 1) * (Math.abs(difY) + 1)];
 
-        // TMSTileSchema
-        if (difY >= 0) {
-
-            int i = 0;
-            for (int xIdx = 0; xIdx <= difX; ++xIdx) {
-                for (int yIdx = 0; yIdx <= difY; ++yIdx) {
-                    tileCoords[i++] = new TileCoord(zoom, minX + xIdx, minY + yIdx);
-                }
+        int i = 0;
+        for (int xIdx = 0; xIdx <= difX; ++xIdx) {
+            for (int yIdx = 0; yIdx >= difY; --yIdx) {
+                tileCoords[i++] = new TileCoord(zoom, minX + xIdx, minY + yIdx);
             }
-
-            // GoogleTileSchema
-        } else {
-
-            int i = 0;
-            for (int xIdx = 0; xIdx <= difX; ++xIdx) {
-                for (int yIdx = 0; yIdx >= difY; --yIdx) {
-                    tileCoords[i++] = new TileCoord(zoom, minX + xIdx, minY + yIdx);
-                }
-            }
-
         }
 
         return tileCoords;
@@ -144,20 +133,68 @@ public abstract class TileSchema {
 
         return tileCoords;
     }
+    
+    public TileCoord getTopLeftTile(Tile tile) {
+        int x = tile.getX() - 1;
+        int y = tile.getY() - 1;
+        int z = tile.getZ();
+        
+        return new TileCoord(z, x, y);
+    }
 
-    public abstract TileCoord getTopLeftTile(Tile tile);
+    public TileCoord getTopTile(Tile tile) {
+        int x = tile.getX();
+        int y = tile.getY() - 1;
+        int z = tile.getZ();
+        
+        return new TileCoord(z, x, y);
+    }
 
-    public abstract TileCoord getTopTile(Tile tile);
+    public TileCoord getTopRightTile(Tile tile) {
+        int x = tile.getX() + 1;
+        int y = tile.getY() - 1;
+        int z = tile.getZ();
+        
+        return new TileCoord(z, x, y);
+    }
 
-    public abstract TileCoord getTopRightTile(Tile tile);
+    public TileCoord getLeftTile(Tile tile) {
+        int x = tile.getX() - 1;
+        int y = tile.getY();
+        int z = tile.getZ();
+        
+        return new TileCoord(z, x, y);
+    }
 
-    public abstract TileCoord getLeftTile(Tile tile);
+    public TileCoord getRightTile(Tile tile) {
+        int x = tile.getX() + 1;
+        int y = tile.getY();
+        int z = tile.getZ();
+        
+        return new TileCoord(z, x, y);
+    }
 
-    public abstract TileCoord getRightTile(Tile tile);
+    public TileCoord getBottomLeftTile(Tile tile) {
+        int x = tile.getX() - 1;
+        int y = tile.getY() + 1;
+        int z = tile.getZ();
+        
+        return new TileCoord(z, x, y);
+    }
 
-    public abstract TileCoord getBottomLeftTile(Tile tile);
+    public TileCoord getBottomTile(Tile tile) {
+        int x = tile.getX();
+        int y = tile.getY() + 1;
+        int z = tile.getZ();
+        
+        return new TileCoord(z, x, y);
+    }
 
-    public abstract TileCoord getBottomTile(Tile tile);
-
-    public abstract TileCoord getBottomRightTile(Tile tile);
+    public TileCoord getBottomRightTile(Tile tile) {
+        int x = tile.getX() + 1;
+        int y = tile.getY() + 1;
+        int z = tile.getZ();
+        
+        return new TileCoord(z, x, y);
+    }
 }

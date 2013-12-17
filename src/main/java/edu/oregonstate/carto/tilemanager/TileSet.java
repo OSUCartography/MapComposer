@@ -21,42 +21,33 @@ public abstract class TileSet {
      * helps us decide what type of tile to construct.
      */
     private final TileType type;
-    /**
-     * The constructor also sets the schema. once this is set, the TileSchema
-     * methods will compute the correct tile relative to a given input tile.
-     */
-    private final TileSchema schema;
+    
+    private final TileSchema schema = new TileSchema();
+    
     /**
      * The cache is a content addressable object that will return a given tile
      * if it already has been created.
      */
     private final Cache cache;
     /**
-     * It should be set in the constructor if we have a source schema that is
-     * different from our internal and served tile schema. In this case, we need
-     * to transform the y coordinate when we fetch the tile from file or HTTP
-     * but maintain the intended y coordinate internally.
+     * If the source tiles adhere to the obscure TMS tile schema instead of
+     * the standard OpenStreetMap tile schema, we need to flip
+     * the y coordinate to our internal schema (OpenStreetMap schema)
      */
-    protected final boolean sourceSchemaOpposite;
+    protected final boolean tmsSchema;
 
-    public TileSet(Cache cache, TileSchema schema, TileType type, boolean sourceSchemaOpposite) {
+    public TileSet(Cache cache, TileType type, boolean tmsSchema) {
         this.type = type;
         this.cache = cache;
-        this.schema = schema;
-        this.sourceSchemaOpposite = sourceSchemaOpposite;
+        this.tmsSchema = tmsSchema;
     }
 
-    /**
-     * Almost all tile sets on the Internet use Google Tile schema, including
-     * OpenStreetMap, MapQuest, MapBox, and Esri. We also have the tile type be
-     * an image by default.
-     */
     public TileSet() {
-        this(MemCache.getInstance(), new GoogleTileSchema(), TileType.IMAGE, false);
+        this(MemCache.getInstance(), TileType.IMAGE, false);
     }
     
     public TileSet(boolean sourceSchemaOpposite) {
-        this(MemCache.getInstance(), new GoogleTileSchema(), TileType.IMAGE, sourceSchemaOpposite);
+        this(MemCache.getInstance(), TileType.IMAGE, sourceSchemaOpposite);
     }
 
     /**
