@@ -9,20 +9,22 @@ import java.text.DecimalFormat;
  * @author Bernhard Jenny, Institute of Cartography, ETH Zurich.
  */
 public class Grid {
-
-    private float[][] grid;
     /**
      * Size of a pixel.
      */
     private double cellSize;
     /**
-     * Vertical coordinate of top left corner of this image.
+     * Horizontal coordinate of top left corner of this grid.
+     */
+    private double west;
+    /**
+     * Vertical coordinate of top left corner of this grid.
      */
     private double north;
     /**
-     * Horizontal coordinate of top left corner of this image.
+     * A two-dimensional array to store grid values.
      */
-    private double west;
+    private float[][] grid;
 
     public class GeoGridStatistics {
 

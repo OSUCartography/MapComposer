@@ -7,7 +7,14 @@ import java.net.URL;
  * @author Bernie Jenny
  */
 public interface Cache {
-    public void put(URL url, Tile tile);
+    /**
+     * The URL of a tile serves as the key to the tile in the cache.
+     * The cache can call getURL() on a tile to get the corresponding
+     * URL.
+     * 
+     * @param tile 
+     */
+    public void put(Tile tile);
      
     public Tile get(URL url, TileSet tileSet);
 }

@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
- *
+ * Merges multiple tiles to a megatile.
  * @author Bernhard Jenny, Cartography and Geovisualization Group, Oregon State
  * University
  */

@@ -19,20 +19,18 @@ public class MemCache implements Cache {
     private static int MAX_SIZE = 5000;
 
     /* This is the one instance that exists throughout the entire life-cycle
-     * of the program.  The can be retrieved at any time using the static
+     * of the program.  It can be retrieved at any time using the static
      * singleton method.  This is to be used to prevent many instances of
      * the same cache hanging around.
      */
     private static MemCache singleton = new MemCache();
-//    private ConcurrentHashMap<String, Tile> map = new ConcurrentHashMap<String, Tile>();
     private ConcurrentMap map = CacheBuilder.newBuilder().maximumSize(MAX_SIZE).build().asMap();
 
     private MemCache() {
     }
 
     /**
-     * Call this method to get the cache, not the constructor. We only want a
-     * single cache to exist for the application.
+     * Returns the cache singleton.
      *
      * @return the singleton instance
      */
@@ -41,7 +39,8 @@ public class MemCache implements Cache {
     }
 
     @Override
-    public void put(URL url, Tile tile) {
+    public void put(Tile tile) {
+        URL url = tile.getURL();
         String urlStr = url.toString();
         map.put(urlStr, tile);
     }

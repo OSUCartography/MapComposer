@@ -9,8 +9,8 @@ import java.net.URL;
 public class DumbCache implements Cache {
 
     @Override
-    public void put(URL url, Tile tile) {
-        // nothing to cache
+    public void put(Tile tile) {
+        // nowhere to write to
     }
 
     @Override

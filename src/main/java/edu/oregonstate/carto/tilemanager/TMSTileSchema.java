@@ -1,8 +1,5 @@
 package edu.oregonstate.carto.tilemanager;
 
-import static edu.oregonstate.carto.tilemanager.TileSchema.TILE_SIZE;
-import java.net.URL;
-
 /**
  *
  * @author Nicholas Hallahan nick@theoutpost.io

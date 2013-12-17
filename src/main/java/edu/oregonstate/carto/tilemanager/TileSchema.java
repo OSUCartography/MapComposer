@@ -6,8 +6,7 @@ package edu.oregonstate.carto.tilemanager;
  */
 public abstract class TileSchema {
 
-    protected static final int TILE_SIZE = 256;
-    protected static final double INITIAL_RESOLUTION = 2 * Math.PI * 6378137 / TILE_SIZE;
+    protected static final double INITIAL_RESOLUTION = 2 * Math.PI * 6378137 / Tile.TILE_SIZE;
     protected static final double ORIGIN_SHIFT = 2 * Math.PI * 6378137 / 2.0;
 
     /**
@@ -38,8 +37,8 @@ public abstract class TileSchema {
         double yPixels = (yMeters + ORIGIN_SHIFT) / resolution;
 
         // pixels to tile
-        int xTile = (int) (Math.ceil(xPixels / (double) TILE_SIZE) - 1);
-        int yTile = (int) (Math.ceil(yPixels / (double) TILE_SIZE) - 1);
+        int xTile = (int) (Math.ceil(xPixels / (double) Tile.TILE_SIZE) - 1);
+        int yTile = (int) (Math.ceil(yPixels / (double) Tile.TILE_SIZE) - 1);
 
         return new TileCoord(zoom, xTile, yTile);
     }

@@ -56,10 +56,7 @@ public abstract class TileSet {
     }
     
     public TileSet(boolean sourceSchemaOpposite) {
-        this.cache = MemCache.getInstance();
-        this.schema = new GoogleTileSchema();
-        this.type = TileType.IMAGE;
-        this.sourceSchemaOpposite = sourceSchemaOpposite;
+        this(MemCache.getInstance(), new GoogleTileSchema(), TileType.IMAGE, sourceSchemaOpposite);
     }
 
     /**
@@ -149,9 +146,19 @@ public abstract class TileSet {
         Tile t = cache.get(url, this);
         if (t == null) {
             t = createTile(z, x, y);
-            cache.put(url, t);
+            cache.put(t);
         }
         return t;
+    }
+    
+    /**
+     * The content of tile has changed, the cache has to be updated if 
+     * if it uses serialized tiles. This method needs to be called when the
+     * tile data has been fetched.
+     * @param tile 
+     */
+    protected void tileChanged(Tile tile) {
+        cache.put(tile);
     }
 
     public Tile[] getTilesForBBoxZoomRange(double minLat, double minLng, double maxLat, double maxLng, int minZoom, int maxZoom) {

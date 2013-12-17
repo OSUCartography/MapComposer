@@ -32,7 +32,6 @@ public class FileTileSet extends TileSet {
      * @throws MalformedURLException 
      */
     public FileTileSet(String rootDir) throws MalformedURLException {
-        super();
         this.rootDirectory = new File(rootDir).toURI().toURL();
     }
     

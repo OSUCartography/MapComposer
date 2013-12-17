@@ -29,15 +29,11 @@ public class SQLiteCache implements Cache {
     private PreparedStatement fetchStmt;
 
     private SQLiteCache() {
-        connect();
-    }
-
-    private void connect() {
         try {
             Driver driver = (Driver) Class.forName(DRIVER_NAME).newInstance();
             DriverManager.registerDriver(driver);
             con = DriverManager.getConnection(DB_URL);
-            insertStmt = con.prepareStatement("INSERT INTO cache VALUES(?, ?)");
+            insertStmt = con.prepareStatement("INSERT OR REPLACE INTO cache VALUES(?, ?)");
             fetchStmt = con.prepareStatement("SELECT * FROM cache WHERE cache.url=?");
         } catch (Exception ex) {
             // FIXME
@@ -50,9 +46,10 @@ public class SQLiteCache implements Cache {
     }
 
     @Override
-    public void put(URL url, Tile tile) {
+    public void put(Tile tile) {
         ByteArrayOutputStream outStream = null;
         try {
+            URL url = tile.getURL();
             outStream = new ByteArrayOutputStream();
             DataOutputStream dataOutStream = new DataOutputStream(outStream);
             tile.toBinary(dataOutStream);
@@ -79,8 +76,8 @@ public class SQLiteCache implements Cache {
 
     @Override
     public Tile get(URL url, TileSet tileSet) {
-        String urlStr = url.toString();
         try {
+            String urlStr = url.toString();
             fetchStmt.setString(1, urlStr);
             ResultSet rs = fetchStmt.executeQuery();
             byte[] bytes = rs.getBytes(1);
@@ -89,7 +86,7 @@ public class SQLiteCache implements Cache {
             Tile tile = new ImageTile(tileSet, dataInputStream);
             return tile;
         } catch (SQLException ex) {
-            return null;
+            return null; // return null if the tile is not in the cache.
         } catch (IOException ex) {
             Logger.getLogger(SQLiteCache.class.getName()).log(Level.SEVERE, null, ex);
         }
