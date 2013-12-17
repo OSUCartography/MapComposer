@@ -81,11 +81,11 @@ public class SQLiteCacheTest {
 
             TileSet tileSet = new HTTPTileSet("http://a.tile.openstreetmap.org/{z}/{x}/{y}.png");
             Tile t = tileSet.getTile(12, 785, 1219);
-            sqliteCache.put(url, t);
+            sqliteCache.put(t);
 
             t = tileSet.getTile(12, 785, 1218);
             t.fetch();
-            sqliteCache.put(url, t);
+            sqliteCache.put(t);
 
         } catch (MalformedURLException ex) {
             Logger.getLogger(SQLiteCacheTest.class.getName()).log(Level.SEVERE, null, ex);
