@@ -164,43 +164,59 @@ public abstract class TileSet {
     }
 
     public Tile getTopLeftTile(Tile tile) {
-        TileCoord coord = schema.getTopLeftTile(tile);
-        return getTile(coord);
+        int x = tile.getX() - 1;
+        int y = tile.getY() - 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getTopTile(Tile tile) {
-        TileCoord coord = schema.getTopTile(tile);
-        return getTile(coord);
+        int x = tile.getX();
+        int y = tile.getY() - 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getTopRightTile(Tile tile) {
-        TileCoord coord = schema.getTopRightTile(tile);
-        return getTile(coord);
+        int x = tile.getX() + 1;
+        int y = tile.getY() - 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getLeftTile(Tile tile) {
-        TileCoord coord = schema.getLeftTile(tile);
-        return getTile(coord);
+        int x = tile.getX() - 1;
+        int y = tile.getY();
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getRightTile(Tile tile) {
-        TileCoord coord = schema.getRightTile(tile);
-        return getTile(coord);
+        int x = tile.getX() + 1;
+        int y = tile.getY();
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getBottomLeftTile(Tile tile) {
-        TileCoord coord = schema.getBottomLeftTile(tile);
-        return getTile(coord);
+        int x = tile.getX() - 1;
+        int y = tile.getY() + 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getBottomTile(Tile tile) {
-        TileCoord coord = schema.getBottomTile(tile);
-        return getTile(coord);
+        int x = tile.getX();
+        int y = tile.getY() + 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getBottomRightTile(Tile tile) {
-        TileCoord coord = schema.getBottomRightTile(tile);
-        return getTile(coord);
+        int x = tile.getX() + 1;
+        int y = tile.getY() + 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
     
     public Cache getCache() {
