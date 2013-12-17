@@ -211,4 +211,8 @@ public abstract class TileSet {
         TileCoord coord = schema.getBottomRightTile(tile);
         return getTile(coord);
     }
+    
+    public Cache getCache() {
+        return cache;
+    }
 }
