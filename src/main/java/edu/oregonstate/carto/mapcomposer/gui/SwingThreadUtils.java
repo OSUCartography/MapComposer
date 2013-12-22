@@ -5,7 +5,7 @@
  *
  */
 
-package ika.utils;
+package edu.oregonstate.carto.mapcomposer.gui;
 
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;

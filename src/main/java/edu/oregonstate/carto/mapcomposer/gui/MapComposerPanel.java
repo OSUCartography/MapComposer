@@ -3,7 +3,7 @@
  *
  * Created on July 31, 2007, 8:27 AM
  */
-package edu.oregonstate.carto.mapcomposer.map.gui;
+package edu.oregonstate.carto.mapcomposer.gui;
 
 import edu.oregonstate.carto.mapcomposer.Layer;
 import edu.oregonstate.carto.mapcomposer.Map;
@@ -13,12 +13,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
-import edu.oregonstate.carto.mapcomposer.map.style.Emboss;
-import edu.oregonstate.carto.mapcomposer.map.style.Shadow;
-import edu.oregonstate.carto.mapcomposer.map.style.Tint;
-import ika.utils.FileUtils;
-import ika.utils.GUIUtil;
-import ika.utils.TransparentMacPanel;
+import edu.oregonstate.carto.mapcomposer.Emboss;
+import edu.oregonstate.carto.mapcomposer.Shadow;
+import edu.oregonstate.carto.mapcomposer.Tint;
+import edu.oregonstate.utils.FileUtils;
+import edu.oregonstate.utils.GUIUtil;
 
 public class MapComposerPanel extends javax.swing.JPanel {
 
@@ -72,7 +71,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         multiplyBlendingRadioButton = new javax.swing.JRadioButton();
         javax.swing.JLabel opacityLabel = new javax.swing.JLabel();
         opacitySlider = new javax.swing.JSlider();
-        opacityNumberField = new ika.gui.NumberField();
+        opacityNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         curveFilePathTextField = new javax.swing.JTextField();
         curveFileButton = new javax.swing.JButton();
         javax.swing.JLabel gradationCurveLabel = new javax.swing.JLabel();
@@ -86,7 +85,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         textureSelectionButton = new javax.swing.JButton();
         javax.swing.JLabel textureScaleLabel = new javax.swing.JLabel();
         textureScaleSlider = new javax.swing.JSlider();
-        textureScaleNumberField = new ika.gui.NumberField();
+        textureScaleNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         textureURLLabel = new javax.swing.JLabel();
         textureClearButton = new javax.swing.JButton();
         texturePreviewLabel = new javax.swing.JLabel();
@@ -102,25 +101,25 @@ public class MapComposerPanel extends javax.swing.JPanel {
         shadowColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
         javax.swing.JLabel DropShadowFuzinessLabel = new javax.swing.JLabel();
         shadowFuziSlider = new javax.swing.JSlider();
-        shadowFuziNumberField = new ika.gui.NumberField();
+        shadowFuziNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         javax.swing.JPanel embossPanel = new TransparentMacPanel();
         embossCheckBox = new javax.swing.JCheckBox();
         javax.swing.JLabel embossAzimuthLabel = new javax.swing.JLabel();
         embossAzimuthSlider = new javax.swing.JSlider();
-        embossAzimuthNumberField = new ika.gui.NumberField();
+        embossAzimuthNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         embossElevationSlider = new javax.swing.JSlider();
-        embossElevationNumberField = new ika.gui.NumberField();
+        embossElevationNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         javax.swing.JLabel embossElevationLabel = new javax.swing.JLabel();
         javax.swing.JLabel embossHeightLabel = new javax.swing.JLabel();
         embossHeightSlider = new javax.swing.JSlider();
-        embossHeightNumberField = new ika.gui.NumberField();
+        embossHeightNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         embossSoftnessSlider = new javax.swing.JSlider();
         javax.swing.JLabel embossSoftnessLabel = new javax.swing.JLabel();
-        embossSoftnessNumberField = new ika.gui.NumberField();
+        embossSoftnessNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         layersPanel = new javax.swing.JPanel();
         javax.swing.JLabel layersLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        layerList = new ika.gui.DraggableList();
+        layerList = new edu.oregonstate.carto.mapcomposer.gui.DraggableList();
         layerListToolBar = new javax.swing.JToolBar();
         addLayerButton = new javax.swing.JButton();
         removeLayerButton = new javax.swing.JButton();
@@ -1313,19 +1312,19 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.ButtonGroup blendingButtonGroup;
     private javax.swing.JButton curveFileButton;
     private javax.swing.JTextField curveFilePathTextField;
-    private ika.gui.NumberField embossAzimuthNumberField;
+    private edu.oregonstate.carto.mapcomposer.gui.NumberField embossAzimuthNumberField;
     private javax.swing.JSlider embossAzimuthSlider;
     private javax.swing.JCheckBox embossCheckBox;
-    private ika.gui.NumberField embossElevationNumberField;
+    private edu.oregonstate.carto.mapcomposer.gui.NumberField embossElevationNumberField;
     private javax.swing.JSlider embossElevationSlider;
-    private ika.gui.NumberField embossHeightNumberField;
+    private edu.oregonstate.carto.mapcomposer.gui.NumberField embossHeightNumberField;
     private javax.swing.JSlider embossHeightSlider;
-    private ika.gui.NumberField embossSoftnessNumberField;
+    private edu.oregonstate.carto.mapcomposer.gui.NumberField embossSoftnessNumberField;
     private javax.swing.JSlider embossSoftnessSlider;
     private javax.swing.JCheckBox invertMaskCheckBox;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
-    private ika.gui.DraggableList layerList;
+    private edu.oregonstate.carto.mapcomposer.gui.DraggableList layerList;
     private javax.swing.JToolBar layerListToolBar;
     private javax.swing.JPanel layersPanel;
     private javax.swing.JSlider maskBlurSlider;
@@ -1335,20 +1334,20 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton multiplyBlendingRadioButton;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JRadioButton normalBlendingRadioButton;
-    private ika.gui.NumberField opacityNumberField;
+    private edu.oregonstate.carto.mapcomposer.gui.NumberField opacityNumberField;
     private javax.swing.JSlider opacitySlider;
     private javax.swing.JButton previewButton;
     private javax.swing.JButton removeLayerButton;
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JCheckBox shadowCheckBox;
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton shadowColorButton;
-    private ika.gui.NumberField shadowFuziNumberField;
+    private edu.oregonstate.carto.mapcomposer.gui.NumberField shadowFuziNumberField;
     private javax.swing.JSlider shadowFuziSlider;
     private javax.swing.JLabel shadowOffsetLabel;
     private javax.swing.JSlider shadowOffsetSlider;
     private javax.swing.JButton textureClearButton;
     private javax.swing.JLabel texturePreviewLabel;
-    private ika.gui.NumberField textureScaleNumberField;
+    private edu.oregonstate.carto.mapcomposer.gui.NumberField textureScaleNumberField;
     private javax.swing.JSlider textureScaleSlider;
     private javax.swing.JButton textureSelectionButton;
     private javax.swing.JLabel textureURLLabel;

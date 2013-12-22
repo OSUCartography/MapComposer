@@ -4,7 +4,7 @@
  * Created on September 11, 2007, 10:54 PM
  *
  */
-package ika.utils;
+package edu.oregonstate.utils;
 
 import java.awt.Component;
 import java.awt.Dimension;

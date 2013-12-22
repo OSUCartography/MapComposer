@@ -7,9 +7,6 @@ import com.jhlabs.image.ImageUtils;
 import com.jhlabs.image.LightFilter;
 import com.jhlabs.image.ShadowFilter;
 import com.jhlabs.image.TileImageFilter;
-import edu.oregonstate.carto.mapcomposer.map.style.Emboss;
-import edu.oregonstate.carto.mapcomposer.map.style.Shadow;
-import edu.oregonstate.carto.mapcomposer.map.style.Tint;
 import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
 import edu.oregonstate.carto.tilemanager.ImageTileMerger;
 import edu.oregonstate.carto.tilemanager.Tile;
@@ -59,7 +56,7 @@ public class Layer {
     @XmlElement(name = "curveURL")
     private String curveURL;
     
-//    @XmlElement(name = "tint")
+    @XmlElement(name = "tint")
     private Tint tint = null;
     
     @XmlElement(name = "textureScale")
@@ -71,10 +68,10 @@ public class Layer {
     @XmlElement(name = "maskBlur")
     private float maskBlur = 0;
     
-//    @XmlElement(name = "shadow")
+    @XmlElement(name = "shadow")
     private Shadow shadow = null;
     
-//    @XmlElement(name = "emboss")
+    @XmlElement(name = "emboss")
     private Emboss emboss = null;
 
     public Layer() {

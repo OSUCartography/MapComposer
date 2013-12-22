@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.oregonstate.carto.mapcomposer.map.style;
+package edu.oregonstate.carto.mapcomposer;
 
 import edu.oregonstate.carto.mapcomposer.utils.ColorJaxbAdaptor;
 import java.awt.Color;

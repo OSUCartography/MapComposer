@@ -193,7 +193,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="ika.gui.NumberField" name="opacityNumberField">
+        <Component class="edu.oregonstate.carto.mapcomposer.gui.NumberField" name="opacityNumberField">
           <Properties>
             <Property name="doubleValue" type="double" value="100.0"/>
             <Property name="max" type="double" value="100.0"/>
@@ -388,7 +388,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="ika.gui.NumberField" name="textureScaleNumberField">
+            <Component class="edu.oregonstate.carto.mapcomposer.gui.NumberField" name="textureScaleNumberField">
               <Events>
                 <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="numberFieldPropertyChange"/>
               </Events>
@@ -633,7 +633,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="ika.gui.NumberField" name="shadowFuziNumberField">
+            <Component class="edu.oregonstate.carto.mapcomposer.gui.NumberField" name="shadowFuziNumberField">
               <Properties>
                 <Property name="max" type="double" value="90.0"/>
                 <Property name="min" type="double" value="0.0"/>
@@ -714,7 +714,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="ika.gui.NumberField" name="embossAzimuthNumberField">
+            <Component class="edu.oregonstate.carto.mapcomposer.gui.NumberField" name="embossAzimuthNumberField">
               <Events>
                 <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="numberFieldPropertyChange"/>
               </Events>
@@ -738,7 +738,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="ika.gui.NumberField" name="embossElevationNumberField">
+            <Component class="edu.oregonstate.carto.mapcomposer.gui.NumberField" name="embossElevationNumberField">
               <Properties>
                 <Property name="max" type="double" value="90.0"/>
                 <Property name="min" type="double" value="0.0"/>
@@ -790,7 +790,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="ika.gui.NumberField" name="embossHeightNumberField">
+            <Component class="edu.oregonstate.carto.mapcomposer.gui.NumberField" name="embossHeightNumberField">
               <Properties>
                 <Property name="max" type="double" value="100.0"/>
                 <Property name="min" type="double" value="0.0"/>
@@ -832,7 +832,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="ika.gui.NumberField" name="embossSoftnessNumberField">
+            <Component class="edu.oregonstate.carto.mapcomposer.gui.NumberField" name="embossSoftnessNumberField">
               <Properties>
                 <Property name="max" type="double" value="50.0"/>
                 <Property name="min" type="double" value="0.0"/>
@@ -896,7 +896,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="ika.gui.DraggableList" name="layerList">
+            <Component class="edu.oregonstate.carto.mapcomposer.gui.DraggableList" name="layerList">
               <Properties>
                 <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                   <StringArray count="0"/>

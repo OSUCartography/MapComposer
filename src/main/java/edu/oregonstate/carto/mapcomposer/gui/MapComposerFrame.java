@@ -6,7 +6,7 @@
 package edu.oregonstate.carto.mapcomposer.gui;
 
 import edu.oregonstate.carto.mapcomposer.Map;
-import ika.utils.FileUtils;
+import edu.oregonstate.utils.FileUtils;
 import java.awt.Desktop;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -37,7 +37,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mapComposerPanel = new edu.oregonstate.carto.mapcomposer.map.gui.MapComposerPanel();
+        mapComposerPanel = new edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         loadDataMenu = new javax.swing.JMenu();
@@ -248,7 +248,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem loadImageDirectoryMenuItem;
     private javax.swing.JMenuItem loadStyleMenuItem;
     private javax.swing.JMenuItem loadTileSetDirectoryMenuItem;
-    private edu.oregonstate.carto.mapcomposer.map.gui.MapComposerPanel mapComposerPanel;
+    private edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel mapComposerPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem saveMapMenuItem;
     private javax.swing.JMenuItem saveStyleMenuItem;

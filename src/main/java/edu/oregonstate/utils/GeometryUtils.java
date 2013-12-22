@@ -1,4 +1,4 @@
-package ika.utils;
+package edu.oregonstate.utils;
 
 /*
  * GeometryUtils.java

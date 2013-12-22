@@ -220,12 +220,12 @@ public class Grid {
         // intersect.
         // Use GeometryUtils.rectanglesIntersect and not Rectangle2D.intersects!
         final Rectangle2D bounds = this.getBounds2D(scale);
-        return ika.utils.GeometryUtils.rectanglesIntersect(rect, bounds);
+        return edu.oregonstate.utils.GeometryUtils.rectanglesIntersect(rect, bounds);
     }
 
     public boolean isPointOnSymbol(java.awt.geom.Point2D point, double tolDist, double scale) {
         Rectangle2D bounds = this.getBounds2D(scale);
-        ika.utils.GeometryUtils.enlargeRectangle(bounds, tolDist);
+        edu.oregonstate.utils.GeometryUtils.enlargeRectangle(bounds, tolDist);
         return bounds.contains(point);
     }
 

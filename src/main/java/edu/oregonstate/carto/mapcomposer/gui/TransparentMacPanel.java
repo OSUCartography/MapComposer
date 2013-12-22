@@ -1,4 +1,4 @@
-package ika.utils;
+package edu.oregonstate.carto.mapcomposer.gui;
 
 import java.awt.LayoutManager;
 import javax.swing.JPanel;
@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 public class TransparentMacPanel extends JPanel {
 
     private void conditionalTransparency() {
-        if (ika.utils.Sys.isMacOSX_10_5_orHigherWithJava5()) {
+        if (edu.oregonstate.utils.Sys.isMacOSX_10_5_orHigherWithJava5()) {
             this.setOpaque(false);
         }
     }

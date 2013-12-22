@@ -1,4 +1,4 @@
-package ika.utils;
+package edu.oregonstate.utils;
 
 /**
  * <p>This class lets you determine which system your Java application runs on. Furthermore, it offers

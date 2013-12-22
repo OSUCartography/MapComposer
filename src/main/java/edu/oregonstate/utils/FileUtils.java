@@ -3,7 +3,7 @@
  *
  * Created on April 1, 2005, 11:31 AM
  */
-package ika.utils;
+package edu.oregonstate.utils;
 
 import java.io.*;
 import java.awt.*;
@@ -124,7 +124,7 @@ public class FileUtils {
             sb.append(".");
 
             String title = "File Already Exists";
-            ika.utils.ErrorDialog.showErrorDialog(sb.toString(), title);
+            edu.oregonstate.carto.mapcomposer.gui.ErrorDialog.showErrorDialog(sb.toString(), title);
         }
         return fileExists;
     }
@@ -389,7 +389,7 @@ public class FileUtils {
                 String extendedFilePath = forceFileNameExtension(filePath, ext);
                 if (!extendedFilePath.equals(filePath)) {
                     // make sure there is not a conflict with an existing file
-                    if (ika.utils.FileUtils.warningIfFileExists(extendedFilePath, ext)) {
+                    if (edu.oregonstate.utils.FileUtils.warningIfFileExists(extendedFilePath, ext)) {
                         filePath = null;
                     } else {
                         filePath = extendedFilePath;
@@ -424,7 +424,7 @@ public class FileUtils {
         gui.ext = ext;
 
         // make sure we run in the event dispatch thread.
-        ika.utils.SwingThreadUtils.invokeAndWait(gui);
+        edu.oregonstate.carto.mapcomposer.gui.SwingThreadUtils.invokeAndWait(gui);
         return gui.filePath;
     }
 

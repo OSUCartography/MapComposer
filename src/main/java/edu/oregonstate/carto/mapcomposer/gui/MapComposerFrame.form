@@ -104,7 +104,7 @@
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
   <SubComponents>
-    <Component class="edu.oregonstate.carto.mapcomposer.map.gui.MapComposerPanel" name="mapComposerPanel">
+    <Component class="edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel" name="mapComposerPanel">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">

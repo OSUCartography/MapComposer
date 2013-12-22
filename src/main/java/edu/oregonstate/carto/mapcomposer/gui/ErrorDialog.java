@@ -3,7 +3,7 @@
  *
  * Created on January 9, 2006, 10:37 AM
  */
-package ika.utils;
+package edu.oregonstate.carto.mapcomposer.gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ public class ErrorDialog {
 
             // try finding a parent component if none is specified
             if (parentComponent == null) {
-                parentComponent = ika.utils.GUIUtil.getFrontMostFrame();
+                parentComponent = edu.oregonstate.utils.GUIUtil.getFrontMostFrame();
             }
             final Component component = parentComponent;
 

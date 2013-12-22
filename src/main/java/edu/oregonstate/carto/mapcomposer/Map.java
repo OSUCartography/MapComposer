@@ -22,7 +22,7 @@ import javax.xml.bind.Unmarshaller;
  */
 public class Map {
 
-    private ArrayList<Layer> layers = new ArrayList<Layer>();
+    private final ArrayList<Layer> layers = new ArrayList<Layer>();
 
     public BufferedImage generateTile(int z, int x, int y) {
 

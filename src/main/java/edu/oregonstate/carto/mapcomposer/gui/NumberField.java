@@ -5,7 +5,7 @@
  *
  */
 
-package ika.gui;
+package edu.oregonstate.carto.mapcomposer.gui;
 
 import javax.swing.*;
 import javax.swing.text.*;

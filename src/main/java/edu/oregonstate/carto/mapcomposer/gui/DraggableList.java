@@ -4,7 +4,7 @@
  * Created on March 1, 2006, 1:47 PM
  */
 
-package ika.gui;
+package edu.oregonstate.carto.mapcomposer.gui;
 
 import edu.oregonstate.carto.mapcomposer.gui.DnDListModel;
 import java.awt.datatransfer.*;
