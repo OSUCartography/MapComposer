@@ -18,12 +18,7 @@ public class TileIterator implements Iterator {
     private final double minLat, minLng, maxLat, maxLng;
     private final int minZoom, maxZoom;
     
-    private final int minX, minY, maxX, maxY, difX, difY;
-    
-    private int zIdx = 0;
-    private int xIdx = 0;
-    private int yIdx = 0;
-    
+    private int minX, minY, maxX, maxY, difX, difY, zIdx, xIdx, yIdx;
     
     public TileIterator(TileSet tileSet,
             double minLat, double minLng,
@@ -45,9 +40,18 @@ public class TileIterator implements Iterator {
         this.minZoom = minZoom;
         this.maxZoom = maxZoom;
         
-        Tile minTile = getTileForLatLngZoom(minLat, minLng, zoom);
-        Tile maxTile = getTileForLatLngZoom(maxLat, maxLng, zoom);
+        zIdx = minZoom;
+        zoom();
+    }
+            
+    private void zoom() {
+        Tile minTile = getTileForLatLngZoom(minLat, minLng, zIdx);
+        Tile maxTile = getTileForLatLngZoom(maxLat, maxLng, zIdx);
         
+        /*
+         * minX and minY are for the minTile, so according to the Google / OSM
+         * tile schema, maxTile will have a Y value smaller than minTile's Y val.
+         */
         minX = minTile.getX();
         minY = minTile.getY();
         maxX = maxTile.getX();
@@ -55,32 +59,34 @@ public class TileIterator implements Iterator {
 
         difX = maxX - minX;
         difY = maxY - minY;
+        
+        ++zIdx;
+        xIdx = 0;
+        yIdx = 0;
     }
-            
+    
     @Override
     public boolean hasNext() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (zIdx > maxZoom) return false;
+        return true;
     }
 
     @Override
     public Tile next() {
         if (yIdx >= difY) {
-            --yIdx;
-            
+            return tileSet.getTile(zIdx, minX + xIdx, minY + yIdx--);
         } else if (xIdx <= difX) {
             yIdx = 0;
             ++xIdx;
-        } 
-        return tileSet.getTile(zIdx, minX + xIdx, minY + yIdx);
-        
-        if (xIdx <= difX) {
-            if (yIdx >= difY) {
-                t = tileSet.getTile(zIdx, minX + xIdx, minY + yIdx);
-                --yIdx;
+            return tileSet.getTile(zIdx, minX + xIdx, minY + yIdx--);
+        } else {
+            if (zIdx <= maxZoom) {
+                zoom();
+                return next();
+            } else {
+                return null;
             }
-            ++xIdx;
         }
-        return null;
     }
 
     @Override
@@ -115,7 +121,7 @@ public class TileIterator implements Iterator {
         int xTile = (int) (Math.ceil(xPixels / (double) Tile.TILE_SIZE) - 1);
         int yTile = (int) (Math.ceil(yPixels / (double) Tile.TILE_SIZE) - 1);
         
-        // FIXME
+        // NH FIXME
         // Convert TMS y coord to Google y coord, should be done in math above...
         yTile = (int) ( (Math.pow(2, zoom) - 1) - (double)yTile );
 
