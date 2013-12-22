@@ -83,5 +83,10 @@ public class HTTPTileSet extends TileSet {
     public String getHttpFormatString() {
         return httpFormatString;
     }
+    
+    @Override
+    public String toString() {
+        return httpFormatString;
+    }
 
 }

@@ -82,7 +82,7 @@ public abstract class TileSet {
     }
 
     /**
-     * Returns a properly formatted URL for tile coordinates (z, x, y).
+     * Returns a URL for tile coordinates (z, x, y).
      *
      * @param z
      * @param x

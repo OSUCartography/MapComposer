@@ -1,24 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.oregonstate.carto.mapcomposer;
 
-import com.jhlabs.composite.MultiplyComposite;
-import edu.oregonstate.carto.tilemanager.TileSet;
-import java.awt.AlphaComposite;
+import edu.oregonstate.carto.tilemanager.Tile;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 /**
  *
@@ -26,21 +22,20 @@ import javax.imageio.ImageIO;
  */
 public class Map {
 
-    public final static int TILE_SIZE = 256;
     private ArrayList<Layer> layers = new ArrayList<Layer>();
 
     public BufferedImage generateTile(int z, int x, int y) {
 
         BufferedImage tileImage = new BufferedImage(
-                TILE_SIZE,
-                TILE_SIZE,
+                Tile.TILE_SIZE,
+                Tile.TILE_SIZE,
                 BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2d = tileImage.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2d.setColor(Color.WHITE);
-        g2d.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+        g2d.fillRect(0, 0, Tile.TILE_SIZE, Tile.TILE_SIZE);
 
         for (Layer layer : layers) {
             if (!layer.isVisible()) {
@@ -54,5 +49,61 @@ public class Map {
 
     public void addLayer(Layer layer) {
         layers.add(layer);
+    }
+
+    public void addLayer(int index, Layer layer) {
+        layers.add(index, layer);
+    }
+
+    public void removeLayer(Layer layer) {
+        layers.remove(layer);
+    }
+
+    public Layer removeLayer(int index) {
+        return layers.remove(index);
+    }
+
+    public Layer getLayer(int index) {
+        return layers.get(index);
+    }
+
+    public int getLayerCount() {
+        return layers.size();
+    }
+
+    public Layer[] getLayers() {
+        return layers.toArray(new Layer[layers.size()]);
+    }
+    
+    public static Map unmarshal(String fileName) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(Map.class);
+            Unmarshaller m = context.createUnmarshaller();
+            Map map = (Map)m.unmarshal(new FileInputStream(fileName));
+            return map;
+            
+        } catch (JAXBException ex) {
+            // FIXME
+            Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return new Map();
+    }
+    
+    public void marshal(String fileName) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(Map.class);
+            Marshaller m = context.createMarshaller();
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            m.marshal(this, new FileOutputStream(fileName));
+            
+        } catch (JAXBException ex) {
+            // FIXME
+            Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

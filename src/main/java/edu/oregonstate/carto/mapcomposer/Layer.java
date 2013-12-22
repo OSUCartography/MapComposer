@@ -44,8 +44,8 @@ public class Layer {
     @XmlElement(name = "visible")
     private boolean visible = true;
     
-    @XmlElement(name = "layerName")
-    private String layerName;
+    @XmlElement(name = "name")
+    private String name;
     
     @XmlElement(name = "textureURL")
     private String textureURL;
@@ -77,6 +77,13 @@ public class Layer {
 //    @XmlElement(name = "emboss")
     private Emboss emboss = null;
 
+    public Layer() {
+    }
+    
+    public Layer(String layerName) {
+        this.name = layerName;
+    }
+    
     public void renderToTile(Graphics2D g2d, int z, int x, int y) {
 
         if (isBlendingNormal()) {
@@ -100,9 +107,9 @@ public class Layer {
                 }
 
                 TileImageFilter tiler = new TileImageFilter();
-                tiler.setHeight(Map.TILE_SIZE * 3);
-                tiler.setWidth(Map.TILE_SIZE * 3);
-                BufferedImage dst = new BufferedImage(Map.TILE_SIZE * 3, Map.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
+                tiler.setHeight(Tile.TILE_SIZE * 3);
+                tiler.setWidth(Tile.TILE_SIZE * 3);
+                BufferedImage dst = new BufferedImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
                 textureImage = tiler.filter(textureImage, dst);
             } catch (IOException ex) {
                 textureImage = null;
@@ -149,7 +156,7 @@ public class Layer {
                 image = tintFilter.filter(image, null);
             } else {
                 // no pre-existing image, create a solid color image
-                image = solidColorImage(Map.TILE_SIZE * 3, Map.TILE_SIZE * 3, this.tint.getTintColor());
+                image = solidColorImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, this.tint.getTintColor());
             }
         }
 
@@ -203,13 +210,13 @@ public class Layer {
             ShadowFilter shadowFilter = new ShadowFilter(this.shadow.getShadowFuziness(), this.shadow.getShadowOffset(), -this.shadow.getShadowOffset(), 1f);
             shadowFilter.setShadowColor(this.shadow.getShadowColor().getRGB());
             shadowImage = shadowFilter.filter(shadowImage, null);
-            shadowImage = shadowImage.getSubimage(Map.TILE_SIZE, Map.TILE_SIZE, Map.TILE_SIZE, Map.TILE_SIZE);
+            shadowImage = shadowImage.getSubimage(Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
             g2d.drawImage(shadowImage, null, null);
 
         }
 
         // draw this layer into the destination image
-        BufferedImage tileImage = image.getSubimage(Map.TILE_SIZE, Map.TILE_SIZE, Map.TILE_SIZE, Map.TILE_SIZE);
+        BufferedImage tileImage = image.getSubimage(Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
         g2d.drawImage(tileImage, null, null);
     }
 
@@ -259,10 +266,10 @@ public class Layer {
     
     private static BufferedImage createWhiteMegaTile() {
         if (whiteMegaTile != null) return whiteMegaTile;
-        whiteMegaTile = new BufferedImage(Map.TILE_SIZE * 3, Map.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
+        whiteMegaTile = new BufferedImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = whiteMegaTile.createGraphics();
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, Map.TILE_SIZE * 3, Map.TILE_SIZE * 3);
+        g.fillRect(0, 0, Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3);
         g.dispose();
         return whiteMegaTile;
     }
@@ -282,17 +289,17 @@ public class Layer {
     }
 
     /**
-     * @return the layerName
+     * @return the name
      */
-    public String getLayerName() {
-        return layerName;
+    public String getName() {
+        return name;
     }
 
     /**
-     * @param layerName the layerName to set
+     * @param name the layerName to set
      */
-    public void setLayerName(String layerName) {
-        this.layerName = layerName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -422,5 +429,55 @@ public class Layer {
      */
     public void setMaskBlur(float maskBlur) {
         this.maskBlur = maskBlur;
+    }
+    
+    
+    /**
+     * @return the blending
+     */
+    public BlendType getBlending() {
+        return blending;
+    }
+
+    /**
+     * @return the tint
+     */
+    public Tint getTint() {
+        return tint;
+    }
+
+    /**
+     * @param tint the tint to set
+     */
+    public void setTint(Tint tint) {
+        this.tint = tint;
+    }
+
+    /**
+     * @return the shadow
+     */
+    public Shadow getShadow() {
+        return shadow;
+    }
+
+    /**
+     * @param shadow the shadow to set
+     */
+    public void setShadow(Shadow shadow) {
+        this.shadow = shadow;
+    }
+
+    /**
+     * @return the emboss
+     */
+    public Emboss getEmboss() {
+        return emboss;
+    }
+
+    /**
+     * @param emboss the emboss to set
+     */
+    public void setEmboss(Emboss emboss) {
+        this.emboss = emboss;
     }
 }
