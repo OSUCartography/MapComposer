@@ -9,15 +9,14 @@ import edu.oregonstate.carto.mapcomposer.Layer;
 import edu.oregonstate.carto.mapcomposer.Map;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import edu.oregonstate.carto.mapcomposer.Emboss;
 import edu.oregonstate.carto.mapcomposer.Shadow;
 import edu.oregonstate.carto.mapcomposer.Tint;
-import edu.oregonstate.utils.FileUtils;
-import edu.oregonstate.utils.GUIUtil;
+import edu.oregonstate.carto.utils.FileUtils;
+import edu.oregonstate.carto.utils.GUIUtil;
 
 public class MapComposerPanel extends javax.swing.JPanel {
 
@@ -71,7 +70,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         multiplyBlendingRadioButton = new javax.swing.JRadioButton();
         javax.swing.JLabel opacityLabel = new javax.swing.JLabel();
         opacitySlider = new javax.swing.JSlider();
-        opacityNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         curveFilePathTextField = new javax.swing.JTextField();
         curveFileButton = new javax.swing.JButton();
         javax.swing.JLabel gradationCurveLabel = new javax.swing.JLabel();
@@ -80,15 +78,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
         tintColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
         jSeparator1 = new javax.swing.JSeparator();
         urlTextField = new javax.swing.JTextField();
+        opacityTextField = new javax.swing.JFormattedTextField();
         javax.swing.JTabbedPane settingsTabbedPane = new javax.swing.JTabbedPane();
         javax.swing.JPanel texturePanel = new TransparentMacPanel();
         textureSelectionButton = new javax.swing.JButton();
         javax.swing.JLabel textureScaleLabel = new javax.swing.JLabel();
         textureScaleSlider = new javax.swing.JSlider();
-        textureScaleNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         textureURLLabel = new javax.swing.JLabel();
         textureClearButton = new javax.swing.JButton();
         texturePreviewLabel = new javax.swing.JLabel();
+        textureScaleFormattedTextField = new javax.swing.JFormattedTextField();
         javax.swing.JPanel maskPanel = new TransparentMacPanel();
         maskComboBox = new javax.swing.JComboBox();
         invertMaskCheckBox = new javax.swing.JCheckBox();
@@ -101,21 +100,20 @@ public class MapComposerPanel extends javax.swing.JPanel {
         shadowColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
         javax.swing.JLabel DropShadowFuzinessLabel = new javax.swing.JLabel();
         shadowFuziSlider = new javax.swing.JSlider();
-        shadowFuziNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         javax.swing.JPanel embossPanel = new TransparentMacPanel();
         embossCheckBox = new javax.swing.JCheckBox();
         javax.swing.JLabel embossAzimuthLabel = new javax.swing.JLabel();
         embossAzimuthSlider = new javax.swing.JSlider();
-        embossAzimuthNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         embossElevationSlider = new javax.swing.JSlider();
-        embossElevationNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         javax.swing.JLabel embossElevationLabel = new javax.swing.JLabel();
         javax.swing.JLabel embossHeightLabel = new javax.swing.JLabel();
         embossHeightSlider = new javax.swing.JSlider();
-        embossHeightNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
         embossSoftnessSlider = new javax.swing.JSlider();
         javax.swing.JLabel embossSoftnessLabel = new javax.swing.JLabel();
-        embossSoftnessNumberField = new edu.oregonstate.carto.mapcomposer.gui.NumberField();
+        embossAzimuthFormattedTextField = new javax.swing.JFormattedTextField();
+        embossElevationFormattedTextField = new javax.swing.JFormattedTextField();
+        embossHeightFormattedTextField = new javax.swing.JFormattedTextField();
+        embossSoftnessFormattedTextField = new javax.swing.JFormattedTextField();
         layersPanel = new javax.swing.JPanel();
         javax.swing.JLabel layersLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -242,21 +240,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         settingsPanel.add(opacitySlider, gridBagConstraints);
 
-        opacityNumberField.setDoubleValue(100.0);
-        opacityNumberField.setMax(100.0);
-        opacityNumberField.setMin(0.0);
-        opacityNumberField.setPattern("##0");
-        opacityNumberField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                numberFieldPropertyChange(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        settingsPanel.add(opacityNumberField, gridBagConstraints);
-
         curveFilePathTextField.setText("file:///Volumes/FireWireHD/Java/MapComposer/data/forestcurve.acv");
         curveFilePathTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -341,6 +324,23 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         settingsPanel.add(urlTextField, gridBagConstraints);
 
+        opacityTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
+        opacityTextField.setPreferredSize(new java.awt.Dimension(60, 28));
+        javax.swing.text.NumberFormatter nf = new javax.swing.text.NumberFormatter();
+        nf.setMinimum(0);
+        nf.setMaximum(100);
+        opacityTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nf));
+        opacityTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                numberFieldChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        settingsPanel.add(opacityTextField, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -380,16 +380,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 3;
         texturePanel.add(textureScaleSlider, gridBagConstraints);
 
-        textureScaleNumberField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                numberFieldPropertyChange(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
-        texturePanel.add(textureScaleNumberField, gridBagConstraints);
-
         textureURLLabel.setFont(textureURLLabel.getFont().deriveFont(textureURLLabel.getFont().getSize()-3f));
         textureURLLabel.setText("Texture Path");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -417,6 +407,19 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         texturePanel.add(texturePreviewLabel, gridBagConstraints);
+
+        textureScaleFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.#"))));
+        textureScaleFormattedTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                numberFieldChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        texturePanel.add(textureScaleFormattedTextField, gridBagConstraints);
 
         settingsTabbedPane.addTab("Texture", texturePanel);
 
@@ -522,18 +525,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         dropShadowPanel.add(shadowFuziSlider, gridBagConstraints);
 
-        shadowFuziNumberField.setMax(90.0);
-        shadowFuziNumberField.setMin(0.0);
-        shadowFuziNumberField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                numberFieldPropertyChange(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        dropShadowPanel.add(shadowFuziNumberField, gridBagConstraints);
-
         settingsTabbedPane.addTab("Drop Shadow", dropShadowPanel);
 
         embossPanel.setLayout(new java.awt.GridBagLayout());
@@ -571,16 +562,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         embossPanel.add(embossAzimuthSlider, gridBagConstraints);
 
-        embossAzimuthNumberField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                numberFieldPropertyChange(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        embossPanel.add(embossAzimuthNumberField, gridBagConstraints);
-
         embossElevationSlider.setMaximum(90);
         embossElevationSlider.setValue(45);
         embossElevationSlider.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -592,18 +573,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         embossPanel.add(embossElevationSlider, gridBagConstraints);
-
-        embossElevationNumberField.setMax(90.0);
-        embossElevationNumberField.setMin(0.0);
-        embossElevationNumberField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                numberFieldPropertyChange(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        embossPanel.add(embossElevationNumberField, gridBagConstraints);
 
         embossElevationLabel.setText("Elevation:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -629,18 +598,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 4;
         embossPanel.add(embossHeightSlider, gridBagConstraints);
 
-        embossHeightNumberField.setMax(100.0);
-        embossHeightNumberField.setMin(0.0);
-        embossHeightNumberField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                numberFieldPropertyChange(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
-        embossPanel.add(embossHeightNumberField, gridBagConstraints);
-
         embossSoftnessSlider.setMaximum(50);
         embossSoftnessSlider.setValue(10);
         embossSoftnessSlider.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -660,17 +617,74 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         embossPanel.add(embossSoftnessLabel, gridBagConstraints);
 
-        embossSoftnessNumberField.setMax(50.0);
-        embossSoftnessNumberField.setMin(0.0);
-        embossSoftnessNumberField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+        javax.swing.text.NumberFormatter nfEmbossAziuth = new javax.swing.text.NumberFormatter();
+        nfEmbossAziuth.setMinimum(0);
+        nfEmbossAziuth.setMaximum(360);
+        embossAzimuthFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nfEmbossAziuth));
+        embossAzimuthFormattedTextField.setText("0");
+        embossAzimuthFormattedTextField.setPreferredSize(new java.awt.Dimension(60, 28));
+        embossAzimuthFormattedTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                numberFieldPropertyChange(evt);
+                numberFieldChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        embossPanel.add(embossAzimuthFormattedTextField, gridBagConstraints);
+
+        embossElevationFormattedTextField.setText("0");
+        javax.swing.text.NumberFormatter nfEmbossElevation = new javax.swing.text.NumberFormatter();
+        nfEmbossElevation.setMinimum(0);
+        nfEmbossElevation.setMaximum(90);
+        embossElevationFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nfEmbossElevation));
+        embossElevationFormattedTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                numberFieldChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        embossPanel.add(embossElevationFormattedTextField, gridBagConstraints);
+
+        embossHeightFormattedTextField.setText("0");
+        javax.swing.text.NumberFormatter nfEmbossHeight = new javax.swing.text.NumberFormatter();
+        nfEmbossHeight.setMinimum(0);
+        nfEmbossHeight.setMaximum(100);
+        embossHeightFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nfEmbossHeight));
+        embossHeightFormattedTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                numberFieldChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        embossPanel.add(embossHeightFormattedTextField, gridBagConstraints);
+
+        embossSoftnessFormattedTextField.setText("0");
+        javax.swing.text.NumberFormatter nfEmbossSoftness = new javax.swing.text.NumberFormatter();
+        nfEmbossSoftness.setMinimum(0);
+        nfEmbossSoftness.setMaximum(50);
+        embossSoftnessFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nfEmbossSoftness));
+        embossSoftnessFormattedTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                numberFieldChanged(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 5;
-        embossPanel.add(embossSoftnessNumberField, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        embossPanel.add(embossSoftnessFormattedTextField, gridBagConstraints);
 
         settingsTabbedPane.addTab("Emboss", embossPanel);
 
@@ -755,32 +769,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 13);
         add(layersPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * An event handler for number fields. Used by various number fields to read
-     * freshly entered values.
-     *
-     * @param evt
-     */
-    private void numberFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_numberFieldPropertyChange
-        if (this.updating || "value".equals(evt.getPropertyName()) == false) {
-            return;
-        }
-
-        this.updating = true;
-        try {
-            this.opacitySlider.setValue((int) this.opacityNumberField.getDoubleValue());
-            float textureScale = (float) this.textureScaleNumberField.getDoubleValue();
-            this.writeTextureScale(textureScale);
-            this.embossAzimuthSlider.setValue((int) this.embossAzimuthNumberField.getDoubleValue());
-            this.embossElevationSlider.setValue((int) this.embossElevationNumberField.getDoubleValue());
-            this.embossHeightSlider.setValue((int) (this.embossHeightNumberField.getDoubleValue() * 100));
-            this.embossSoftnessSlider.setValue((int) this.embossSoftnessNumberField.getDoubleValue());
-            this.shadowFuziSlider.setValue((int) this.shadowFuziNumberField.getDoubleValue());
-        } finally {
-            this.updating = false;
-        }
-    }//GEN-LAST:event_numberFieldPropertyChange
 
     /**
      * Event handler for selecting a Photoshop ACV curve file.
@@ -903,13 +891,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         this.updating = true;
         try {
-            this.opacityNumberField.setDoubleValue(opacitySlider.getValue());
-            this.textureScaleNumberField.setDoubleValue(this.readTextureScale());
-            this.embossAzimuthNumberField.setDoubleValue(embossAzimuthSlider.getValue());
-            this.embossElevationNumberField.setDoubleValue(embossElevationSlider.getValue());
-            this.embossHeightNumberField.setDoubleValue(embossHeightSlider.getValue() / 100.);
-            this.embossSoftnessNumberField.setDoubleValue(embossSoftnessSlider.getValue());
-            this.shadowFuziNumberField.setDoubleValue(shadowFuziSlider.getValue());
+            this.opacityTextField.setValue(opacitySlider.getValue());
+            this.textureScaleFormattedTextField.setValue(readTextureScale());
+            this.embossAzimuthFormattedTextField.setValue(embossAzimuthSlider.getValue());
+            this.embossElevationFormattedTextField.setValue(embossElevationSlider.getValue());
+            this.embossHeightFormattedTextField.setValue(embossHeightSlider.getValue());
+            this.embossSoftnessFormattedTextField.setValue(embossSoftnessSlider.getValue());
         } finally {
             this.updating = false;
         }
@@ -961,22 +948,22 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
         if (this.embossCheckBox.isSelected()) {
             this.embossHeightSlider.setEnabled(true);
-            this.embossHeightNumberField.setEnabled(true);
+            this.embossHeightFormattedTextField.setEnabled(true);
             this.embossSoftnessSlider.setEnabled(true);
-            this.embossSoftnessNumberField.setEnabled(true);
+            this.embossSoftnessFormattedTextField.setEnabled(true);
             this.embossAzimuthSlider.setEnabled(true);
-            this.embossAzimuthNumberField.setEnabled(true);
+            this.embossAzimuthFormattedTextField.setEnabled(true);
             this.embossElevationSlider.setEnabled(true);
-            this.embossElevationNumberField.setEnabled(true);
+            this.embossElevationFormattedTextField.setEnabled(true);
         } else {
             this.embossHeightSlider.setEnabled(false);
-            this.embossHeightNumberField.setEnabled(false);
+            this.embossHeightFormattedTextField.setEnabled(false);
             this.embossSoftnessSlider.setEnabled(false);
-            this.embossSoftnessNumberField.setEnabled(false);
+            this.embossSoftnessFormattedTextField.setEnabled(false);
             this.embossAzimuthSlider.setEnabled(false);
-            this.embossAzimuthNumberField.setEnabled(false);
+            this.embossAzimuthFormattedTextField.setEnabled(false);
             this.embossElevationSlider.setEnabled(false);
-            this.embossElevationNumberField.setEnabled(false);
+            this.embossElevationFormattedTextField.setEnabled(false);
         }
     }//GEN-LAST:event_embossCheckBoxStateChanged
 
@@ -1027,6 +1014,33 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private void urlTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_urlTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_urlTextFieldActionPerformed
+
+    private void numberFieldChanged(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_numberFieldChanged
+        if (this.updating || "value".equals(evt.getPropertyName()) == false) {
+            return;
+        }
+
+        this.updating = true;
+        try {
+            int opacity = ((Number) opacityTextField.getValue()).intValue();
+            this.opacitySlider.setValue(opacity);
+            
+            float textureScale = ((Number)textureScaleFormattedTextField.getValue()).floatValue();
+            this.writeTextureScale(textureScale);
+            
+            int embossAzimuth = ((Number) embossAzimuthFormattedTextField.getValue()).intValue();
+            int embossElevation = ((Number) embossElevationFormattedTextField.getValue()).intValue();
+            int embossHeight = ((Number) embossHeightFormattedTextField.getValue()).intValue();
+            int embossSoftness = ((Number) embossSoftnessFormattedTextField.getValue()).intValue();
+            this.embossAzimuthSlider.setValue(embossAzimuth);
+            this.embossElevationSlider.setValue(embossElevation);
+            this.embossHeightSlider.setValue(embossHeight);
+            this.embossSoftnessSlider.setValue(embossSoftness);
+            
+        } finally {
+            this.updating = false;
+        }
+    }//GEN-LAST:event_numberFieldChanged
 
     /**
      * Updates the value of the texture scale slider
@@ -1085,7 +1099,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.normalBlendingRadioButton.setEnabled(on);
             this.multiplyBlendingRadioButton.setEnabled(on);
             this.opacitySlider.setEnabled(on);
-            this.opacityNumberField.setEnabled(on);
+            this.opacityTextField.setEnabled(on);
             this.curveFilePathTextField.setEnabled(on);
             this.curveFileButton.setEnabled(on);
             this.tintCheckBox.setEnabled(on);
@@ -1100,17 +1114,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.shadowCheckBox.setEnabled(on);
             this.shadowOffsetSlider.setEnabled(on);
             this.shadowColorButton.setEnabled(on);
-            this.shadowFuziNumberField.setEnabled(on);
             this.shadowFuziSlider.setEnabled(on);
             this.embossCheckBox.setEnabled(on);
             this.embossHeightSlider.setEnabled(on);
-            this.embossHeightNumberField.setEnabled(on);
+            this.embossHeightFormattedTextField.setEnabled(on);
             this.embossSoftnessSlider.setEnabled(on);
-            this.embossSoftnessNumberField.setEnabled(on);
+            this.embossSoftnessFormattedTextField.setEnabled(on);
             this.embossAzimuthSlider.setEnabled(on);
-            this.embossAzimuthNumberField.setEnabled(on);
+            this.embossAzimuthFormattedTextField.setEnabled(on);
             this.embossElevationSlider.setEnabled(on);
-            this.embossElevationNumberField.setEnabled(on);
+            this.embossElevationFormattedTextField.setEnabled(on);
             this.previewButton.setEnabled(on);
             this.removeLayerButton.setEnabled(on);
             this.moveUpLayerButton.setEnabled(on && selectedID != 0);
@@ -1135,7 +1148,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
             // opacity
             this.opacitySlider.setValue((int) (selectedLayer.getOpacity() * 100));
-            this.opacityNumberField.setDoubleValue(selectedLayer.getOpacity() * 100);
+            this.opacityTextField.setValue((int)(selectedLayer.getOpacity() * 100));
 
             // curve
             this.curveFilePathTextField.setText(selectedLayer.getCurveURL());
@@ -1151,7 +1164,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             // texture
             textureURLLabel.setText(selectedLayer.getTextureURL());
             this.writeTextureScale(selectedLayer.getTextureScale());
-            this.textureScaleNumberField.setDoubleValue(selectedLayer.getTextureScale());
+            this.textureScaleFormattedTextField.setValue(selectedLayer.getTextureScale());
             previewTexture();
 
             // mask
@@ -1178,13 +1191,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 this.embossElevationSlider.setEnabled(true);
 
                 this.embossHeightSlider.setValue((int) (selectedLayer.getEmboss().getEmbossHeight() * 100f));
-                this.embossHeightNumberField.setDoubleValue(selectedLayer.getEmboss().getEmbossHeight());
+                this.embossHeightFormattedTextField.setValue(selectedLayer.getEmboss().getEmbossHeight() * 100);
                 this.embossSoftnessSlider.setValue((int) selectedLayer.getEmboss().getEmbossSoftness());
-                this.embossSoftnessNumberField.setDoubleValue(selectedLayer.getEmboss().getEmbossSoftness());
+                this.embossSoftnessFormattedTextField.setValue(selectedLayer.getEmboss().getEmbossSoftness());
                 this.embossAzimuthSlider.setValue((int) selectedLayer.getEmboss().getEmbossAzimuth());
-                this.embossAzimuthNumberField.setDoubleValue(selectedLayer.getEmboss().getEmbossAzimuth());
+                this.embossAzimuthFormattedTextField.setValue(selectedLayer.getEmboss().getEmbossAzimuth());
                 this.embossElevationSlider.setValue((int) selectedLayer.getEmboss().getEmbossElevation());
-                this.embossElevationNumberField.setDoubleValue(selectedLayer.getEmboss().getEmbossElevation());
+                this.embossElevationFormattedTextField.setValue(selectedLayer.getEmboss().getEmbossElevation());
             } else {
                 this.embossCheckBox.setSelected(false);
             }
@@ -1226,9 +1239,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     /**
      * Reads user settings from the GUI and passes the settings to the currently
      * selected layer.
-     *
-     * @throws MalformedURLException
-     * @throws IOException
      */
     public void readGUI() {
         if (this.updating) {
@@ -1312,14 +1322,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.ButtonGroup blendingButtonGroup;
     private javax.swing.JButton curveFileButton;
     private javax.swing.JTextField curveFilePathTextField;
-    private edu.oregonstate.carto.mapcomposer.gui.NumberField embossAzimuthNumberField;
+    private javax.swing.JFormattedTextField embossAzimuthFormattedTextField;
     private javax.swing.JSlider embossAzimuthSlider;
     private javax.swing.JCheckBox embossCheckBox;
-    private edu.oregonstate.carto.mapcomposer.gui.NumberField embossElevationNumberField;
+    private javax.swing.JFormattedTextField embossElevationFormattedTextField;
     private javax.swing.JSlider embossElevationSlider;
-    private edu.oregonstate.carto.mapcomposer.gui.NumberField embossHeightNumberField;
+    private javax.swing.JFormattedTextField embossHeightFormattedTextField;
     private javax.swing.JSlider embossHeightSlider;
-    private edu.oregonstate.carto.mapcomposer.gui.NumberField embossSoftnessNumberField;
+    private javax.swing.JFormattedTextField embossSoftnessFormattedTextField;
     private javax.swing.JSlider embossSoftnessSlider;
     private javax.swing.JCheckBox invertMaskCheckBox;
     private javax.swing.JScrollPane jScrollPane2;
@@ -1334,20 +1344,19 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton multiplyBlendingRadioButton;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JRadioButton normalBlendingRadioButton;
-    private edu.oregonstate.carto.mapcomposer.gui.NumberField opacityNumberField;
     private javax.swing.JSlider opacitySlider;
+    private javax.swing.JFormattedTextField opacityTextField;
     private javax.swing.JButton previewButton;
     private javax.swing.JButton removeLayerButton;
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JCheckBox shadowCheckBox;
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton shadowColorButton;
-    private edu.oregonstate.carto.mapcomposer.gui.NumberField shadowFuziNumberField;
     private javax.swing.JSlider shadowFuziSlider;
     private javax.swing.JLabel shadowOffsetLabel;
     private javax.swing.JSlider shadowOffsetSlider;
     private javax.swing.JButton textureClearButton;
     private javax.swing.JLabel texturePreviewLabel;
-    private edu.oregonstate.carto.mapcomposer.gui.NumberField textureScaleNumberField;
+    private javax.swing.JFormattedTextField textureScaleFormattedTextField;
     private javax.swing.JSlider textureScaleSlider;
     private javax.swing.JButton textureSelectionButton;
     private javax.swing.JLabel textureURLLabel;

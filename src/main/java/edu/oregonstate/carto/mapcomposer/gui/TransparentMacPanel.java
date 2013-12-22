@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 public class TransparentMacPanel extends JPanel {
 
     private void conditionalTransparency() {
-        if (edu.oregonstate.utils.Sys.isMacOSX_10_5_orHigherWithJava5()) {
+        if (edu.oregonstate.carto.utils.Sys.isMacOSX_10_5_orHigherWithJava5()) {
             this.setOpaque(false);
         }
     }

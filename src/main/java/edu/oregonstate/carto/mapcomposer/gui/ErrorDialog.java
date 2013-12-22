@@ -39,7 +39,7 @@ public class ErrorDialog {
 
             // try finding a parent component if none is specified
             if (parentComponent == null) {
-                parentComponent = edu.oregonstate.utils.GUIUtil.getFrontMostFrame();
+                parentComponent = edu.oregonstate.carto.utils.GUIUtil.getFrontMostFrame();
             }
             final Component component = parentComponent;
 

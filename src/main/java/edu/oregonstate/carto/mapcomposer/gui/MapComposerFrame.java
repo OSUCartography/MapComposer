@@ -6,7 +6,7 @@
 package edu.oregonstate.carto.mapcomposer.gui;
 
 import edu.oregonstate.carto.mapcomposer.Map;
-import edu.oregonstate.utils.FileUtils;
+import edu.oregonstate.carto.utils.FileUtils;
 import java.awt.Desktop;
 import java.awt.image.BufferedImage;
 import java.io.File;

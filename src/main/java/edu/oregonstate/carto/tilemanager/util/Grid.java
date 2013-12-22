@@ -220,12 +220,12 @@ public class Grid {
         // intersect.
         // Use GeometryUtils.rectanglesIntersect and not Rectangle2D.intersects!
         final Rectangle2D bounds = this.getBounds2D(scale);
-        return edu.oregonstate.utils.GeometryUtils.rectanglesIntersect(rect, bounds);
+        return edu.oregonstate.carto.utils.GeometryUtils.rectanglesIntersect(rect, bounds);
     }
 
     public boolean isPointOnSymbol(java.awt.geom.Point2D point, double tolDist, double scale) {
         Rectangle2D bounds = this.getBounds2D(scale);
-        edu.oregonstate.utils.GeometryUtils.enlargeRectangle(bounds, tolDist);
+        edu.oregonstate.carto.utils.GeometryUtils.enlargeRectangle(bounds, tolDist);
         return bounds.contains(point);
     }
 
