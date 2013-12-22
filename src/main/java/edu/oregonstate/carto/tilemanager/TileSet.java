@@ -21,42 +21,31 @@ public abstract class TileSet {
      * helps us decide what type of tile to construct.
      */
     private final TileType type;
-    /**
-     * The constructor also sets the schema. once this is set, the TileSchema
-     * methods will compute the correct tile relative to a given input tile.
-     */
-    private final TileSchema schema;
+    
     /**
      * The cache is a content addressable object that will return a given tile
      * if it already has been created.
      */
     private final Cache cache;
     /**
-     * It should be set in the constructor if we have a source schema that is
-     * different from our internal and served tile schema. In this case, we need
-     * to transform the y coordinate when we fetch the tile from file or HTTP
-     * but maintain the intended y coordinate internally.
+     * If the source tiles adhere to the obscure TMS tile schema instead of
+     * the standard OpenStreetMap tile schema, we need to flip
+     * the y coordinate to our internal schema (OpenStreetMap schema)
      */
-    protected final boolean sourceSchemaOpposite;
+    protected final boolean tmsSchema;
 
-    public TileSet(Cache cache, TileSchema schema, TileType type, boolean sourceSchemaOpposite) {
+    public TileSet(Cache cache, TileType type, boolean tmsSchema) {
         this.type = type;
         this.cache = cache;
-        this.schema = schema;
-        this.sourceSchemaOpposite = sourceSchemaOpposite;
+        this.tmsSchema = tmsSchema;
     }
 
-    /**
-     * Almost all tile sets on the Internet use Google Tile schema, including
-     * OpenStreetMap, MapQuest, MapBox, and Esri. We also have the tile type be
-     * an image by default.
-     */
     public TileSet() {
-        this(MemCache.getInstance(), new GoogleTileSchema(), TileType.IMAGE, false);
+        this(MemCache.getInstance(), TileType.IMAGE, false);
     }
     
     public TileSet(boolean sourceSchemaOpposite) {
-        this(MemCache.getInstance(), new GoogleTileSchema(), TileType.IMAGE, sourceSchemaOpposite);
+        this(MemCache.getInstance(), TileType.IMAGE, sourceSchemaOpposite);
     }
 
     /**
@@ -90,10 +79,6 @@ public abstract class TileSet {
      * @return URL
      */
     public abstract URL urlForZXY(int z, int x, int y);
-
-    public TileSchema getTileSchema() {
-        return schema;
-    }
 
     /**
      * This creates a new tile and puts it in the cache.
@@ -161,55 +146,64 @@ public abstract class TileSet {
         cache.put(tile);
     }
 
-    public Tile[] getTilesForBBoxZoomRange(double minLat, double minLng, double maxLat, double maxLng, int minZoom, int maxZoom) {
-        TileCoord[] tileCoords = schema.getTileCoordsForBBoxZoomRange(minLat, minLng, maxLat, maxLng, minZoom, maxZoom);
-        Tile[] tiles = new Tile[tileCoords.length];
-        for (int i = 0; i < tiles.length; ++i) {
-            TileCoord coord = tileCoords[i];
-            Tile t = getTile(coord);
-            tiles[i] = t;
-        }
-        return tiles;
+    public TileIterator createIterator(double minLat, double minLng, double maxLat, double maxLng, int minZoom, int maxZoom) {
+        return new TileIterator(this, minLat, minLng, maxLat, maxLng, minZoom, maxZoom);
     }
 
     public Tile getTopLeftTile(Tile tile) {
-        TileCoord coord = schema.getTopLeftTile(tile);
-        return getTile(coord);
+        int x = tile.getX() - 1;
+        int y = tile.getY() - 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getTopTile(Tile tile) {
-        TileCoord coord = schema.getTopTile(tile);
-        return getTile(coord);
+        int x = tile.getX();
+        int y = tile.getY() - 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getTopRightTile(Tile tile) {
-        TileCoord coord = schema.getTopRightTile(tile);
-        return getTile(coord);
+        int x = tile.getX() + 1;
+        int y = tile.getY() - 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getLeftTile(Tile tile) {
-        TileCoord coord = schema.getLeftTile(tile);
-        return getTile(coord);
+        int x = tile.getX() - 1;
+        int y = tile.getY();
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getRightTile(Tile tile) {
-        TileCoord coord = schema.getRightTile(tile);
-        return getTile(coord);
+        int x = tile.getX() + 1;
+        int y = tile.getY();
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getBottomLeftTile(Tile tile) {
-        TileCoord coord = schema.getBottomLeftTile(tile);
-        return getTile(coord);
+        int x = tile.getX() - 1;
+        int y = tile.getY() + 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getBottomTile(Tile tile) {
-        TileCoord coord = schema.getBottomTile(tile);
-        return getTile(coord);
+        int x = tile.getX();
+        int y = tile.getY() + 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
 
     public Tile getBottomRightTile(Tile tile) {
-        TileCoord coord = schema.getBottomRightTile(tile);
-        return getTile(coord);
+        int x = tile.getX() + 1;
+        int y = tile.getY() + 1;
+        int z = tile.getZ();
+        return getTile(z, x, y);
     }
     
     public Cache getCache() {

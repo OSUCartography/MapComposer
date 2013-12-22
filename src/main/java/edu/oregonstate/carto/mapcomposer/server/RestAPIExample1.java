@@ -3,10 +3,8 @@ package edu.oregonstate.carto.mapcomposer.server;
 import edu.oregonstate.carto.mapcomposer.Layer;
 import edu.oregonstate.carto.mapcomposer.Map;
 import edu.oregonstate.carto.tilemanager.FileTileSet;
-import edu.oregonstate.carto.tilemanager.GoogleTileSchema;
 import edu.oregonstate.carto.tilemanager.HTTPTileSet;
 import edu.oregonstate.carto.tilemanager.SQLiteCache;
-import edu.oregonstate.carto.tilemanager.TileSet;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
@@ -39,21 +37,19 @@ public class RestAPIExample1 {
     public RestAPIExample1() {
         map = new Map();
         
-//        esriSatelliteSet = new HTTPTileSet("http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
-        esriSatelliteSet = new HTTPTileSet(
-                "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-                SQLiteCache.getInstance(),
-                new GoogleTileSchema(),
-                TileSet.TileType.IMAGE,
-                false);
+        esriSatelliteSet = new HTTPTileSet("http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
+//        esriSatelliteSet = new HTTPTileSet(
+//                "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+//                SQLiteCache.getInstance(),
+//                TileSet.TileType.IMAGE,
+//                false);
         
-//        watercolorSet = new HTTPTileSet("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
-        watercolorSet = new HTTPTileSet(
-                "http://tile.stamen.com/watercolor/{z}/{x}/{y}.png",
-                SQLiteCache.getInstance(),
-                new GoogleTileSchema(),
-                TileSet.TileType.IMAGE,
-                false);
+        watercolorSet = new HTTPTileSet("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
+//        watercolorSet = new HTTPTileSet(
+//                "http://tile.stamen.com/watercolor/{z}/{x}/{y}.png",
+//                SQLiteCache.getInstance(),
+//                TileSet.TileType.IMAGE,
+//                false);
         
         
         try {
