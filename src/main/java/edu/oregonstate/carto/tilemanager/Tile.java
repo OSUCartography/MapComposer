@@ -193,4 +193,9 @@ public abstract class Tile<TileData> {
         out.writeInt(x);
         out.writeInt(y);
     }
+    
+    @Override
+    public String toString() {
+        return "Tile(z=" + z + ", x=" + x + ", y=" + y + ")";
+    }
 }

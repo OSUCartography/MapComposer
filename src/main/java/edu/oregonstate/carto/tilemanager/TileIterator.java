@@ -40,10 +40,16 @@ public class TileIterator implements Iterator {
         this.minZoom = minZoom;
         this.maxZoom = maxZoom;
         
-        zIdx = minZoom;
+        zIdx = this.minZoom;
         zoom();
     }
-            
+           
+    /**
+     * This method gets the minTile and maxTile for the current zIdx index.
+     * It then sets up the diffs and zeros out the x and y indices. The zIdx
+     * iterator is not incremented inside this method, because we want to 
+     * first get the tiles from the minZoom level in next().
+     */
     private void zoom() {
         Tile minTile = getTileForLatLngZoom(minLat, minLng, zIdx);
         Tile maxTile = getTileForLatLngZoom(maxLat, maxLng, zIdx);
@@ -60,33 +66,49 @@ public class TileIterator implements Iterator {
         difX = maxX - minX;
         difY = maxY - minY;
         
-        ++zIdx;
         xIdx = 0;
         yIdx = 0;
     }
     
+    /**
+     * It is slightly more efficient to create
+     * a do while next() does not return null.
+     * 
+     * For example:
+     * 
+     *  Tile t = corvallis3.next();
+     *  while (t != null) {
+     *      System.out.println(t.toString());
+     *      t = corvallis3.next();
+     *  }
+     * 
+     * @return 
+     */
     @Override
     public boolean hasNext() {
-        if (zIdx > maxZoom) return false;
-        return true;
+        if (yIdx >= difY) return true;
+        if (xIdx <= difX) return true;
+        if (zIdx + 1 <= maxZoom) return true;
+        return false;
     }
 
     @Override
     public Tile next() {
         if (yIdx >= difY) {
             return tileSet.getTile(zIdx, minX + xIdx, minY + yIdx--);
-        } else if (xIdx <= difX) {
+        }
+        if (xIdx <= difX) {
             yIdx = 0;
             ++xIdx;
             return tileSet.getTile(zIdx, minX + xIdx, minY + yIdx--);
-        } else {
-            if (zIdx <= maxZoom) {
-                zoom();
-                return next();
-            } else {
-                return null;
-            }
+        } 
+        // Increments the zoom index and make sure result is not more than
+        // the max zoom.
+        if (++zIdx <= maxZoom) { 
+            zoom();
+            return next();
         }
+        return null;
     }
 
     @Override
