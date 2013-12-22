@@ -22,8 +22,6 @@ public abstract class TileSet {
      */
     private final TileType type;
     
-    private final TileSchema schema = new TileSchema();
-    
     /**
      * The cache is a content addressable object that will return a given tile
      * if it already has been created.
@@ -81,10 +79,6 @@ public abstract class TileSet {
      * @return URL
      */
     public abstract URL urlForZXY(int z, int x, int y);
-
-    public TileSchema getTileSchema() {
-        return schema;
-    }
 
     /**
      * This creates a new tile and puts it in the cache.
@@ -152,15 +146,8 @@ public abstract class TileSet {
         cache.put(tile);
     }
 
-    public Tile[] getTilesForBBoxZoomRange(double minLat, double minLng, double maxLat, double maxLng, int minZoom, int maxZoom) {
-        TileCoord[] tileCoords = schema.getTileCoordsForBBoxZoomRange(minLat, minLng, maxLat, maxLng, minZoom, maxZoom);
-        Tile[] tiles = new Tile[tileCoords.length];
-        for (int i = 0; i < tiles.length; ++i) {
-            TileCoord coord = tileCoords[i];
-            Tile t = getTile(coord);
-            tiles[i] = t;
-        }
-        return tiles;
+    public TileIterator createIterator(double minLat, double minLng, double maxLat, double maxLng, int minZoom, int maxZoom) {
+        return new TileIterator(this, minLat, minLng, maxLat, maxLng, minZoom, maxZoom);
     }
 
     public Tile getTopLeftTile(Tile tile) {

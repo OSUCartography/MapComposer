@@ -54,25 +54,27 @@ public class CachePopulator {
         populate(DEFAULT_NUM_THREADS);
     }
     
+    // NH TODO
+    // Redo this so it works with TileIterator
     public void populate(int numThreads) {
-        System.out.println("Populating cache...");
-        Tile[] tiles = tileSet.getTilesForBBoxZoomRange(
-                minLat, minLng, maxLat, maxLng, minZoom, maxZoom);
-        int len = tiles.length;
-        int partitionSize = len / numThreads;
-        ExecutorService pool = Executors.newFixedThreadPool(numThreads);
-        Runnable worker;
-        int i = 0;
-        for(; i < numThreads; ++i) {
-            worker = new CachePopulatorThread(tiles, partitionSize*i, partitionSize*(i+1)-1);
-            pool.execute(worker);
-        }
-        // last one may have a few more tiles than the others
-        worker = new CachePopulatorThread(tiles, partitionSize*i, len-1);
-        pool.execute(worker);
-        pool.shutdown();
-        while (!pool.isTerminated()) {}
-        System.out.println("Finished populating cache!");
+//        System.out.println("Populating cache...");
+//        Tile[] tiles = tileSet.getTilesForBBoxZoomRange(
+//                minLat, minLng, maxLat, maxLng, minZoom, maxZoom);
+//        int len = tiles.length;
+//        int partitionSize = len / numThreads;
+//        ExecutorService pool = Executors.newFixedThreadPool(numThreads);
+//        Runnable worker;
+//        int i = 0;
+//        for(; i < numThreads; ++i) {
+//            worker = new CachePopulatorThread(tiles, partitionSize*i, partitionSize*(i+1)-1);
+//            pool.execute(worker);
+//        }
+//        // last one may have a few more tiles than the others
+//        worker = new CachePopulatorThread(tiles, partitionSize*i, len-1);
+//        pool.execute(worker);
+//        pool.shutdown();
+//        while (!pool.isTerminated()) {}
+//        System.out.println("Finished populating cache!");
     }
             
             
