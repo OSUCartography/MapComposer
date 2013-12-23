@@ -79,7 +79,7 @@ public class SQLiteCacheTest {
         try {
             url = new URL("http://a.tile.openstreetmap.org/12/785/1219.png");
 
-            TileSet tileSet = new HTTPTileSet("http://a.tile.openstreetmap.org/{z}/{x}/{y}.png");
+            TileSet tileSet = new TileSet("http://a.tile.openstreetmap.org/{z}/{x}/{y}.png");
             Tile t = tileSet.getTile(12, 785, 1219);
             sqliteCache.put(t);
 
@@ -100,7 +100,7 @@ public class SQLiteCacheTest {
     public void testGet() throws MalformedURLException, IOException {
         URL url = new URL("http://a.tile.openstreetmap.org/12/785/1219.png");
 
-        TileSet tileSet = new HTTPTileSet("http://a.tile.openstreetmap.org/{z}/{x}/{y}.png");
+        TileSet tileSet = new TileSet("http://a.tile.openstreetmap.org/{z}/{x}/{y}.png");
         Tile tile = sqliteCache.get(url, tileSet);
         ImageTile imageTile = (ImageTile)tile;
         BufferedImage image = imageTile.fetch();

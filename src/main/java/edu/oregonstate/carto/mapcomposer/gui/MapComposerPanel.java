@@ -15,6 +15,7 @@ import javax.swing.JSlider;
 import edu.oregonstate.carto.mapcomposer.Emboss;
 import edu.oregonstate.carto.mapcomposer.Shadow;
 import edu.oregonstate.carto.mapcomposer.Tint;
+import edu.oregonstate.carto.tilemanager.TileSet;
 import edu.oregonstate.carto.utils.FileUtils;
 import edu.oregonstate.carto.utils.GUIUtil;
 import javax.swing.JTextField;
@@ -109,18 +110,18 @@ public class MapComposerPanel extends javax.swing.JPanel {
         embossSoftnessFormattedTextField = new javax.swing.JFormattedTextField();
         settingsPanel = new javax.swing.JPanel();
         visibleCheckBox = new javax.swing.JCheckBox();
-        nameLabel = new javax.swing.JLabel();
+        javax.swing.JLabel nameLabel = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
-        urlLabel = new javax.swing.JLabel();
-        blendingModeLabel = new javax.swing.JLabel();
+        javax.swing.JLabel urlLabel = new javax.swing.JLabel();
+        javax.swing.JLabel blendingModeLabel = new javax.swing.JLabel();
         normalBlendingRadioButton = new javax.swing.JRadioButton();
         multiplyBlendingRadioButton = new javax.swing.JRadioButton();
-        opacityLabel = new javax.swing.JLabel();
+        javax.swing.JLabel opacityLabel = new javax.swing.JLabel();
         opacitySlider = new javax.swing.JSlider();
         curveFilePathTextField = new javax.swing.JTextField();
         curveFileButton = new javax.swing.JButton();
-        gradationCurveLabel = new javax.swing.JLabel();
-        tintLabel = new javax.swing.JLabel();
+        javax.swing.JLabel gradationCurveLabel = new javax.swing.JLabel();
+        javax.swing.JLabel tintLabel = new javax.swing.JLabel();
         tintCheckBox = new javax.swing.JCheckBox();
         tintColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
         jSeparator1 = new javax.swing.JSeparator();
@@ -676,7 +677,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridwidth = 2;
         settingsPanel.add(curveFileButton, gridBagConstraints);
 
-        gradationCurveLabel.setText("Gradation Curve (ACV):");
+        gradationCurveLabel.setText("Curve (ACV):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
@@ -721,6 +722,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
         settingsPanel.add(jSeparator1, gridBagConstraints);
 
+        urlTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
         // Listen for changes in the text
         addDocumentListener(urlTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -784,7 +786,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
     /**
      * Add a listener for changes to text fields. The listener calls readGUI()
      * whenever the text changes.
-     * @param textField 
+     *
+     * @param textField
      */
     private void addDocumentListener(JTextField textField) {
         textField.getDocument().addDocumentListener(new DocumentListener() {
@@ -1162,9 +1165,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
             this.visibleCheckBox.setSelected(selectedLayer.isVisible());
             this.nameTextField.setText(selectedLayer.getName());
-            // FIXME
-            this.urlTextField.setText(selectedLayer.getName());
-            // FIXME this.imageComboBox.setSelectedItem(selectedLayer.getImageName());
+            TileSet tileSet = selectedLayer.getImageTileSet();
+            if (tileSet == null) {
+                this.urlTextField.setText(null);
+            } else {
+                this.urlTextField.setText(tileSet.getUrlTemplate());
+            }
 
             // blending
             this.normalBlendingRadioButton.setSelected(selectedLayer.isBlendingNormal());
@@ -1279,7 +1285,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layer.setOpacity(this.opacitySlider.getValue() / 100.f);
         layer.setCurveURL(this.curveFilePathTextField.getText());
 
-        // FIXME layer.setImageName((String) this.imageComboBox.getSelectedItem());
+        TileSet tileSet = layer.getImageTileSet();
+        if (tileSet == null) {
+            tileSet = new TileSet(urlTextField.getText());
+        }
+        tileSet.setUrlTemplate(urlTextField.getText());
+        
         // mask
         // FIXME layer.setMaskName((String) this.maskComboBox.getSelectedItem());
         layer.setInvertMask(this.invertMaskCheckBox.isSelected());
@@ -1341,7 +1352,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addLayerButton;
     private javax.swing.ButtonGroup blendingButtonGroup;
-    private javax.swing.JLabel blendingModeLabel;
     private javax.swing.JPanel centralPanel;
     private javax.swing.JButton curveFileButton;
     private javax.swing.JTextField curveFilePathTextField;
@@ -1354,7 +1364,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JSlider embossHeightSlider;
     private javax.swing.JFormattedTextField embossSoftnessFormattedTextField;
     private javax.swing.JSlider embossSoftnessSlider;
-    private javax.swing.JLabel gradationCurveLabel;
     private javax.swing.JCheckBox invertMaskCheckBox;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
@@ -1366,10 +1375,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JButton moveDownLayerButton;
     private javax.swing.JButton moveUpLayerButton;
     private javax.swing.JRadioButton multiplyBlendingRadioButton;
-    private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JRadioButton normalBlendingRadioButton;
-    private javax.swing.JLabel opacityLabel;
     private javax.swing.JSlider opacitySlider;
     private javax.swing.JFormattedTextField opacityTextField;
     private javax.swing.JButton previewButton;
@@ -1389,8 +1396,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel textureURLLabel;
     private javax.swing.JCheckBox tintCheckBox;
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton tintColorButton;
-    private javax.swing.JLabel tintLabel;
-    private javax.swing.JLabel urlLabel;
     private javax.swing.JTextField urlTextField;
     private javax.swing.JCheckBox visibleCheckBox;
     // End of variables declaration//GEN-END:variables

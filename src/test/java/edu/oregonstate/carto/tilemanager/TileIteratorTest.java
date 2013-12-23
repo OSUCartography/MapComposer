@@ -8,19 +8,17 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author Nicholas Hallahan nick@theoutpost.io
  */
 public class TileIteratorTest {
-    HTTPTileSet topoSet;
+    TileSet topoSet;
     TileIterator corvallis1;
     
     public TileIteratorTest() {
-        topoSet = new HTTPTileSet("http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}");
+        topoSet = new TileSet("http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}");
         corvallis1 = new TileIterator(topoSet,
                 44.524538, -123.386676, 44.612849, -123.190727,
                 13,13);

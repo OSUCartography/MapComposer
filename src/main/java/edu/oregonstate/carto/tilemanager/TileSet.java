@@ -1,12 +1,31 @@
 package edu.oregonstate.carto.tilemanager;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author Nicholas Hallahan nick@theoutpost.io
  */
-public abstract class TileSet {
+public class TileSet {
+
+    /**
+     * Patterns used for replacing z, x, y formatting tokens to create a valid
+     * URL for a given tile. \\ is special esc char for regex
+     */
+    private final static Pattern Z_TOKEN = Pattern.compile("\\{z\\}");
+    private final static Pattern X_TOKEN = Pattern.compile("\\{x\\}");
+    private final static Pattern Y_TOKEN = Pattern.compile("\\{y\\}");
+
+    /**
+     * Format strings for fetching tiles should follow the following format:
+     * http://tile.openstreetmap.org/{z}/{x}/{y}.png
+     */
+    private String urlTemplate;
 
     /**
      * Tiles in the tile set can only be one type of tile. When constructing
@@ -21,31 +40,42 @@ public abstract class TileSet {
      * helps us decide what type of tile to construct.
      */
     private final TileType type;
-    
+
     /**
      * The cache is a content addressable object that will return a given tile
      * if it already has been created.
      */
     private final Cache cache;
     /**
-     * If the source tiles adhere to the TMS tile schema instead of
-     * the standard OpenStreetMap tile schema, we need to flip
-     * the y coordinate to our internal schema (OpenStreetMap schema)
+     * If the source tiles adhere to the TMS tile schema instead of the standard
+     * OpenStreetMap tile schema, we need to flip the y coordinate to our
+     * internal schema (OpenStreetMap schema)
      */
     protected final boolean tmsSchema;
 
-    public TileSet(Cache cache, TileType type, boolean tmsSchema) {
+    /**
+     * 
+     * @param urlTemplate 
+     * Examples: 
+     * http://tile.openstreetmap.org/{z}/{x}/{y}.png
+     * file://C:/Users/nick/Documents/TMS_tiles_MountHood/buildingMask/{z}/{x}/{y}.png
+     * @param cache
+     * @param type
+     * @param tmsSchema 
+     */
+    public TileSet(String urlTemplate, Cache cache, TileType type, boolean tmsSchema) {
+        this.urlTemplate = urlTemplate;
         this.type = type;
         this.cache = cache;
         this.tmsSchema = tmsSchema;
     }
 
-    public TileSet() {
-        this(MemCache.getInstance(), TileType.IMAGE, false);
+    public TileSet(String urlTemplate) {
+        this(urlTemplate, MemCache.getInstance(), TileType.IMAGE, false);
     }
-    
-    public TileSet(boolean sourceSchemaOpposite) {
-        this(MemCache.getInstance(), TileType.IMAGE, sourceSchemaOpposite);
+
+    public TileSet(String urlTemplate, boolean sourceSchemaOpposite) {
+        this(urlTemplate, MemCache.getInstance(), TileType.IMAGE, sourceSchemaOpposite);
     }
 
     /**
@@ -78,7 +108,27 @@ public abstract class TileSet {
      * @param y
      * @return URL
      */
-    public abstract URL urlForZXY(int z, int x, int y);
+    public URL urlForZXY(int z, int x, int y) {
+        if (tmsSchema) {
+            y = flipY(z, y);
+        }
+
+        try {
+            Matcher zMatch = Z_TOKEN.matcher(urlTemplate);
+            String urlStr = zMatch.replaceAll(String.valueOf(z));
+
+            Matcher xMatch = X_TOKEN.matcher(urlStr);
+            urlStr = xMatch.replaceAll(String.valueOf(x));
+
+            Matcher yMatch = Y_TOKEN.matcher(urlStr);
+            urlStr = yMatch.replaceAll(String.valueOf(y));
+
+            return new URL(urlStr);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(TileSet.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
 
     /**
      * This creates a new tile and puts it in the cache.
@@ -135,12 +185,13 @@ public abstract class TileSet {
         }
         return t;
     }
-    
+
     /**
-     * The content of tile has changed, the cache has to be updated if 
-     * if it uses serialized tiles. This method needs to be called when the
-     * tile data has been fetched.
-     * @param tile 
+     * The content of tile has changed, the cache has to be updated if if it
+     * uses serialized tiles. This method needs to be called when the tile data
+     * has been fetched.
+     *
+     * @param tile
      */
     protected void tileChanged(Tile tile) {
         cache.put(tile);
@@ -205,8 +256,22 @@ public abstract class TileSet {
         int z = tile.getZ();
         return getTile(z, x, y);
     }
-    
+
     public Cache getCache() {
         return cache;
+    }
+    
+    /**
+     * @return the urlTemplate
+     */
+    public String getUrlTemplate() {
+        return urlTemplate;
+    }
+
+    /**
+     * @param urlTemplate the urlTemplate to set
+     */
+    public void setUrlTemplate(String urlTemplate) {
+        this.urlTemplate = urlTemplate;
     }
 }

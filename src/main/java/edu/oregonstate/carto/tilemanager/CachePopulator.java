@@ -1,13 +1,6 @@
 package edu.oregonstate.carto.tilemanager;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -26,7 +19,7 @@ public class CachePopulator {
             double minLat, double minLng, double maxLat, double maxLng, 
             int minZoom, int maxZoom) {
     
-        TileSet tileSet = new HTTPTileSet(httpFormatString);
+        TileSet tileSet = new TileSet(httpFormatString);
         init(tileSet, minLat, minLng, maxLat, maxLng, minZoom, maxZoom);
     }
     

@@ -917,7 +917,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="gradationCurveLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Gradation Curve (ACV):"/>
+                <Property name="text" type="java.lang.String" value="Curve (ACV):"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
@@ -981,6 +981,9 @@
               </Constraints>
             </Component>
             <Component class="javax.swing.JTextField" name="urlTextField">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="http://tile.stamen.com/watercolor/{z}/{x}/{y}.png"/>
+              </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="// Listen for changes in the text&#xa;addDocumentListener(urlTextField);"/>
               </AuxValues>

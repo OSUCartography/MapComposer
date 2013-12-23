@@ -7,7 +7,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-Xmx2048m -classpath %classpath ${packageClassName}</exec.args>
+                <exec.args>-Xmx2048m -classpath %classpath edu.oregonstate.carto.mapcomposer.gui.Main</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>

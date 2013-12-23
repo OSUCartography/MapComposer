@@ -2,7 +2,7 @@ package edu.oregonstate.carto.mapcomposer.server;
 
 import edu.oregonstate.carto.mapcomposer.Layer;
 import edu.oregonstate.carto.mapcomposer.Map;
-import edu.oregonstate.carto.tilemanager.HTTPTileSet;
+import edu.oregonstate.carto.tilemanager.TileSet;
 import java.awt.image.BufferedImage;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -37,7 +37,7 @@ public class Cache {
             @QueryParam("source") String source) { //NH Why does this work? Numbers are put in the format.
 
         Map map = new Map();
-        HTTPTileSet tileSet = new HTTPTileSet(source);
+        TileSet tileSet = new TileSet(source);
         Layer layer = new Layer();
         layer.setImageTileSet(tileSet);
         map.addLayer(layer);

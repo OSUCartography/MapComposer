@@ -2,13 +2,8 @@ package edu.oregonstate.carto.mapcomposer.server;
 
 import edu.oregonstate.carto.mapcomposer.Layer;
 import edu.oregonstate.carto.mapcomposer.Map;
-import edu.oregonstate.carto.tilemanager.FileTileSet;
-import edu.oregonstate.carto.tilemanager.HTTPTileSet;
-import edu.oregonstate.carto.tilemanager.SQLiteCache;
+import edu.oregonstate.carto.tilemanager.TileSet;
 import java.awt.image.BufferedImage;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
@@ -30,39 +25,32 @@ public class RestAPIExample1 {
     private UriInfo context;
     
     private Map map;
-    private HTTPTileSet esriSatelliteSet, watercolorSet;
-    private FileTileSet glacierMask;
+    private TileSet esriSatelliteSet, watercolorSet;
     private Layer layer1, layer2;
 
     public RestAPIExample1() {
         map = new Map();
         
-        esriSatelliteSet = new HTTPTileSet("http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
+        esriSatelliteSet = new TileSet("http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
 //        esriSatelliteSet = new HTTPTileSet(
 //                "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 //                SQLiteCache.getInstance(),
 //                TileSet.TileType.IMAGE,
 //                false);
         
-        watercolorSet = new HTTPTileSet("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
+        watercolorSet = new TileSet("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
 //        watercolorSet = new HTTPTileSet(
 //                "http://tile.stamen.com/watercolor/{z}/{x}/{y}.png",
 //                SQLiteCache.getInstance(),
 //                TileSet.TileType.IMAGE,
 //                false);
-        
-        
-        try {
-            glacierMask = new FileTileSet("data/TMS_tiles_MountHood/glacierMask", true);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(RestAPIExample1.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //glacierMask = new FileTileSet("data/TMS_tiles_MountHood/glacierMask", true);
         
         layer1 = new Layer();
         layer2 = new Layer();
         layer1.setImageTileSet(esriSatelliteSet);
         layer2.setImageTileSet(watercolorSet);
-        layer2.setMaskTileSet(glacierMask);
+        //layer2.setMaskTileSet(glacierMask);
         map.addLayer(layer1);
         map.addLayer(layer2);
     }
