@@ -17,6 +17,9 @@ import edu.oregonstate.carto.mapcomposer.Shadow;
 import edu.oregonstate.carto.mapcomposer.Tint;
 import edu.oregonstate.carto.utils.FileUtils;
 import edu.oregonstate.carto.utils.GUIUtil;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class MapComposerPanel extends javax.swing.JPanel {
 
@@ -30,7 +33,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * recursive calls to event handlers.
      */
     private boolean updating = false;
-    
+
     /**
      * Creates new form MapComposerPanel
      */
@@ -59,26 +62,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         blendingButtonGroup = new javax.swing.ButtonGroup();
-        previewButton = new javax.swing.JButton();
-        settingsPanel = new javax.swing.JPanel();
-        visibleCheckBox = new javax.swing.JCheckBox();
-        javax.swing.JLabel nameLabel = new javax.swing.JLabel();
-        nameTextField = new javax.swing.JTextField();
-        javax.swing.JLabel urlLabel = new javax.swing.JLabel();
-        javax.swing.JLabel blendingModeLabel = new javax.swing.JLabel();
-        normalBlendingRadioButton = new javax.swing.JRadioButton();
-        multiplyBlendingRadioButton = new javax.swing.JRadioButton();
-        javax.swing.JLabel opacityLabel = new javax.swing.JLabel();
-        opacitySlider = new javax.swing.JSlider();
-        curveFilePathTextField = new javax.swing.JTextField();
-        curveFileButton = new javax.swing.JButton();
-        javax.swing.JLabel gradationCurveLabel = new javax.swing.JLabel();
-        javax.swing.JLabel tintLabel = new javax.swing.JLabel();
-        tintCheckBox = new javax.swing.JCheckBox();
-        tintColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        urlTextField = new javax.swing.JTextField();
-        opacityTextField = new javax.swing.JFormattedTextField();
+        layersPanel = new javax.swing.JPanel();
+        javax.swing.JLabel layersLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        layerList = new edu.oregonstate.carto.mapcomposer.gui.DraggableList();
+        layerListToolBar = new javax.swing.JToolBar();
+        addLayerButton = new javax.swing.JButton();
+        removeLayerButton = new javax.swing.JButton();
+        moveUpLayerButton = new javax.swing.JButton();
+        moveDownLayerButton = new javax.swing.JButton();
+        centralPanel = new javax.swing.JPanel();
         javax.swing.JTabbedPane settingsTabbedPane = new javax.swing.JTabbedPane();
         javax.swing.JPanel texturePanel = new TransparentMacPanel();
         textureSelectionButton = new javax.swing.JButton();
@@ -114,238 +107,102 @@ public class MapComposerPanel extends javax.swing.JPanel {
         embossElevationFormattedTextField = new javax.swing.JFormattedTextField();
         embossHeightFormattedTextField = new javax.swing.JFormattedTextField();
         embossSoftnessFormattedTextField = new javax.swing.JFormattedTextField();
-        layersPanel = new javax.swing.JPanel();
-        javax.swing.JLabel layersLabel = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        layerList = new edu.oregonstate.carto.mapcomposer.gui.DraggableList();
-        layerListToolBar = new javax.swing.JToolBar();
-        addLayerButton = new javax.swing.JButton();
-        removeLayerButton = new javax.swing.JButton();
-        moveUpLayerButton = new javax.swing.JButton();
-        moveDownLayerButton = new javax.swing.JButton();
+        settingsPanel = new javax.swing.JPanel();
+        visibleCheckBox = new javax.swing.JCheckBox();
+        nameLabel = new javax.swing.JLabel();
+        nameTextField = new javax.swing.JTextField();
+        urlLabel = new javax.swing.JLabel();
+        blendingModeLabel = new javax.swing.JLabel();
+        normalBlendingRadioButton = new javax.swing.JRadioButton();
+        multiplyBlendingRadioButton = new javax.swing.JRadioButton();
+        opacityLabel = new javax.swing.JLabel();
+        opacitySlider = new javax.swing.JSlider();
+        curveFilePathTextField = new javax.swing.JTextField();
+        curveFileButton = new javax.swing.JButton();
+        gradationCurveLabel = new javax.swing.JLabel();
+        tintLabel = new javax.swing.JLabel();
+        tintCheckBox = new javax.swing.JCheckBox();
+        tintColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        urlTextField = new javax.swing.JTextField();
+        opacityTextField = new javax.swing.JFormattedTextField();
+        javax.swing.JTextField urlHintTextField = new javax.swing.JTextField();
+        southPanel = new javax.swing.JPanel();
+        previewButton = new javax.swing.JButton();
 
-        setLayout(new java.awt.GridBagLayout());
+        setLayout(new java.awt.BorderLayout());
 
-        previewButton.setText("Preview");
-        previewButton.addActionListener(new java.awt.event.ActionListener() {
+        layersPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        layersPanel.setLayout(new java.awt.BorderLayout());
+
+        layersLabel.setText("Layers");
+        layersLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 10, 1));
+        layersPanel.add(layersLabel, java.awt.BorderLayout.PAGE_START);
+
+        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(200, 132));
+
+        layerList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        layerList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                layerListValueChanged(evt);
+            }
+        });
+        jScrollPane2.setViewportView(layerList);
+
+        layersPanel.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
+        layerListToolBar.setFloatable(false);
+
+        addLayerButton.setText("+");
+        addLayerButton.setMaximumSize(new java.awt.Dimension(22, 22));
+        addLayerButton.setMinimumSize(new java.awt.Dimension(22, 22));
+        addLayerButton.setPreferredSize(new java.awt.Dimension(22, 22));
+        addLayerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                previewButtonActionPerformed(evt);
+                addLayerButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        add(previewButton, gridBagConstraints);
+        layerListToolBar.add(addLayerButton);
 
-        settingsPanel.setLayout(new java.awt.GridBagLayout());
-
-        visibleCheckBox.setText("Visible");
-        visibleCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        visibleCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        visibleCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        removeLayerButton.setText("-");
+        removeLayerButton.setMaximumSize(new java.awt.Dimension(22, 22));
+        removeLayerButton.setMinimumSize(new java.awt.Dimension(22, 22));
+        removeLayerButton.setPreferredSize(new java.awt.Dimension(22, 22));
+        removeLayerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
+                removeLayerButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        settingsPanel.add(visibleCheckBox, gridBagConstraints);
+        layerListToolBar.add(removeLayerButton);
 
-        nameLabel.setText("Name:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        settingsPanel.add(nameLabel, gridBagConstraints);
-
-        nameTextField.setText("Forest");
-        nameTextField.addActionListener(new java.awt.event.ActionListener() {
+        moveUpLayerButton.setText("Up");
+        moveUpLayerButton.setMaximumSize(new java.awt.Dimension(45, 22));
+        moveUpLayerButton.setMinimumSize(new java.awt.Dimension(45, 22));
+        moveUpLayerButton.setPreferredSize(new java.awt.Dimension(45, 22));
+        moveUpLayerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameTextFieldActionPerformed(evt);
+                moveUpLayerButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        settingsPanel.add(nameTextField, gridBagConstraints);
+        layerListToolBar.add(moveUpLayerButton);
 
-        urlLabel.setText("URL:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        settingsPanel.add(urlLabel, gridBagConstraints);
-
-        blendingModeLabel.setText("Blending Mode:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        settingsPanel.add(blendingModeLabel, gridBagConstraints);
-
-        blendingButtonGroup.add(normalBlendingRadioButton);
-        normalBlendingRadioButton.setText("Normal");
-        normalBlendingRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        normalBlendingRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        normalBlendingRadioButton.addActionListener(new java.awt.event.ActionListener() {
+        moveDownLayerButton.setText("Down");
+        moveDownLayerButton.setMaximumSize(new java.awt.Dimension(45, 22));
+        moveDownLayerButton.setMinimumSize(new java.awt.Dimension(45, 22));
+        moveDownLayerButton.setPreferredSize(new java.awt.Dimension(45, 22));
+        moveDownLayerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
+                moveDownLayerButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        settingsPanel.add(normalBlendingRadioButton, gridBagConstraints);
+        layerListToolBar.add(moveDownLayerButton);
 
-        blendingButtonGroup.add(multiplyBlendingRadioButton);
-        multiplyBlendingRadioButton.setText("Multiply");
-        multiplyBlendingRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        multiplyBlendingRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        multiplyBlendingRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        settingsPanel.add(multiplyBlendingRadioButton, gridBagConstraints);
+        layersPanel.add(layerListToolBar, java.awt.BorderLayout.PAGE_END);
 
-        opacityLabel.setText("Opacity:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        settingsPanel.add(opacityLabel, gridBagConstraints);
+        add(layersPanel, java.awt.BorderLayout.WEST);
 
-        opacitySlider.setValue(100);
-        opacitySlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                sliderStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        settingsPanel.add(opacitySlider, gridBagConstraints);
-
-        curveFilePathTextField.setText("file:///Volumes/FireWireHD/Java/MapComposer/data/forestcurve.acv");
-        curveFilePathTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        settingsPanel.add(curveFilePathTextField, gridBagConstraints);
-
-        curveFileButton.setText("File");
-        curveFileButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                curveFileButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 2;
-        settingsPanel.add(curveFileButton, gridBagConstraints);
-
-        gradationCurveLabel.setText("Gradation Curve (ACV):");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        settingsPanel.add(gradationCurveLabel, gridBagConstraints);
-
-        tintLabel.setText("Tint:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        settingsPanel.add(tintLabel, gridBagConstraints);
-
-        tintCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        tintCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        tintCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        settingsPanel.add(tintCheckBox, gridBagConstraints);
-
-        tintColorButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        settingsPanel.add(tintColorButton, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
-        settingsPanel.add(jSeparator1, gridBagConstraints);
-
-        urlTextField.setText("url");
-        urlTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                urlTextFieldActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        settingsPanel.add(urlTextField, gridBagConstraints);
-
-        opacityTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
-        opacityTextField.setPreferredSize(new java.awt.Dimension(60, 28));
-        javax.swing.text.NumberFormatter nf = new javax.swing.text.NumberFormatter();
-        nf.setMinimum(0);
-        nf.setMaximum(100);
-        opacityTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nf));
-        opacityTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                numberFieldChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        settingsPanel.add(opacityTextField, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 10, 20, 10);
-        add(settingsPanel, gridBagConstraints);
+        centralPanel.setLayout(new java.awt.GridBagLayout());
 
         texturePanel.setLayout(new java.awt.GridBagLayout());
 
@@ -689,112 +546,267 @@ public class MapComposerPanel extends javax.swing.JPanel {
         settingsTabbedPane.addTab("Emboss", embossPanel);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(settingsTabbedPane, gridBagConstraints);
+        centralPanel.add(settingsTabbedPane, gridBagConstraints);
 
-        layersPanel.setLayout(new java.awt.BorderLayout());
+        settingsPanel.setLayout(new java.awt.GridBagLayout());
 
-        layersLabel.setText("Layers");
-        layersLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 10, 1));
-        layersPanel.add(layersLabel, java.awt.BorderLayout.PAGE_START);
-
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(200, 132));
-
-        layerList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        layerList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                layerListValueChanged(evt);
-            }
-        });
-        jScrollPane2.setViewportView(layerList);
-
-        layersPanel.add(jScrollPane2, java.awt.BorderLayout.CENTER);
-
-        layerListToolBar.setFloatable(false);
-
-        addLayerButton.setText("+");
-        addLayerButton.setMaximumSize(new java.awt.Dimension(22, 22));
-        addLayerButton.setMinimumSize(new java.awt.Dimension(22, 22));
-        addLayerButton.setPreferredSize(new java.awt.Dimension(22, 22));
-        addLayerButton.addActionListener(new java.awt.event.ActionListener() {
+        visibleCheckBox.setText("Visible");
+        visibleCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        visibleCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        visibleCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addLayerButtonActionPerformed(evt);
+                MapComposerPanel.this.actionPerformed(evt);
             }
         });
-        layerListToolBar.add(addLayerButton);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        settingsPanel.add(visibleCheckBox, gridBagConstraints);
 
-        removeLayerButton.setText("-");
-        removeLayerButton.setMaximumSize(new java.awt.Dimension(22, 22));
-        removeLayerButton.setMinimumSize(new java.awt.Dimension(22, 22));
-        removeLayerButton.setPreferredSize(new java.awt.Dimension(22, 22));
-        removeLayerButton.addActionListener(new java.awt.event.ActionListener() {
+        nameLabel.setText("Name:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        settingsPanel.add(nameLabel, gridBagConstraints);
+
+        nameTextField.setText("Forest");
+        // Listen for changes in the text
+        addDocumentListener(nameTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        settingsPanel.add(nameTextField, gridBagConstraints);
+
+        urlLabel.setText("URL:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        settingsPanel.add(urlLabel, gridBagConstraints);
+
+        blendingModeLabel.setText("Blending Mode:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        settingsPanel.add(blendingModeLabel, gridBagConstraints);
+
+        blendingButtonGroup.add(normalBlendingRadioButton);
+        normalBlendingRadioButton.setText("Normal");
+        normalBlendingRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        normalBlendingRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        normalBlendingRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeLayerButtonActionPerformed(evt);
+                MapComposerPanel.this.actionPerformed(evt);
             }
         });
-        layerListToolBar.add(removeLayerButton);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        settingsPanel.add(normalBlendingRadioButton, gridBagConstraints);
 
-        moveUpLayerButton.setText("Up");
-        moveUpLayerButton.setMaximumSize(new java.awt.Dimension(45, 22));
-        moveUpLayerButton.setMinimumSize(new java.awt.Dimension(45, 22));
-        moveUpLayerButton.setPreferredSize(new java.awt.Dimension(45, 22));
-        moveUpLayerButton.addActionListener(new java.awt.event.ActionListener() {
+        blendingButtonGroup.add(multiplyBlendingRadioButton);
+        multiplyBlendingRadioButton.setText("Multiply");
+        multiplyBlendingRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        multiplyBlendingRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        multiplyBlendingRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                moveUpLayerButtonActionPerformed(evt);
+                MapComposerPanel.this.actionPerformed(evt);
             }
         });
-        layerListToolBar.add(moveUpLayerButton);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        settingsPanel.add(multiplyBlendingRadioButton, gridBagConstraints);
 
-        moveDownLayerButton.setText("Down");
-        moveDownLayerButton.setMaximumSize(new java.awt.Dimension(45, 22));
-        moveDownLayerButton.setMinimumSize(new java.awt.Dimension(45, 22));
-        moveDownLayerButton.setPreferredSize(new java.awt.Dimension(45, 22));
-        moveDownLayerButton.addActionListener(new java.awt.event.ActionListener() {
+        opacityLabel.setText("Opacity:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        settingsPanel.add(opacityLabel, gridBagConstraints);
+
+        opacitySlider.setValue(100);
+        opacitySlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sliderStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        settingsPanel.add(opacitySlider, gridBagConstraints);
+
+        curveFilePathTextField.setEditable(false);
+        curveFilePathTextField.setBackground(null);
+        curveFilePathTextField.setFont(curveFilePathTextField.getFont().deriveFont((float)10));
+        curveFilePathTextField.setText("file:///Volumes/FireWireHD/Java/MapComposer/data/forestcurve.acv");
+        curveFilePathTextField.setBorder(null);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        settingsPanel.add(curveFilePathTextField, gridBagConstraints);
+
+        curveFileButton.setText("File");
+        curveFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                moveDownLayerButtonActionPerformed(evt);
+                curveFileButtonActionPerformed(evt);
             }
         });
-        layerListToolBar.add(moveDownLayerButton);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 2;
+        settingsPanel.add(curveFileButton, gridBagConstraints);
 
-        layersPanel.add(layerListToolBar, java.awt.BorderLayout.PAGE_END);
+        gradationCurveLabel.setText("Gradation Curve (ACV):");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        settingsPanel.add(gradationCurveLabel, gridBagConstraints);
+
+        tintLabel.setText("Tint:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        settingsPanel.add(tintLabel, gridBagConstraints);
+
+        tintCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        tintCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        tintCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MapComposerPanel.this.actionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        settingsPanel.add(tintCheckBox, gridBagConstraints);
+
+        tintColorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MapComposerPanel.this.actionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        settingsPanel.add(tintColorButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        settingsPanel.add(jSeparator1, gridBagConstraints);
+
+        // Listen for changes in the text
+        addDocumentListener(urlTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        settingsPanel.add(urlTextField, gridBagConstraints);
+
+        opacityTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
+        opacityTextField.setPreferredSize(new java.awt.Dimension(60, 28));
+        javax.swing.text.NumberFormatter nf = new javax.swing.text.NumberFormatter();
+        nf.setMinimum(0);
+        nf.setMaximum(100);
+        opacityTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nf));
+        opacityTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                numberFieldChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        settingsPanel.add(opacityTextField, gridBagConstraints);
+
+        urlHintTextField.setEditable(false);
+        urlHintTextField.setBackground(null);
+        urlHintTextField.setFont(urlHintTextField.getFont().deriveFont((float)10));
+        urlHintTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
+        urlHintTextField.setBorder(null);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        settingsPanel.add(urlHintTextField, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 13);
-        add(layersPanel, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 20, 10);
+        centralPanel.add(settingsPanel, gridBagConstraints);
+
+        add(centralPanel, java.awt.BorderLayout.CENTER);
+
+        southPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        previewButton.setText("Preview");
+        previewButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previewButtonActionPerformed(evt);
+            }
+        });
+        southPanel.add(previewButton);
+
+        add(southPanel, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Event handler for selecting a Photoshop ACV curve file.
-     *
-     * @param evt
+     * Add a listener for changes to text fields. The listener calls readGUI()
+     * whenever the text changes.
+     * @param textField 
      */
-    private void curveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_curveFileButtonActionPerformed
-        String msg = "Select an Adobe Photoshop ACV File";
-        String filePath = FileUtils.askFile(GUIUtil.getOwnerFrame(this), msg, true);
-        if (filePath == null) {
-            return;
-        }
-        this.curveFilePathTextField.setText("file://" + filePath);
-        this.readGUI();
-    }//GEN-LAST:event_curveFileButtonActionPerformed
+    private void addDocumentListener(JTextField textField) {
+        textField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // text was changed
+                readGUI();
+            }
 
-    /**
-     * Event handler for changing the name of a layer.
-     *
-     * @param evt
-     */
-    private void nameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameTextFieldActionPerformed
-        this.readGUI();
-        // update layers list to reflect new name.
-        this.writeGUI();
-    }//GEN-LAST:event_nameTextFieldActionPerformed
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                // text was deleted
+                readGUI();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                // text was inserted
+                readGUI();
+            }
+        });
+    }
 
     /**
      * Event handler for moving a layer downwards in the layers hierarchy.
@@ -849,33 +861,33 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
-    /*    try {
-            this.readGUI();
+        /*    try {
+         this.readGUI();
 
-            if (this.imageCollection instanceof DirectoryImageCollection) {
-                MapTileGenerator generator = new MapTileGenerator(getMap(), imageCollection);
-                BufferedImage image = generator.createTile("map");
-                ika.utils.ImageUtils.displayImageInWindow(image);
-            } else if (this.imageCollection instanceof TiledImageCollection) {
+         if (this.imageCollection instanceof DirectoryImageCollection) {
+         MapTileGenerator generator = new MapTileGenerator(getMap(), imageCollection);
+         BufferedImage image = generator.createTile("map");
+         ika.utils.ImageUtils.displayImageInWindow(image);
+         } else if (this.imageCollection instanceof TiledImageCollection) {
 
-                //Writing resulting tiles to a temporary directory.
-                File tempTilesDir = FileUtils.createTempDirectory();
-                MapTileGenerator generator = new MapTileGenerator(map, this.imageCollection);
-                map.setTiledImage(new TiledImage(tempTilesDir.getAbsolutePath()));
-                File refDir = ((TiledImageCollection) (imageCollection)).getRefDir();
-                map.getTiledImage().createTiledImage(refDir, true, generator, null);
+         //Writing resulting tiles to a temporary directory.
+         File tempTilesDir = FileUtils.createTempDirectory();
+         MapTileGenerator generator = new MapTileGenerator(map, this.imageCollection);
+         map.setTiledImage(new TiledImage(tempTilesDir.getAbsolutePath()));
+         File refDir = ((TiledImageCollection) (imageCollection)).getRefDir();
+         map.getTiledImage().createTiledImage(refDir, true, generator, null);
 
-                File styleFile = new File(tempTilesDir, FileUtils.getFileNameWithoutExtension(tempTilesDir.getName()));
-                this.map.marshal(styleFile.getAbsolutePath() + ".xml");
+         File styleFile = new File(tempTilesDir, FileUtils.getFileNameWithoutExtension(tempTilesDir.getName()));
+         this.map.marshal(styleFile.getAbsolutePath() + ".xml");
 
-                //Display results in a webpage
-                File htmlFile = copyHTML(tempTilesDir.getPath());
-                Desktop.getDesktop().browse(htmlFile.toURI());
-            }
+         //Display results in a webpage
+         File htmlFile = copyHTML(tempTilesDir.getPath());
+         Desktop.getDesktop().browse(htmlFile.toURI());
+         }
 
-        } catch (Exception exc) {
-            ErrorDialog.showErrorDialog("Could not render the preview", exc);
-        }*/
+         } catch (Exception exc) {
+         ErrorDialog.showErrorDialog("Could not render the preview", exc);
+         }*/
     }//GEN-LAST:event_previewButtonActionPerformed
 
     /**
@@ -975,27 +987,27 @@ public class MapComposerPanel extends javax.swing.JPanel {
      */
     private void textureSelectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textureSelectionButtonActionPerformed
         /*try {
-            String path = null;
-            if (imageCollection instanceof DirectoryImageCollection) {
-                String msg = "Select a Texture Image Tile";
-                path = FileUtils.askFile(GUIUtil.getOwnerFrame(this), msg, true);
-            } else if (imageCollection instanceof TiledImageCollection) {
-                String msg = "Select a Directory with a Texture Tile Set";
-                path = FileUtils.askDirectory(GUIUtil.getOwnerFrame(this), msg, true, null);
-            }
-            if (path != null) {
-                MapLayer layer = getSelectedMapLayer();
-                if (layer != null) {
-                    layer.setTextureURL(path);
-                }
-                writeGUI();
-            }
-        } catch (Exception ex) {
-            String msg = "Error";
-            String title = "The texture could not be loaded.";
-            ErrorDialog.showErrorDialog(msg, title, ex, this);
-        }
-    */
+         String path = null;
+         if (imageCollection instanceof DirectoryImageCollection) {
+         String msg = "Select a Texture Image Tile";
+         path = FileUtils.askFile(GUIUtil.getOwnerFrame(this), msg, true);
+         } else if (imageCollection instanceof TiledImageCollection) {
+         String msg = "Select a Directory with a Texture Tile Set";
+         path = FileUtils.askDirectory(GUIUtil.getOwnerFrame(this), msg, true, null);
+         }
+         if (path != null) {
+         MapLayer layer = getSelectedMapLayer();
+         if (layer != null) {
+         layer.setTextureURL(path);
+         }
+         writeGUI();
+         }
+         } catch (Exception ex) {
+         String msg = "Error";
+         String title = "The texture could not be loaded.";
+         ErrorDialog.showErrorDialog(msg, title, ex, this);
+         }
+         */
     }//GEN-LAST:event_textureSelectionButtonActionPerformed
 
     /**
@@ -1011,10 +1023,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         writeGUI();
     }//GEN-LAST:event_textureClearButtonActionPerformed
 
-    private void urlTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_urlTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_urlTextFieldActionPerformed
-
     private void numberFieldChanged(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_numberFieldChanged
         if (this.updating || "value".equals(evt.getPropertyName()) == false) {
             return;
@@ -1024,10 +1032,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         try {
             int opacity = ((Number) opacityTextField.getValue()).intValue();
             this.opacitySlider.setValue(opacity);
-            
-            float textureScale = ((Number)textureScaleFormattedTextField.getValue()).floatValue();
+
+            float textureScale = ((Number) textureScaleFormattedTextField.getValue()).floatValue();
             this.writeTextureScale(textureScale);
-            
+
             int embossAzimuth = ((Number) embossAzimuthFormattedTextField.getValue()).intValue();
             int embossElevation = ((Number) embossElevationFormattedTextField.getValue()).intValue();
             int embossHeight = ((Number) embossHeightFormattedTextField.getValue()).intValue();
@@ -1036,11 +1044,26 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.embossElevationSlider.setValue(embossElevation);
             this.embossHeightSlider.setValue(embossHeight);
             this.embossSoftnessSlider.setValue(embossSoftness);
-            
+
         } finally {
             this.updating = false;
         }
     }//GEN-LAST:event_numberFieldChanged
+
+    /**
+     * Event handler for selecting a Photoshop ACV curve file.
+     *
+     * @param evt
+     */
+    private void curveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_curveFileButtonActionPerformed
+        String msg = "Select an Adobe Photoshop ACV File";
+        String filePath = FileUtils.askFile(GUIUtil.getOwnerFrame(this), msg, true);
+        if (filePath == null) {
+            return;
+        }
+        this.curveFilePathTextField.setText("file://" + filePath);
+        this.readGUI();
+    }//GEN-LAST:event_curveFileButtonActionPerformed
 
     /**
      * Updates the value of the texture scale slider
@@ -1148,7 +1171,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
             // opacity
             this.opacitySlider.setValue((int) (selectedLayer.getOpacity() * 100));
-            this.opacityTextField.setValue((int)(selectedLayer.getOpacity() * 100));
+            this.opacityTextField.setValue((int) (selectedLayer.getOpacity() * 100));
 
             // curve
             this.curveFilePathTextField.setText(selectedLayer.getCurveURL());
@@ -1212,28 +1235,28 @@ public class MapComposerPanel extends javax.swing.JPanel {
      */
     private void previewTexture() {
         /*
-        // tiled textures are not currently supported
-        if (imageCollection instanceof DirectoryImageCollection == false) {
-            texturePreviewLabel.setIcon(null);
-            return;
-        }
-        String textureURL = getSelectedMapLayer().getTextureURL();
-        if (textureURL == null) {
-            texturePreviewLabel.setIcon(null);
-            return;
-        }
-        try {
-            int h = texturePreviewLabel.getHeight();
-            int w = texturePreviewLabel.getWidth();
-            BufferedImage texturePatch = ImageIO.read(new File(textureURL));
-            TileImageFilter tiler = new TileImageFilter(w, h);
-            BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-            img = tiler.filter(texturePatch, img);
-            texturePreviewLabel.setIcon(new ImageIcon(img));
-        } catch (Exception ex) {
-            texturePreviewLabel.setIcon(null);
-        }
-        */ 
+         // tiled textures are not currently supported
+         if (imageCollection instanceof DirectoryImageCollection == false) {
+         texturePreviewLabel.setIcon(null);
+         return;
+         }
+         String textureURL = getSelectedMapLayer().getTextureURL();
+         if (textureURL == null) {
+         texturePreviewLabel.setIcon(null);
+         return;
+         }
+         try {
+         int h = texturePreviewLabel.getHeight();
+         int w = texturePreviewLabel.getWidth();
+         BufferedImage texturePatch = ImageIO.read(new File(textureURL));
+         TileImageFilter tiler = new TileImageFilter(w, h);
+         BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+         img = tiler.filter(texturePatch, img);
+         texturePreviewLabel.setIcon(new ImageIcon(img));
+         } catch (Exception ex) {
+         texturePreviewLabel.setIcon(null);
+         }
+         */
     }
 
     /**
@@ -1249,15 +1272,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
             return;
         }
 
-        layer.setVisible(this.visibleCheckBox.isSelected());
-        layer.setName(this.nameTextField.getText());
+        layer.setVisible(visibleCheckBox.isSelected());
+        layer.setName(nameTextField.getText());
         layer.setBlending(this.normalBlendingRadioButton.isSelected()
                 ? Layer.BlendType.NORMAL : Layer.BlendType.MULTIPLY);
         layer.setOpacity(this.opacitySlider.getValue() / 100.f);
         layer.setCurveURL(this.curveFilePathTextField.getText());
 
         // FIXME layer.setImageName((String) this.imageComboBox.getSelectedItem());
-
         // mask
         // FIXME layer.setMaskName((String) this.maskComboBox.getSelectedItem());
         layer.setInvertMask(this.invertMaskCheckBox.isSelected());
@@ -1286,7 +1308,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
             layer.setShadow(null);
         }
 
-
         // emboss
         if (this.embossCheckBox.isSelected()) {
             Emboss emboss = new Emboss();
@@ -1306,20 +1327,22 @@ public class MapComposerPanel extends javax.swing.JPanel {
         // FIXME org.apache.commons.io.FileUtils.copyURLToFile(inputUrl, dest);
         return dest;
     }
-    
+
     public Map getMap() {
         return map;
     }
 
     public void setMap(Map map) {
         this.map = map;
-        layerList.setSelectedIndex(layerList.getFirstVisibleIndex());        
+        layerList.setSelectedIndex(layerList.getFirstVisibleIndex());
         this.writeGUI();
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addLayerButton;
     private javax.swing.ButtonGroup blendingButtonGroup;
+    private javax.swing.JLabel blendingModeLabel;
+    private javax.swing.JPanel centralPanel;
     private javax.swing.JButton curveFileButton;
     private javax.swing.JTextField curveFilePathTextField;
     private javax.swing.JFormattedTextField embossAzimuthFormattedTextField;
@@ -1331,6 +1354,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JSlider embossHeightSlider;
     private javax.swing.JFormattedTextField embossSoftnessFormattedTextField;
     private javax.swing.JSlider embossSoftnessSlider;
+    private javax.swing.JLabel gradationCurveLabel;
     private javax.swing.JCheckBox invertMaskCheckBox;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
@@ -1342,8 +1366,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JButton moveDownLayerButton;
     private javax.swing.JButton moveUpLayerButton;
     private javax.swing.JRadioButton multiplyBlendingRadioButton;
+    private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JRadioButton normalBlendingRadioButton;
+    private javax.swing.JLabel opacityLabel;
     private javax.swing.JSlider opacitySlider;
     private javax.swing.JFormattedTextField opacityTextField;
     private javax.swing.JButton previewButton;
@@ -1354,6 +1380,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JSlider shadowFuziSlider;
     private javax.swing.JLabel shadowOffsetLabel;
     private javax.swing.JSlider shadowOffsetSlider;
+    private javax.swing.JPanel southPanel;
     private javax.swing.JButton textureClearButton;
     private javax.swing.JLabel texturePreviewLabel;
     private javax.swing.JFormattedTextField textureScaleFormattedTextField;
@@ -1362,6 +1389,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel textureURLLabel;
     private javax.swing.JCheckBox tintCheckBox;
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton tintColorButton;
+    private javax.swing.JLabel tintLabel;
+    private javax.swing.JLabel urlLabel;
     private javax.swing.JTextField urlTextField;
     private javax.swing.JCheckBox visibleCheckBox;
     // End of variables declaration//GEN-END:variables

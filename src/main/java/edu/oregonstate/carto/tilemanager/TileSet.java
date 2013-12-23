@@ -28,7 +28,7 @@ public abstract class TileSet {
      */
     private final Cache cache;
     /**
-     * If the source tiles adhere to the obscure TMS tile schema instead of
+     * If the source tiles adhere to the TMS tile schema instead of
      * the standard OpenStreetMap tile schema, we need to flip
      * the y coordinate to our internal schema (OpenStreetMap schema)
      */

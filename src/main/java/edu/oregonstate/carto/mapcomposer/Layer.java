@@ -24,8 +24,10 @@ import javax.imageio.ImageIO;
 import javax.xml.bind.annotation.XmlElement;
 
 /**
- *
+ * A map layer.
  * @author Nicholas Hallahan nick@theoutpost.io
+ * @author Bernhard Jenny, Cartography and Geovisualization Group, Oregon State
+ * University
  */
 public class Layer {
 
@@ -476,5 +478,10 @@ public class Layer {
      */
     public void setEmboss(Emboss emboss) {
         this.emboss = emboss;
+    }
+    
+    @Override
+    public String toString() {
+        return getName();
     }
 }

@@ -7,11 +7,7 @@ package edu.oregonstate.carto.mapcomposer.gui;
 
 import edu.oregonstate.carto.mapcomposer.Map;
 import edu.oregonstate.carto.utils.FileUtils;
-import java.awt.Desktop;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 /**
  * Main window for composing a map consisting of multiple layers. The UI
@@ -52,7 +48,6 @@ public class MapComposerFrame extends javax.swing.JFrame {
         createTextureMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
 
         mapComposerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
         getContentPane().add(mapComposerPanel, java.awt.BorderLayout.CENTER);
