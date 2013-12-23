@@ -1,5 +1,6 @@
 package edu.oregonstate.carto.tilemanager;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -53,6 +54,10 @@ public class TileSet {
      */
     protected final boolean tmsSchema;
 
+    public static TileSet createFileTileSet(File directory) {
+        String urlTemplate = "file://" + directory.getAbsolutePath() + "/{z}/{x}/{y}.png";
+        return new TileSet(urlTemplate);
+    }
     /**
      * 
      * @param urlTemplate 

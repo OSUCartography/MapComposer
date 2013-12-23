@@ -15,9 +15,14 @@ import javax.swing.JSlider;
 import edu.oregonstate.carto.mapcomposer.Emboss;
 import edu.oregonstate.carto.mapcomposer.Shadow;
 import edu.oregonstate.carto.mapcomposer.Tint;
+import edu.oregonstate.carto.tilemanager.ImageTile;
+import edu.oregonstate.carto.tilemanager.TileGenerator;
+import edu.oregonstate.carto.tilemanager.TileIterator;
 import edu.oregonstate.carto.tilemanager.TileSet;
 import edu.oregonstate.carto.utils.FileUtils;
 import edu.oregonstate.carto.utils.GUIUtil;
+import java.awt.Desktop;
+import java.net.URISyntaxException;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -864,33 +869,22 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
-        /*    try {
-         this.readGUI();
-
-         if (this.imageCollection instanceof DirectoryImageCollection) {
-         MapTileGenerator generator = new MapTileGenerator(getMap(), imageCollection);
-         BufferedImage image = generator.createTile("map");
-         ika.utils.ImageUtils.displayImageInWindow(image);
-         } else if (this.imageCollection instanceof TiledImageCollection) {
-
-         //Writing resulting tiles to a temporary directory.
-         File tempTilesDir = FileUtils.createTempDirectory();
-         MapTileGenerator generator = new MapTileGenerator(map, this.imageCollection);
-         map.setTiledImage(new TiledImage(tempTilesDir.getAbsolutePath()));
-         File refDir = ((TiledImageCollection) (imageCollection)).getRefDir();
-         map.getTiledImage().createTiledImage(refDir, true, generator, null);
-
-         File styleFile = new File(tempTilesDir, FileUtils.getFileNameWithoutExtension(tempTilesDir.getName()));
-         this.map.marshal(styleFile.getAbsolutePath() + ".xml");
-
-         //Display results in a webpage
-         File htmlFile = copyHTML(tempTilesDir.getPath());
-         Desktop.getDesktop().browse(htmlFile.toURI());
-         }
-
-         } catch (Exception exc) {
-         ErrorDialog.showErrorDialog("Could not render the preview", exc);
-         }*/
+        try {
+            readGUI();
+            TileGenerator tileGenerator = new TileGenerator();
+            tileGenerator.generateTiles(map);
+            URL htmlMapViewerURL = tileGenerator.generateHTMLMapViewer();
+            Desktop.getDesktop().browse(htmlMapViewerURL.toURI());
+            
+// FIXME
+//            File styleFile = new File(tempTilesDir, FileUtils.getFileNameWithoutExtension(tempTilesDir.getName()));
+//            this.map.marshal(styleFile.getAbsolutePath() + ".xml");
+        } catch (IOException exc) {
+            // FIXME
+            ErrorDialog.showErrorDialog("Could not render the preview", exc);
+        } catch (URISyntaxException exc) {
+            ErrorDialog.showErrorDialog("Could not render the preview", exc);
+        }
     }//GEN-LAST:event_previewButtonActionPerformed
 
     /**
@@ -1288,9 +1282,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         TileSet tileSet = layer.getImageTileSet();
         if (tileSet == null) {
             tileSet = new TileSet(urlTextField.getText());
+            layer.setImageTileSet(tileSet);
         }
         tileSet.setUrlTemplate(urlTextField.getText());
-        
+
         // mask
         // FIXME layer.setMaskName((String) this.maskComboBox.getSelectedItem());
         layer.setInvertMask(this.invertMaskCheckBox.isSelected());
@@ -1330,13 +1325,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         } else {
             layer.setEmboss(null);
         }
-    }
-
-    public File copyHTML(String path) throws IOException {
-        URL inputUrl = getClass().getResource("/Local_Tiles_TMS.html");
-        File dest = new File(path + "/Local_Tiles_TMS.html");
-        // FIXME org.apache.commons.io.FileUtils.copyURLToFile(inputUrl, dest);
-        return dest;
     }
 
     public Map getMap() {

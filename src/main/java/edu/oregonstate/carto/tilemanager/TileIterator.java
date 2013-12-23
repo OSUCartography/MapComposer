@@ -3,7 +3,7 @@ package edu.oregonstate.carto.tilemanager;
 import java.util.Iterator;
 
 /**
- * TileIterator iterates over the set of tiles composing of a given bounding
+ * TileIterator iterates over the set of tiles of a given bounding
  * box and zoom range. This is specified in the constructor, and the resulting
  * object will spit out each tile in that set by calling the method next().
  * 
@@ -113,7 +113,7 @@ public class TileIterator implements Iterator {
 
     @Override
     public void remove() {
-        throw new UnsupportedOperationException("Removing a tile makes no sense. You get what you ask for."); 
+        throw new UnsupportedOperationException("Removing a tile makes no sense."); 
     }
 
     /**
