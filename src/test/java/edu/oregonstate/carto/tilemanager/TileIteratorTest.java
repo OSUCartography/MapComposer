@@ -14,32 +14,32 @@ import org.junit.BeforeClass;
  * @author Nicholas Hallahan nick@theoutpost.io
  */
 public class TileIteratorTest {
+
     TileSet topoSet;
     TileIterator corvallis1;
-    
+
     public TileIteratorTest() {
         topoSet = new TileSet("http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}");
         corvallis1 = new TileIterator(topoSet,
                 44.524538, -123.386676, 44.612849, -123.190727,
-                13,13);
+                13, 13);
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
-
 
 //    /**
 //     * Test of next method, of class TileIterator.
@@ -78,7 +78,6 @@ public class TileIteratorTest {
 //            t = corvallis3.next();
 //        }
 //    }
-    
 //    @Test
 //    public void iterateOregon() {
 //        System.out.println("Iterating through huge Oregon tile set...");
@@ -91,7 +90,6 @@ public class TileIteratorTest {
 //            t = oregon.next();
 //        }
 //    }
-    
 //    @Test
 //    public void iterateOregon2() {
 //        System.out.println("Iterating through huge Oregon tile set inefficiently...");
@@ -104,4 +102,16 @@ public class TileIteratorTest {
 //            System.out.println(t.toString());
 //        }
 //    }
+    /*
+    @Test
+    public void testIterateWorld() {
+        System.out.println("Iterating the world...");
+        TileIterator oregon = new TileIterator(topoSet,
+                -85, -180, 85, 180,
+                0, 4);
+        while (oregon.hasNext()) {
+            Tile t = oregon.next();
+            System.out.println(t.toString());
+        }
+    }*/
 }

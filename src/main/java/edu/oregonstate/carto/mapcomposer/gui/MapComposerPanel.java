@@ -7,7 +7,6 @@ package edu.oregonstate.carto.mapcomposer.gui;
 
 import edu.oregonstate.carto.mapcomposer.Layer;
 import edu.oregonstate.carto.mapcomposer.Map;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import javax.swing.JOptionPane;
@@ -15,13 +14,12 @@ import javax.swing.JSlider;
 import edu.oregonstate.carto.mapcomposer.Emboss;
 import edu.oregonstate.carto.mapcomposer.Shadow;
 import edu.oregonstate.carto.mapcomposer.Tint;
-import edu.oregonstate.carto.tilemanager.ImageTile;
 import edu.oregonstate.carto.tilemanager.TileGenerator;
-import edu.oregonstate.carto.tilemanager.TileIterator;
 import edu.oregonstate.carto.tilemanager.TileSet;
 import edu.oregonstate.carto.utils.FileUtils;
 import edu.oregonstate.carto.utils.GUIUtil;
 import java.awt.Desktop;
+import java.awt.geom.Rectangle2D;
 import java.net.URISyntaxException;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -39,6 +37,21 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * recursive calls to event handlers.
      */
     private boolean updating = false;
+    
+    /**
+     * Extent of the preview in lat/lon coordinates in degrees
+     */
+    private Rectangle2D.Double previewExtent = new Rectangle2D.Double(-180, -85.05113, 360, 2 * 85.05113);
+    
+    /**
+     * minimum zoom level for preview
+     */
+    private int previewMinZoom;
+    
+    /**
+     * * maximum zoom level for preview
+     */
+    private int previewMaxZoom;
 
     /**
      * Creates new form MapComposerPanel
@@ -68,6 +81,21 @@ public class MapComposerPanel extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         blendingButtonGroup = new javax.swing.ButtonGroup();
+        extentPanel = new javax.swing.JPanel();
+        westField = new javax.swing.JFormattedTextField();
+        eastField = new javax.swing.JFormattedTextField();
+        southField = new javax.swing.JFormattedTextField();
+        northField = new javax.swing.JFormattedTextField();
+        jPanel1 = new javax.swing.JPanel();
+        minZoomSpinner = new javax.swing.JSpinner();
+        maxZoomSpinner = new javax.swing.JSpinner();
+        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel5 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel6 = new javax.swing.JLabel();
+        jFormattedTextField3 = new javax.swing.JFormattedTextField();
         layersPanel = new javax.swing.JPanel();
         javax.swing.JLabel layersLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -134,7 +162,121 @@ public class MapComposerPanel extends javax.swing.JPanel {
         opacityTextField = new javax.swing.JFormattedTextField();
         javax.swing.JTextField urlHintTextField = new javax.swing.JTextField();
         southPanel = new javax.swing.JPanel();
+        extentButton = new javax.swing.JButton();
         previewButton = new javax.swing.JButton();
+
+        extentPanel.setLayout(new java.awt.GridBagLayout());
+
+        westField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.#####"))));
+        westField.setPreferredSize(new java.awt.Dimension(65, 28));
+        westField.setValue(new Double(-180));
+        javax.swing.text.NumberFormatter nfWest = new javax.swing.text.NumberFormatter();
+        nfWest.setMinimum(-180.0);
+        nfWest.setMaximum(180.0);
+        westField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nfWest));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        extentPanel.add(westField, gridBagConstraints);
+
+        eastField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.#####"))));
+        eastField.setPreferredSize(new java.awt.Dimension(65, 28));
+        eastField.setValue(new Double(180));
+        javax.swing.text.NumberFormatter nfEast = new javax.swing.text.NumberFormatter();
+        nfEast.setMinimum(-180.0);
+        nfEast.setMaximum(180.0);
+        eastField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nfEast));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 7;
+        extentPanel.add(eastField, gridBagConstraints);
+
+        southField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.#####"))));
+        southField.setPreferredSize(new java.awt.Dimension(65, 28));
+        southField.setValue(new Double(-90));
+        javax.swing.text.NumberFormatter nfSouth = new javax.swing.text.NumberFormatter();
+        nfSouth.setMinimum(-85.05113);
+        nfSouth.setMaximum(85.05113);
+        southField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nfSouth));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        extentPanel.add(southField, gridBagConstraints);
+
+        northField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.#####"))));
+        northField.setPreferredSize(new java.awt.Dimension(65, 28));
+        northField.setValue(new Double(90));
+        javax.swing.text.NumberFormatter nfNorth = new javax.swing.text.NumberFormatter();
+        nfNorth.setMinimum(-85.05113);
+        nfNorth.setMaximum(85.05113);
+        northField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nfNorth));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 5;
+        extentPanel.add(northField, gridBagConstraints);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        extentPanel.add(jPanel1, gridBagConstraints);
+
+        minZoomSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 15, 1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 11;
+        extentPanel.add(minZoomSpinner, gridBagConstraints);
+
+        maxZoomSpinner.setModel(new javax.swing.SpinnerNumberModel(4, 0, 15, 1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 12;
+        extentPanel.add(maxZoomSpinner, gridBagConstraints);
+
+        jLabel1.setText("West");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        extentPanel.add(jLabel1, gridBagConstraints);
+
+        jLabel2.setText("East");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 6;
+        extentPanel.add(jLabel2, gridBagConstraints);
+
+        jLabel3.setText("North");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        extentPanel.add(jLabel3, gridBagConstraints);
+
+        jLabel4.setText("South");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 8;
+        extentPanel.add(jLabel4, gridBagConstraints);
+
+        jLabel5.setText("Minimum Zoom");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        extentPanel.add(jLabel5, gridBagConstraints);
+
+        jLabel6.setText("Maximimum Zoom");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        extentPanel.add(jLabel6, gridBagConstraints);
+
+        jFormattedTextField3.setText("jFormattedTextField3");
 
         setLayout(new java.awt.BorderLayout());
 
@@ -777,6 +919,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         southPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
+        extentButton.setText("Extent");
+        extentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                extentButtonActionPerformed(evt);
+            }
+        });
+        southPanel.add(extentButton);
+
         previewButton.setText("Preview");
         previewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -872,6 +1022,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
         try {
             readGUI();
             TileGenerator tileGenerator = new TileGenerator();
+            
+            tileGenerator.setExtent(previewExtent.getMinX(), 
+                    previewExtent.getMaxX(), 
+                    previewExtent.getMinY(), 
+                    previewExtent.getMaxY());
+            tileGenerator.setZoomRange(previewMinZoom, previewMaxZoom);
             tileGenerator.generateTiles(map);
             URL htmlMapViewerURL = tileGenerator.generateHTMLMapViewer();
             Desktop.getDesktop().browse(htmlMapViewerURL.toURI());
@@ -1061,6 +1217,23 @@ public class MapComposerPanel extends javax.swing.JPanel {
         this.curveFilePathTextField.setText("file://" + filePath);
         this.readGUI();
     }//GEN-LAST:event_curveFileButtonActionPerformed
+
+    private void extentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extentButtonActionPerformed
+        String title = "Tiles Extent";
+        int res = JOptionPane.showOptionDialog(this, extentPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+        if (res == JOptionPane.OK_OPTION) {
+            double west = ((Number) westField.getValue()).doubleValue();
+            double east = ((Number) eastField.getValue()).doubleValue();
+            double south = ((Number) southField.getValue()).doubleValue();
+            double north = ((Number) northField.getValue()).doubleValue();
+            this.previewExtent = new Rectangle2D.Double(west, south, east - west, north - south);
+            
+            this.previewMinZoom = ((Number)minZoomSpinner.getValue()).intValue();
+            this.previewMaxZoom = ((Number)maxZoomSpinner.getValue()).intValue();
+            
+            
+        }
+    }//GEN-LAST:event_extentButtonActionPerformed
 
     /**
      * Updates the value of the texture scale slider
@@ -1343,6 +1516,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel centralPanel;
     private javax.swing.JButton curveFileButton;
     private javax.swing.JTextField curveFilePathTextField;
+    private javax.swing.JFormattedTextField eastField;
     private javax.swing.JFormattedTextField embossAzimuthFormattedTextField;
     private javax.swing.JSlider embossAzimuthSlider;
     private javax.swing.JCheckBox embossCheckBox;
@@ -1352,7 +1526,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JSlider embossHeightSlider;
     private javax.swing.JFormattedTextField embossSoftnessFormattedTextField;
     private javax.swing.JSlider embossSoftnessSlider;
+    private javax.swing.JButton extentButton;
+    private javax.swing.JPanel extentPanel;
     private javax.swing.JCheckBox invertMaskCheckBox;
+    private javax.swing.JFormattedTextField jFormattedTextField3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private edu.oregonstate.carto.mapcomposer.gui.DraggableList layerList;
@@ -1360,11 +1538,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel layersPanel;
     private javax.swing.JSlider maskBlurSlider;
     private javax.swing.JComboBox maskComboBox;
+    private javax.swing.JSpinner maxZoomSpinner;
+    private javax.swing.JSpinner minZoomSpinner;
     private javax.swing.JButton moveDownLayerButton;
     private javax.swing.JButton moveUpLayerButton;
     private javax.swing.JRadioButton multiplyBlendingRadioButton;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JRadioButton normalBlendingRadioButton;
+    private javax.swing.JFormattedTextField northField;
     private javax.swing.JSlider opacitySlider;
     private javax.swing.JFormattedTextField opacityTextField;
     private javax.swing.JButton previewButton;
@@ -1375,6 +1556,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JSlider shadowFuziSlider;
     private javax.swing.JLabel shadowOffsetLabel;
     private javax.swing.JSlider shadowOffsetSlider;
+    private javax.swing.JFormattedTextField southField;
     private javax.swing.JPanel southPanel;
     private javax.swing.JButton textureClearButton;
     private javax.swing.JLabel texturePreviewLabel;
@@ -1386,6 +1568,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton tintColorButton;
     private javax.swing.JTextField urlTextField;
     private javax.swing.JCheckBox visibleCheckBox;
+    private javax.swing.JFormattedTextField westField;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -18,6 +18,13 @@ public class TileGenerator {
 
     private File directory;
 
+    private double west = - 180;
+    private double east = 180;
+    private double south = - 90;
+    private double north = 90;
+    private int minZoom = 0;
+    private int maxZoom = 4;
+
     public TileGenerator(File directory) {
         this.directory = directory;
     }
@@ -25,12 +32,17 @@ public class TileGenerator {
     public TileGenerator() {
         this.directory = null;
     }
-
-    private File writeHTMLFile(String path) throws IOException {
-        URL inputUrl = getClass().getResource("/Local_Tiles_TMS.html");
-        File dest = new File(path + "/Local_Tiles_TMS.html");
-        org.apache.commons.io.FileUtils.copyURLToFile(inputUrl, dest);
-        return dest;
+    
+    public void setExtent(double west, double east, double south, double north) {
+        this.west = west;
+        this.east = east;
+        this.south = south;
+        this.north = north;
+    }
+    
+    public void setZoomRange(int minZoom, int maxZoom) {
+        this.minZoom = minZoom;
+        this.maxZoom = maxZoom;
     }
 
     public void generateTiles(Map map) throws IOException, URISyntaxException {
@@ -39,14 +51,15 @@ public class TileGenerator {
             directory = FileUtils.createTempDirectory();
         }
         TileSet outputTileSet = TileSet.createFileTileSet(directory);
-        TileIterator iterator = outputTileSet.createIterator(42, -120, 46, -115, 6, 8);
+        TileIterator iterator = outputTileSet.createIterator(south, west, north, east, minZoom, maxZoom);
         while (iterator.hasNext()) {
             Tile tile = iterator.next();
             BufferedImage img = map.generateTile(tile.getZ(), tile.getX(), tile.getY());
             File file = new File(tile.getURL().toURI());
             file.getParentFile().mkdirs();
             ImageIO.write(img, "png", file);
-            System.out.println(file.getAbsolutePath());
+            // FIXME
+            System.out.println("created tile " + file.getAbsolutePath());
         }
     }
 

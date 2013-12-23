@@ -117,6 +117,7 @@ public class TileIterator implements Iterator {
     }
 
     /**
+     * TODO check parameters for validity.
      * Derived from globalmaptiles.py:
      * http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/
      *
