@@ -87,7 +87,7 @@ public class TileIterator implements Iterator {
     @Override
     public boolean hasNext() {
         if (yIdx >= difY) return true;
-        if (xIdx <= difX) return true;
+        if (xIdx < difX) return true;
         if (zIdx + 1 <= maxZoom) return true;
         return false;
     }
@@ -97,7 +97,7 @@ public class TileIterator implements Iterator {
         if (yIdx >= difY) {
             return tileSet.getTile(zIdx, minX + xIdx, minY + yIdx--);
         }
-        if (xIdx <= difX) {
+        if (xIdx < difX) {
             yIdx = 0;
             ++xIdx;
             return tileSet.getTile(zIdx, minX + xIdx, minY + yIdx--);
@@ -117,7 +117,6 @@ public class TileIterator implements Iterator {
     }
 
     /**
-     * TODO check parameters for validity.
      * Derived from globalmaptiles.py:
      * http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/
      *
@@ -141,7 +140,13 @@ public class TileIterator implements Iterator {
         double yPixels = (yMeters + ORIGIN_SHIFT) / resolution;
 
         // pixels to tile
-        int xTile = (int) (Math.ceil(xPixels / (double) Tile.TILE_SIZE) - 1);
+        int xTile;
+        if (xPixels == 0) {
+            xTile = 0;
+        } else {
+            xTile = (int) (Math.ceil(xPixels / (double) Tile.TILE_SIZE) - 1);
+        }
+        
         int yTile = (int) (Math.ceil(yPixels / (double) Tile.TILE_SIZE) - 1);
         
         // NH FIXME
