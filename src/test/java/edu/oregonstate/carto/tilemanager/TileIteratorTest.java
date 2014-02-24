@@ -43,9 +43,6 @@ public class TileIteratorTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of next method, of class TileIterator.
-     */
     @Test
     public void testNext() {
         System.out.println("next");
