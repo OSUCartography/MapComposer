@@ -55,8 +55,13 @@ public class TileSet {
     protected final boolean tmsSchema;
 
     public static TileSet createFileTileSet(File directory) {
-        String urlTemplate = "file://" + directory.getAbsolutePath() + "/{z}/{x}/{y}.png";
-        return new TileSet(urlTemplate);
+        try {
+            String urlTemplate = new File(directory.getAbsolutePath()).toURI().toURL().toExternalForm();
+            //String urlTemplate = "file://" + directory.getAbsolutePath() + File.separator + "{z}" + File.separator + "{x}" + File.separator + "{y}.png";
+            return new TileSet(urlTemplate);
+        } catch (MalformedURLException ex) {
+            return null;
+        }
     }
     /**
      * 
