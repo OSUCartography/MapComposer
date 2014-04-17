@@ -3,28 +3,37 @@ package edu.oregonstate.carto.tilemanager;
 import java.util.Iterator;
 
 /**
- * TileIterator iterates over the set of tiles of a given bounding
- * box and zoom range. This is specified in the constructor, and the resulting
- * object will spit out each tile in that set by calling the method next().
- * 
- * @author Nicholas Hallahan nick@theoutpost.io
+ * TileIterator iterates over the set of tiles of a given bounding box and zoom
+ * range. This is specified in the constructor, and the resulting object will
+ * spit out each tile in that set by calling the method next().
+ *
+ * @author Nicholas Hallahan nick@theoutpost.io and Bernie Jenny, Oregon State
  */
 public class TileIterator implements Iterator {
 
+    private final static int MAX_Z = 31;
     private static final double INITIAL_RESOLUTION = 2 * Math.PI * 6378137 / Tile.TILE_SIZE;
     private static final double ORIGIN_SHIFT = 2 * Math.PI * 6378137 / 2.0;
-    
+
     private final TileSet tileSet;
     private final double minLat, minLng, maxLat, maxLng;
     private final int minZoom, maxZoom;
-    
-    private int minX, minY, maxX, maxY, difX, difY, zIdx, xIdx, yIdx;
-    
+    private int minX, minY, maxX, maxY, zIdx, xIdx, yIdx;
+
     public TileIterator(TileSet tileSet,
             double minLat, double minLng,
             double maxLat, double maxLng,
             int minZoom, int maxZoom) {
+
+        if (tileSet == null) {
+            throw new IllegalArgumentException("TileSet not valid");
+        }
         
+        // FIXME BJ
+        // not sure what the valid boundary values are
+        if (minLat < -90 || maxLat > 90 || minLng < -180 || maxLng > 360) {
+            throw new IllegalArgumentException("extent is not valid");
+        }
         if (minLat > maxLat) {
             throw new IllegalArgumentException("minLat cannot be greater than maxLat");
         }
@@ -32,6 +41,13 @@ public class TileIterator implements Iterator {
             throw new IllegalArgumentException("minLng cannot be greater than maxLng");
         }
         
+        if (minZoom < 0) {
+            throw new IllegalArgumentException("minZoom cannot be smaller than 0");
+        }
+        if (maxZoom > MAX_Z) {
+            throw new IllegalArgumentException("maxZoom cannot be greater than 31");
+        }
+
         this.tileSet = tileSet;
         this.minLat = minLat;
         this.minLng = minLng;
@@ -39,72 +55,89 @@ public class TileIterator implements Iterator {
         this.maxLng = maxLng;
         this.minZoom = minZoom;
         this.maxZoom = maxZoom;
-        
+
         zIdx = this.minZoom;
         zoom();
     }
-           
-    /**
-     * This method gets the minTile and maxTile for the current zIdx index.
-     * It then sets up the diffs and zeros out the x and y indices. The zIdx
-     * iterator is not incremented inside this method, because we want to 
-     * first get the tiles from the minZoom level in next().
-     */
-    private void zoom() {
-        Tile minTile = getTileForLatLngZoom(minLat, minLng, zIdx);
-        Tile maxTile = getTileForLatLngZoom(maxLat, maxLng, zIdx);
-        
-        /*
-         * minX and minY are for the minTile, so according to the Google / OSM
-         * tile schema, maxTile will have a Y value smaller than minTile's Y val.
-         */
-        minX = minTile.getX();
-        minY = minTile.getY();
-        maxX = maxTile.getX();
-        maxY = maxTile.getY();
-
-        difX = maxX - minX;
-        difY = maxY - minY;
-        
-        xIdx = 0;
-        yIdx = 0;
-    }
     
     /**
-     * It is slightly more efficient to create
-     * a do while next() does not return null.
-     * 
+     * Use this constructor if tiles for a single zoom level are needed and
+     * the extent of the tiles is known in columns and rows. Returns all tiles 
+     * inside a rectangle defined by minX, maxX, minY, and maxY.
+     * @param tileSet
+     * @param minX first column (westernmost)
+     * @param maxX last column (easternmost)
+     * @param minY first row (northernmost)
+     * @param maxY last row (southernmost)
+     * @param zoomIdx zoom level
+     */
+    public TileIterator(TileSet tileSet, int minX, int maxX, int minY, int maxY, int zoomIdx) {
+        
+        if (minX < 0 || minY < 0 || zoomIdx < 0) {
+            throw new IllegalArgumentException("invalid tile coordinates");
+        }
+        
+        this.tileSet = tileSet;
+        minLat = maxLat = minLng = maxLng = Double.NaN;
+        minZoom = maxZoom = zoomIdx;
+        this.minX = minX;
+        this.minY = minY;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        zIdx = zoomIdx;
+        xIdx = minX;
+        yIdx = minY;
+    }            
+
+    /**
+     * This method gets the corner tiles for the current zIdx index. It
+     * then resets the x and y indices. The zIdx index is not incremented inside 
+     * this method, because we want to first get the tiles from the minZoom 
+     * level in next().
+     */
+    private void zoom() {
+        Tile lowerLeftTile = getTileForLatLngZoom(minLat, minLng, zIdx);
+        Tile upperRightTile = getTileForLatLngZoom(maxLat, maxLng, zIdx);
+
+        // y increases from north to south in the Google / OSM tile schema
+        minX = lowerLeftTile.getX();
+        minY = upperRightTile.getY();
+        maxX = upperRightTile.getX();
+        maxY = lowerLeftTile.getY();
+        xIdx = minX;
+        yIdx = minY;
+    }
+
+    /**
+     * It is slightly more efficient to create a do while next() does not return
+     * null.
      * For example:
-     * 
-     *  Tile t = corvallis3.next();
-     *  while (t != null) {
-     *      System.out.println(t.toString());
-     *      t = corvallis3.next();
-     *  }
-     * 
-     * @return 
+     *
+     * Tile t = iterator.next(); 
+     * while (t != null) {
+     *  System.out.println(t.toString()); 
+     *  t = iterator.next(); 
+     * }
+     *
+     * @return
      */
     @Override
     public boolean hasNext() {
-        if (yIdx >= difY) return true;
-        if (xIdx < difX) return true;
-        if (zIdx + 1 <= maxZoom) return true;
-        return false;
+        return yIdx <= maxY || xIdx < maxX || zIdx < maxZoom;
     }
 
     @Override
     public Tile next() {
-        if (yIdx >= difY) {
-            return tileSet.getTile(zIdx, minX + xIdx, minY + yIdx--);
+        if (yIdx <= maxY) {
+            return tileSet.getTile(zIdx, xIdx, yIdx++);
         }
-        if (xIdx < difX) {
-            yIdx = 0;
-            ++xIdx;
-            return tileSet.getTile(zIdx, minX + xIdx, minY + yIdx--);
-        } 
+        if (xIdx < maxX) {
+            yIdx = minY + 1;
+            return tileSet.getTile(zIdx, ++xIdx, minY);
+        }
         // Increments the zoom index and make sure result is not more than
         // the max zoom.
-        if (++zIdx <= maxZoom) { 
+        if (++zIdx <= maxZoom) {
             zoom();
             return next();
         }
@@ -113,7 +146,7 @@ public class TileIterator implements Iterator {
 
     @Override
     public void remove() {
-        throw new UnsupportedOperationException("Removing a tile makes no sense."); 
+        throw new UnsupportedOperationException("Removing a tile makes no sense.");
     }
 
     /**
@@ -146,14 +179,22 @@ public class TileIterator implements Iterator {
         } else {
             xTile = (int) (Math.ceil(xPixels / (double) Tile.TILE_SIZE) - 1);
         }
-        
+
         int yTile = (int) (Math.ceil(yPixels / (double) Tile.TILE_SIZE) - 1);
-        
+
         // NH FIXME
         // Convert TMS y coord to Google y coord, should be done in math above...
-        yTile = (int) ( (Math.pow(2, zoom) - 1) - (double)yTile );
+        yTile = (int) ((Math.pow(2, zoom) - 1) - (double) yTile);
 
         return tileSet.getTile(zoom, xTile, yTile);
     }
-    
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("latitude ").append(minLat).append(" to ").append(maxLat).append("\n");
+        sb.append("longitude ").append(minLng).append(" to ").append(maxLng).append("\n");
+        sb.append("zoom ").append(minZoom).append(" to ").append(maxZoom).append("\n");
+        return sb.toString();
+    }
 }

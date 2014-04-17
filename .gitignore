@@ -23,3 +23,5 @@ data/cache.db
 
 # Maven build stuff
 /target/
+/target /
+/target 123/
