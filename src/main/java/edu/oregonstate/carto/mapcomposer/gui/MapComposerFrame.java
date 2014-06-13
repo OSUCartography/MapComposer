@@ -48,6 +48,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
         createTextureMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         mapComposerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
         getContentPane().add(mapComposerPanel, java.awt.BorderLayout.CENTER);

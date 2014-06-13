@@ -54,24 +54,32 @@ public class TileSet {
      */
     protected final boolean tmsSchema;
 
-    public static TileSet createFileTileSet(File directory) {
-        try {
-            String urlTemplate = new File(directory.getAbsolutePath()).toURI().toURL().toExternalForm();
-            //String urlTemplate = "file://" + directory.getAbsolutePath() + File.separator + "{z}" + File.separator + "{x}" + File.separator + "{y}.png";
-            return new TileSet(urlTemplate);
-        } catch (MalformedURLException ex) {
-            return null;
-        }
-    }
     /**
-     * 
-     * @param urlTemplate 
-     * Examples: 
+     * Creates a local file based TileSet
+     * @param directory
+     * @return 
+     */
+    public static TileSet createFileTileSet(File directory) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("file://");
+        sb.append(directory.getAbsolutePath());
+        sb.append(File.separator);
+        sb.append("{z}");
+        sb.append(File.separator);
+        sb.append("{x}");
+        sb.append(File.separator);
+        sb.append("{y}.png");
+        return new TileSet(sb.toString());
+    }
+
+    /**
+     *
+     * @param urlTemplate Examples:
      * http://tile.openstreetmap.org/{z}/{x}/{y}.png
      * file://C:/Users/nick/Documents/TMS_tiles_MountHood/buildingMask/{z}/{x}/{y}.png
      * @param cache
      * @param type
-     * @param tmsSchema 
+     * @param tmsSchema
      */
     public TileSet(String urlTemplate, Cache cache, TileType type, boolean tmsSchema) {
         this.urlTemplate = urlTemplate;
@@ -82,10 +90,6 @@ public class TileSet {
 
     public TileSet(String urlTemplate) {
         this(urlTemplate, MemCache.getInstance(), TileType.IMAGE, false);
-    }
-
-    public TileSet(String urlTemplate, boolean sourceSchemaOpposite) {
-        this(urlTemplate, MemCache.getInstance(), TileType.IMAGE, sourceSchemaOpposite);
     }
 
     /**
@@ -180,10 +184,12 @@ public class TileSet {
     }
 
     /**
-     * Gets the tile with the corresponding coordinates from the cache. If not,
-     * a new tile is created.
+     * Gets the tile with the corresponding coordinates from the cache. If the
+     * tile is not in the cache, a new tile is created.
      *
-     * @param coord
+     * @param z
+     * @param x
+     * @param y
      * @return the tile we are looking for
      */
     public synchronized Tile getTile(int z, int x, int y) {
@@ -192,6 +198,9 @@ public class TileSet {
         if (t == null) {
             t = createTile(z, x, y);
             cache.put(t);
+            System.out.println("Cache: put " + t.toString());
+        } else {
+            System.out.println("Cache: get " + t.toString());
         }
         return t;
     }
@@ -270,7 +279,7 @@ public class TileSet {
     public Cache getCache() {
         return cache;
     }
-    
+
     /**
      * @return the urlTemplate
      */
@@ -283,5 +292,19 @@ public class TileSet {
      */
     public void setUrlTemplate(String urlTemplate) {
         this.urlTemplate = urlTemplate;
+    }
+
+    /**
+     * Returns true if the current URL template string seems to be valid.
+     * @return 
+     */
+    public boolean isURLTemplateValid() {
+        // FIXME use regular expression
+        return urlTemplate.contains("{x}")
+                && urlTemplate.contains("{y}")
+                && urlTemplate.contains("{z}")
+                && urlTemplate.contains("//")
+                && urlTemplate.contains(".")
+                && !urlTemplate.contains(" ");
     }
 }

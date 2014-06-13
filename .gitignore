@@ -1,5 +1,5 @@
 # We don't want to commit the cache, because it may get big during dev
-data/cache.db
+/data/
 
 # generic files to ignore
 *~
@@ -25,3 +25,4 @@ data/cache.db
 /target/
 /target /
 /target 123/
+data/cache.db

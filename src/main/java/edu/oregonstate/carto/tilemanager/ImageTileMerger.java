@@ -19,13 +19,15 @@ public class ImageTileMerger {
      * neighborhood tiles.
      *
      * For the tiles around the center tile, rather than throwing an IO
-     * exception, I fill them with white. This is to avoid the problem of having
+     * exception, we fill them with white. This is to avoid the problem of having
      * the whole mega tile fail if any images around the center image are not
      * available.
      *
      * It throws IOException only when it cannot load the center image.
      *
+     * @param centerTile The tile at the center of the mega-tile
      * @return A BufferedImage of the 9 tiles.
+     * @throws java.io.IOException
      */
     public static BufferedImage createMegaTile(Tile centerTile) throws IOException {
         int megaTileSize = Tile.TILE_SIZE * 3;

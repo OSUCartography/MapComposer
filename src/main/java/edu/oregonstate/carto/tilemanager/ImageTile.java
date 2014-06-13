@@ -72,6 +72,7 @@ public class ImageTile extends Tile<BufferedImage> {
         if (img == null) {
             TileSet tileSet = getTileSet();
             URL url = tileSet.urlForTile(this);
+            System.out.println("loading image from " + url.toString());
             img = ImageIO.read(url);
             // replace object in cache
             tileSet.tileChanged(this);

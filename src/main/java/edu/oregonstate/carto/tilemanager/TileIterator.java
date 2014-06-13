@@ -4,8 +4,8 @@ import java.util.Iterator;
 
 /**
  * TileIterator iterates over the set of tiles of a given bounding box and zoom
- * range. This is specified in the constructor, and the resulting object will
- * spit out each tile in that set by calling the method next().
+ * range. This is specified in the constructor, and the iterator will provide
+ * each tile in that set by calling the method next().
  *
  * @author Nicholas Hallahan nick@theoutpost.io and Bernie Jenny, Oregon State
  */
@@ -28,7 +28,7 @@ public class TileIterator implements Iterator {
         if (tileSet == null) {
             throw new IllegalArgumentException("TileSet not valid");
         }
-        
+
         // FIXME BJ
         // not sure what the valid boundary values are
         if (minLat < -90 || maxLat > 90 || minLng < -180 || maxLng > 360) {
@@ -40,7 +40,7 @@ public class TileIterator implements Iterator {
         if (minLng > maxLng) {
             throw new IllegalArgumentException("minLng cannot be greater than maxLng");
         }
-        
+
         if (minZoom < 0) {
             throw new IllegalArgumentException("minZoom cannot be smaller than 0");
         }
@@ -59,11 +59,12 @@ public class TileIterator implements Iterator {
         zIdx = this.minZoom;
         zoom();
     }
-    
+
     /**
-     * Use this constructor if tiles for a single zoom level are needed and
-     * the extent of the tiles is known in columns and rows. Returns all tiles 
+     * Use this constructor if tiles for a single zoom level are needed and the
+     * extent of the tiles is known in columns and rows. Returns all tiles
      * inside a rectangle defined by minX, maxX, minY, and maxY.
+     *
      * @param tileSet
      * @param minX first column (westernmost)
      * @param maxX last column (easternmost)
@@ -72,11 +73,11 @@ public class TileIterator implements Iterator {
      * @param zoomIdx zoom level
      */
     public TileIterator(TileSet tileSet, int minX, int maxX, int minY, int maxY, int zoomIdx) {
-        
+
         if (minX < 0 || minY < 0 || zoomIdx < 0) {
             throw new IllegalArgumentException("invalid tile coordinates");
         }
-        
+
         this.tileSet = tileSet;
         minLat = maxLat = minLng = maxLng = Double.NaN;
         minZoom = maxZoom = zoomIdx;
@@ -87,13 +88,13 @@ public class TileIterator implements Iterator {
         zIdx = zoomIdx;
         xIdx = minX;
         yIdx = minY;
-    }            
+    }
 
     /**
-     * This method gets the corner tiles for the current zIdx index. It
-     * then resets the x and y indices. The zIdx index is not incremented inside 
-     * this method, because we want to first get the tiles from the minZoom 
-     * level in next().
+     * This method gets the corner tiles for the current zIdx index. It then
+     * resets the x and y indices. The zIdx index is not incremented inside this
+     * method, because we want to first get the tiles from the minZoom level in
+     * next().
      */
     private void zoom() {
         Tile lowerLeftTile = getTileForLatLngZoom(minLat, minLng, zIdx);
@@ -110,14 +111,10 @@ public class TileIterator implements Iterator {
 
     /**
      * It is slightly more efficient to create a do while next() does not return
-     * null.
-     * For example:
+     * null. For example:
      *
-     * Tile t = iterator.next(); 
-     * while (t != null) {
-     *  System.out.println(t.toString()); 
-     *  t = iterator.next(); 
-     * }
+     * Tile t = iterator.next(); while (t != null) {
+     * System.out.println(t.toString()); t = iterator.next(); }
      *
      * @return
      */
@@ -154,39 +151,54 @@ public class TileIterator implements Iterator {
      * http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/
      *
      * @param lat
-     * @param lng
+     * @param lon
      * @param zoom
      * @return
      */
-    private Tile getTileForLatLngZoom(double lat, double lng, int zoom) {
-        // convert lat lng to meters
-        double xMeters = lng * ORIGIN_SHIFT / 180.0;
-        double yMeters = Math.log(Math.tan((90 + lat) * Math.PI / 360.0))
-                / (Math.PI / 180.0);
-        yMeters = yMeters * ORIGIN_SHIFT / 180.0;
+    private Tile getTileForLatLngZoom(double lat, double lon, int zoom) {
+        /*
+         // convert lat lng to meters
+         double xMeters = lng * ORIGIN_SHIFT / 180.0;
+         double yMeters = Math.log(Math.tan((90 + lat) * Math.PI / 360.0)) / (Math.PI / 180.0);
+         yMeters = yMeters * ORIGIN_SHIFT / 180.0;
 
-        // resolution of meters/pixel for given zoom level
-        double resolution = INITIAL_RESOLUTION / Math.pow(2, zoom);
+         // resolution of meters/pixel for given zoom level
+         double resolution = INITIAL_RESOLUTION / Math.pow(2, zoom);
 
-        // meters to pixels
-        double xPixels = (xMeters + ORIGIN_SHIFT) / resolution;
-        double yPixels = (yMeters + ORIGIN_SHIFT) / resolution;
+         // meters to pixels
+         double xPixels = (xMeters + ORIGIN_SHIFT) / resolution;
+         double yPixels = (yMeters + ORIGIN_SHIFT) / resolution;
 
-        // pixels to tile
-        int xTile;
-        if (xPixels == 0) {
-            xTile = 0;
-        } else {
-            xTile = (int) (Math.ceil(xPixels / (double) Tile.TILE_SIZE) - 1);
+         // pixels to tile
+         int xTile;
+         if (xPixels == 0) {
+         xTile = 0;
+         } else {
+         xTile = (int) (Math.ceil(xPixels / (double) Tile.TILE_SIZE) - 1);
+         }
+
+         int yTile = (int) (Math.ceil(yPixels / (double) Tile.TILE_SIZE) - 1);
+
+         // NH FIXME
+         // Convert TMS y coord to Google y coord, should be done in math above...
+         yTile = (int) ((Math.pow(2, zoom) - 1) - (double) yTile);
+         */
+        int xtile = (int) Math.floor((lon + 180) / 360 * (1 << zoom));
+        int ytile = (int) Math.floor((1 - Math.log(Math.tan(Math.toRadians(lat)) + 1 / Math.cos(Math.toRadians(lat))) / Math.PI) / 2 * (1 << zoom));
+        if (xtile < 0) {
+            xtile = 0;
+        }
+        if (xtile >= (1 << zoom)) {
+            xtile = ((1 << zoom) - 1);
+        }
+        if (ytile < 0) {
+            ytile = 0;
+        }
+        if (ytile >= (1 << zoom)) {
+            ytile = ((1 << zoom) - 1);
         }
 
-        int yTile = (int) (Math.ceil(yPixels / (double) Tile.TILE_SIZE) - 1);
-
-        // NH FIXME
-        // Convert TMS y coord to Google y coord, should be done in math above...
-        yTile = (int) ((Math.pow(2, zoom) - 1) - (double) yTile);
-
-        return tileSet.getTile(zoom, xTile, yTile);
+        return tileSet.getTile(zoom, xtile, ytile);
     }
 
     @Override

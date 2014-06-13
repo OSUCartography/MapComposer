@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import javax.imageio.ImageIO;
 
 /**
@@ -49,6 +48,11 @@ public class TileGenerator {
         // Write tiles to a temporary directory if no directory is specified
         if (directory == null) {
             directory = FileUtils.createTempDirectory();
+            
+            // FIXME the directory will be deleted when the virtual machine 
+            // terminates. This may still result in a huge number of files.
+            // A more clever solution is needed here.
+            directory.deleteOnExit();
         }
         TileSet outputTileSet = TileSet.createFileTileSet(directory);
         TileIterator iterator = outputTileSet.createIterator(south, west, north, east, minZoom, maxZoom);
@@ -56,6 +60,7 @@ public class TileGenerator {
             Tile tile = iterator.next();
             BufferedImage img = map.generateTile(tile.getZ(), tile.getX(), tile.getY());
             File file = new File(tile.getURL().toURI());
+            // make sure a directory for each zoom level exists
             file.getParentFile().mkdirs();
             ImageIO.write(img, "png", file);
             // FIXME
@@ -63,14 +68,7 @@ public class TileGenerator {
         }
     }
 
-    public URL generateHTMLMapViewer() throws IOException {
-        if (directory == null) {
-            throw new IllegalStateException("no directory for HTML map");
-        }
-        String path = directory.getAbsolutePath();
-        URL inputUrl = getClass().getResource("/Local_Tiles_TMS.html");
-        File dest = new File(path + "/Local_Tiles_TMS.html");
-        org.apache.commons.io.FileUtils.copyURLToFile(inputUrl, dest);
-        return dest.toURI().toURL();
+    public File getDirectory() {
+        return directory;
     }
 }

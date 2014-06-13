@@ -16,15 +16,15 @@ public class MemCache implements Cache {
      * entries, and the least recently used (LRU) object is removed from the
      * cache once the maximum size is reached.
      */
-    private static int MAX_SIZE = 5000;
+    private static final int MAX_SIZE = 5000;
 
     /* This is the one instance that exists throughout the entire life-cycle
      * of the program.  It can be retrieved at any time using the static
      * singleton method.  This is to be used to prevent many instances of
      * the same cache hanging around.
      */
-    private static MemCache singleton = new MemCache();
-    private ConcurrentMap map = CacheBuilder.newBuilder().maximumSize(MAX_SIZE).build().asMap();
+    private static final MemCache singleton = new MemCache();
+    private final ConcurrentMap map = CacheBuilder.newBuilder().maximumSize(MAX_SIZE).build().asMap();
 
     private MemCache() {
     }
@@ -49,6 +49,7 @@ public class MemCache implements Cache {
      * Returns a tile if it is in the cache, returns null otherwise.
      *
      * @param url (the key)
+     * @param tileSet
      * @return a tile or null
      */
     @Override
