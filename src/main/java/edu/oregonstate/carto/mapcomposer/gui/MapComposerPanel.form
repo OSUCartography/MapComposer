@@ -1236,29 +1236,22 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JTextField" name="urlHintTextField">
+            <Component class="javax.swing.JTextArea" name="urlHintTextArea">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="null" type="code"/>
-                </Property>
+                <Property name="columns" type="int" value="20"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
                   <FontInfo relative="true">
-                    <Font component="urlHintTextField" property="font" relativeSize="false" size="10"/>
+                    <Font component="urlHintTextArea" property="font" relativeSize="true" size="-2"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Example: http://tile.openstreetmap.org/{z}/{x}/{y}.png or http://tile.stamen.com/watercolor/{z}/{x}/{y}.png"/>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="null" type="code"/>
-                </Property>
+                <Property name="rows" type="int" value="4"/>
+                <Property name="text" type="java.lang.String" value="Examples:&#xa;http://tile.openstreetmap.org/{z}/{x}/{y}.png&#xa;http://tile.stamen.com/watercolor/{z}/{x}/{y}.png&#xa;http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}.png"/>
+                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
-                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
-              </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                  <GridBagConstraints gridX="1" gridY="3" gridWidth="4" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="21" weightX="0.0" weightY="0.0"/>
+                  <GridBagConstraints gridX="1" gridY="3" gridWidth="4" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
                 </Constraint>
               </Constraints>
             </Component>

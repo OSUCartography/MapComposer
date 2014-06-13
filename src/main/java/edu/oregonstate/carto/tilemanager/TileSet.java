@@ -198,9 +198,6 @@ public class TileSet {
         if (t == null) {
             t = createTile(z, x, y);
             cache.put(t);
-            System.out.println("Cache: put " + t.toString());
-        } else {
-            System.out.println("Cache: get " + t.toString());
         }
         return t;
     }

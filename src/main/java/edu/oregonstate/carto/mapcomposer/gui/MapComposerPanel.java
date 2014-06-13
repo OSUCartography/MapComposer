@@ -5,13 +5,9 @@
  */
 package edu.oregonstate.carto.mapcomposer.gui;
 
+import edu.oregonstate.carto.mapcomposer.Emboss;
 import edu.oregonstate.carto.mapcomposer.Layer;
 import edu.oregonstate.carto.mapcomposer.Map;
-import java.io.IOException;
-import java.net.URL;
-import javax.swing.JOptionPane;
-import javax.swing.JSlider;
-import edu.oregonstate.carto.mapcomposer.Emboss;
 import edu.oregonstate.carto.mapcomposer.Shadow;
 import edu.oregonstate.carto.mapcomposer.Tint;
 import edu.oregonstate.carto.tilemanager.TileGenerator;
@@ -22,8 +18,16 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.embed.swing.JFXPanel;
+import javax.swing.JOptionPane;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
@@ -164,7 +168,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JSeparator();
         urlTextField = new javax.swing.JTextField();
         opacityTextField = new javax.swing.JFormattedTextField();
-        javax.swing.JTextField urlHintTextField = new javax.swing.JTextField();
+        urlHintTextArea = new javax.swing.JTextArea();
         southPanel = new javax.swing.JPanel();
         extentButton = new javax.swing.JButton();
         previewButton = new javax.swing.JButton();
@@ -902,18 +906,17 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         settingsPanel.add(opacityTextField, gridBagConstraints);
 
-        urlHintTextField.setEditable(false);
-        urlHintTextField.setBackground(null);
-        urlHintTextField.setFont(urlHintTextField.getFont().deriveFont((float)10));
-        urlHintTextField.setText("Example: http://tile.openstreetmap.org/{z}/{x}/{y}.png or http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
-        urlHintTextField.setBorder(null);
+        urlHintTextArea.setEditable(false);
+        urlHintTextArea.setColumns(20);
+        urlHintTextArea.setFont(urlHintTextArea.getFont().deriveFont(urlHintTextArea.getFont().getSize()-2f));
+        urlHintTextArea.setRows(4);
+        urlHintTextArea.setText("Examples:\nhttp://tile.openstreetmap.org/{z}/{x}/{y}.png\nhttp://tile.stamen.com/watercolor/{z}/{x}/{y}.png\nhttp://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}.png");
+        urlHintTextArea.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        settingsPanel.add(urlHintTextField, gridBagConstraints);
+        settingsPanel.add(urlHintTextArea, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1022,8 +1025,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         this.layerList.setSelectedIndex(--selectedLayerID);
     }//GEN-LAST:event_removeLayerButtonActionPerformed
 
-    private URL generateHTMLMapViewer(File directory, 
-            int zoom, double centerLat, double centerLon) 
+    private URL generateHTMLMapViewer(File directory,
+            int zoom, double centerLat, double centerLon)
             throws IOException, URISyntaxException {
         if (directory == null) {
             throw new IllegalStateException("no directory for HTML map");
@@ -1038,7 +1041,65 @@ public class MapComposerPanel extends javax.swing.JPanel {
         org.apache.commons.io.FileUtils.writeStringToFile(dest, html);
         return dest.toURI().toURL();
     }
-    
+
+    private void renderTilesWithProgressDialog() {
+        SwingWorkerWithProgressIndicator worker;
+        String dialogTitle = "Rendering Tiles";
+
+        worker = new SwingWorkerWithProgressIndicator<URL>(null, dialogTitle, "", true) {
+
+            @Override
+            public void done() {
+                try {
+                    // close progress dialog
+                    completeProgress();
+
+                    // a call to get() will throw an ExecutionException if an 
+                    // exception occured in doInBackground
+                    URL htmlMapViewerURL = get();
+
+                    // open web browser
+                    Desktop.getDesktop().browse(htmlMapViewerURL.toURI());
+                } catch (URISyntaxException | IOException | ExecutionException | InterruptedException | CancellationException ex) {
+                    completeProgress();
+                    if (!isAborted()) {
+                        ErrorDialog.showErrorDialog("Could not open a preview brpwser window.", ex);
+                    }
+                } finally {
+                    // hide the progress dialog
+                    completeProgress();
+                }
+            }
+
+            @Override
+            protected URL doInBackground() throws Exception {
+                // start progress dialog
+                start();
+
+                // create tiles
+                TileGenerator tileGenerator = new TileGenerator();
+                tileGenerator.setExtent(previewExtent.getMinX(),
+                        previewExtent.getMaxX(),
+                        previewExtent.getMinY(),
+                        previewExtent.getMaxY());
+                tileGenerator.setZoomRange(previewMinZoom, previewMaxZoom);
+                tileGenerator.generateTiles(map, this);
+
+                // copy html file to directory with tiles and open in web browser
+                URL htmlMapViewerURL = generateHTMLMapViewer(
+                        tileGenerator.getDirectory(),
+                        previewMinZoom,
+                        previewExtent.getCenterY(), previewExtent.getCenterX());
+                return htmlMapViewerURL;
+            }
+        };
+
+        worker.setMaxTimeWithoutDialogMilliseconds(0);
+        worker.setIndeterminate(true);
+        worker.setMessage("");
+        worker.execute();
+    }
+
     /**
      * Event handler to generate a preview of the current map. Either displays
      * an image in a new window, or creates tiles and has the default web
@@ -1047,29 +1108,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
-        try {
-            readGUI();
-            
-            // create tiles
-            TileGenerator tileGenerator = new TileGenerator();
-            tileGenerator.setExtent(previewExtent.getMinX(),
-                    previewExtent.getMaxX(),
-                    previewExtent.getMinY(),
-                    previewExtent.getMaxY());
-            tileGenerator.setZoomRange(previewMinZoom, previewMaxZoom);
-            tileGenerator.generateTiles(map);
-            
-            // copy html file to directory with tiles and open in web browser
-            URL htmlMapViewerURL = generateHTMLMapViewer(
-                    tileGenerator.getDirectory(), 
-                    previewMinZoom, 
-                    previewExtent.getCenterY(), previewExtent.getCenterX());
-            Desktop.getDesktop().browse(htmlMapViewerURL.toURI());
-        } catch (IOException | URISyntaxException exc) {
-            // FIXME
-            ErrorDialog.showErrorDialog("Could not render the preview", exc);
-            exc.printStackTrace();
-        }
+        readGUI();
+        renderTilesWithProgressDialog();
     }//GEN-LAST:event_previewButtonActionPerformed
 
     /**
@@ -1249,7 +1289,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     private void extentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extentButtonActionPerformed
         String title = "Tiles Extent";
-        
+
         // write current values to dialog
         westField.setValue(previewExtent.getMinX());
         southField.setValue(previewExtent.getMinY());
@@ -1257,11 +1297,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
         northField.setValue(previewExtent.getMaxY());
         minZoomSpinner.setValue(previewMinZoom);
         maxZoomSpinner.setValue(previewMaxZoom);
-        
+
         // show modal dialog
-        int res = JOptionPane.showOptionDialog(this, extentPanel, title, 
+        int res = JOptionPane.showOptionDialog(this, extentPanel, title,
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
-        
+
         // read new values from dialog
         if (res == JOptionPane.OK_OPTION) {
             double west = ((Number) westField.getValue()).doubleValue();
@@ -1499,7 +1539,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
         Color okColor = UIManager.getDefaults().getColor("TextField.foreground");
         urlTextField.setForeground(tileSet.isURLTemplateValid() ? okColor : Color.RED);
-        
+
         // mask
         // FIXME layer.setMaskName((String) this.maskComboBox.getSelectedItem());
         layer.setInvertMask(this.invertMaskCheckBox.isSelected());
@@ -1608,6 +1648,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel textureURLLabel;
     private javax.swing.JCheckBox tintCheckBox;
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton tintColorButton;
+    private javax.swing.JTextArea urlHintTextArea;
     private javax.swing.JTextField urlTextField;
     private javax.swing.JCheckBox visibleCheckBox;
     private javax.swing.JFormattedTextField westField;
