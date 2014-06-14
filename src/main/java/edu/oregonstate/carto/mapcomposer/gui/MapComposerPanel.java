@@ -1063,7 +1063,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 } catch (URISyntaxException | IOException | ExecutionException | InterruptedException | CancellationException ex) {
                     completeProgress();
                     if (!isAborted()) {
-                        ErrorDialog.showErrorDialog("Could not open a preview brpwser window.", ex);
+                        ErrorDialog.showErrorDialog("Could not open a preview browser window.", ex);
+                        ex.printStackTrace();
                     }
                 } finally {
                     // hide the progress dialog
@@ -1530,15 +1531,19 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layer.setOpacity(this.opacitySlider.getValue() / 100.f);
         layer.setCurveURL(this.curveFilePathTextField.getText());
 
-        TileSet tileSet = layer.getImageTileSet();
-        if (tileSet == null) {
-            tileSet = new TileSet(urlTextField.getText());
-            layer.setImageTileSet(tileSet);
-        } else {
-            tileSet.setUrlTemplate(urlTextField.getText());
+        String tileSetURL = urlTextField.getText();
+        boolean urlTemplateIsValid = TileSet.isURLTemplateValid(tileSetURL);
+        if (urlTemplateIsValid) {
+            TileSet tileSet = layer.getImageTileSet();
+            if (tileSet == null) {
+                tileSet = new TileSet(tileSetURL);
+                layer.setImageTileSet(tileSet);
+            } else {
+                tileSet.setUrlTemplate(urlTextField.getText());
+            }
         }
         Color okColor = UIManager.getDefaults().getColor("TextField.foreground");
-        urlTextField.setForeground(tileSet.isURLTemplateValid() ? okColor : Color.RED);
+        urlTextField.setForeground(urlTemplateIsValid ? okColor : Color.RED);
 
         // mask
         // FIXME layer.setMaskName((String) this.maskComboBox.getSelectedItem());
