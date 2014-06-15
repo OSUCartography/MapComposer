@@ -143,6 +143,22 @@ public class Layer {
             }
         }
 
+        // tinting
+        if (this.tint != null) {
+            // use the pre-existing image for modulating brightness if the image
+            // exists (i.e. a texture image has been created or an image has
+            // been loaded).
+            if (image != null) {
+                TintFilter tintFilter = new TintFilter();
+                tintFilter.setTint(tint.getTintColor());
+                System.out.println(tint.getTintColor().toString());
+                image = tintFilter.filter(image, null);
+            } else {
+                // no pre-existing image, create a solid color image
+                image = solidColorImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, this.tint.getTintColor());
+            }
+        }
+
         // create solid white background image if no image has been loaded 
         if (image == null) {
             image = createWhiteMegaTile();
@@ -152,22 +168,7 @@ public class Layer {
         if (this.curveURL != null && this.curveURL.length() > 0) {
             image = curve(image);
         }
-
-        // tinting
-        if (this.tint != null) {
-            // use the pre-existing image for modulating brightness if the image
-            // exists (i.e. a texture image has been created or an image has
-            // been loaded).
-            if (image != null) {
-                TintFilter tintFilter = new TintFilter();
-                tintFilter.setTint(this.tint.getTintColor());
-                image = tintFilter.filter(image, null);
-            } else {
-                // no pre-existing image, create a solid color image
-                image = solidColorImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, this.tint.getTintColor());
-            }
-        }
-
+        
         // masking
         BufferedImage maskImage = null;
         if (maskTileSet != null) {
