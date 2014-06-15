@@ -57,8 +57,8 @@ public class Layer {
     @XmlElement(name = "name")
     private String name;
 
-    @XmlElement(name = "textureURL")
-    private String textureURL;
+    @XmlElement(name = "textureTileFilePath")
+    private String textureTileFilePath;
 
     @XmlElement(name = "blending")
     private BlendType blending = BlendType.NORMAL;
@@ -104,34 +104,33 @@ public class Layer {
             g2d.setComposite(new MultiplyComposite(getOpacity()));
         }
 
-        BufferedImage textureImage = null;
-        if (textureURL != null) {
+        BufferedImage image = null;
+        if (textureTileFilePath != null) {
             try {
-                textureImage = ImageIO.read(new File(textureURL));
-                textureImage = ImageUtils.convertImageToARGB(textureImage);
+                BufferedImage textureTile = ImageIO.read(new File(textureTileFilePath));
+                textureTile = ImageUtils.convertImageToARGB(textureTile);
 
                 // scale texture patch if needed
                 if (textureScale != 1f) {
-                    int textureW = (int) (textureImage.getWidth() * this.textureScale);
-                    int textureH = (int) (textureImage.getHeight() * this.textureScale);
+                    int textureW = (int) (textureTile.getWidth() * this.textureScale);
+                    int textureH = (int) (textureTile.getHeight() * this.textureScale);
                     BicubicScaleFilter scaleFilter = new BicubicScaleFilter(textureW, textureH);
-                    textureImage = scaleFilter.filter(textureImage, null);
+                    textureTile = scaleFilter.filter(textureTile, null);
                 }
 
                 TileImageFilter tiler = new TileImageFilter();
                 tiler.setHeight(Tile.TILE_SIZE * 3);
                 tiler.setWidth(Tile.TILE_SIZE * 3);
                 BufferedImage dst = new BufferedImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
-                textureImage = tiler.filter(textureImage, dst);
+                image = tiler.filter(textureTile, dst);
             } catch (IOException ex) {
-                textureImage = null;
+                image = null;
                 // FIXME
                 System.err.println("could not load texture image");
             }
         }
 
         // load tile image
-        BufferedImage image = null;
         if (imageTileSet != null) {
             Tile tile = imageTileSet.getTile(z, x, y);
             try {
@@ -159,7 +158,7 @@ public class Layer {
             // use the pre-existing image for modulating brightness if the image
             // exists (i.e. a texture image has been created or an image has
             // been loaded).
-            if (textureImage != null || image != null) {
+            if (image != null) {
                 TintFilter tintFilter = new TintFilter();
                 tintFilter.setTint(this.tint.getTintColor());
                 image = tintFilter.filter(image, null);
@@ -364,17 +363,18 @@ public class Layer {
     }
 
     /**
-     * @return the textureURL
+     * @return the textureTileFilePath
      */
-    public String getTextureURL() {
-        return textureURL;
+    public String getTextureTileFilePath() {
+        return textureTileFilePath;
     }
 
     /**
-     * @param textureURL the textureURL to set
+     * @param textureTileFilePath File path for a single tile that is used to 
+     * texture the layer.
      */
-    public void setTextureURL(String textureURL) {
-        this.textureURL = textureURL;
+    public void setTextureTileFilePath(String textureTileFilePath) {
+        this.textureTileFilePath = textureTileFilePath;
     }
 
     /**

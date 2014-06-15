@@ -18,6 +18,7 @@ import edu.oregonstate.carto.utils.GUIUtil;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -26,6 +27,8 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.prefs.Preferences;
 import javafx.embed.swing.JFXPanel;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -454,14 +457,18 @@ public class MapComposerPanel extends javax.swing.JPanel {
         texturePanel.add(textureClearButton, gridBagConstraints);
 
         texturePreviewLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        texturePreviewLabel.setPreferredSize(new java.awt.Dimension(50, 50));
+        texturePreviewLabel.setPreferredSize(new java.awt.Dimension(128, 128));
+        texturePreviewLabel.setRequestFocusEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridheight = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 7, 0, 0);
         texturePanel.add(texturePreviewLabel, gridBagConstraints);
 
         textureScaleFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.#"))));
+        textureScaleFormattedTextField.setPreferredSize(new java.awt.Dimension(50, 28));
         textureScaleFormattedTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 numberFieldChanged(evt);
@@ -541,6 +548,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         dropShadowPanel.setLayout(new java.awt.GridBagLayout());
 
+        shadowCheckBox.setText("Apply Drop Shadow");
         shadowCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         shadowCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         shadowCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -548,10 +556,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 MapComposerPanel.this.actionPerformed(evt);
             }
         });
-        dropShadowPanel.add(shadowCheckBox, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
+        dropShadowPanel.add(shadowCheckBox, gridBagConstraints);
 
         shadowOffsetLabel.setText("Offset:");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         dropShadowPanel.add(shadowOffsetLabel, gridBagConstraints);
 
@@ -562,19 +576,25 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 sliderStateChanged(evt);
             }
         });
-        dropShadowPanel.add(shadowOffsetSlider, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        dropShadowPanel.add(shadowOffsetSlider, gridBagConstraints);
 
         shadowColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MapComposerPanel.this.actionPerformed(evt);
             }
         });
-        dropShadowPanel.add(shadowColorButton, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        dropShadowPanel.add(shadowColorButton, gridBagConstraints);
 
         DropShadowFuzinessLabel.setText("Fuziness:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         dropShadowPanel.add(DropShadowFuzinessLabel, gridBagConstraints);
 
@@ -587,13 +607,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         dropShadowPanel.add(shadowFuziSlider, gridBagConstraints);
 
         settingsTabbedPane.addTab("Drop Shadow", dropShadowPanel);
 
         embossPanel.setLayout(new java.awt.GridBagLayout());
 
+        embossCheckBox.setText("Emboss");
         embossCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         embossCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         embossCheckBox.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -1273,28 +1294,21 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void textureSelectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textureSelectionButtonActionPerformed
-        /*try {
-         String path = null;
-         if (imageCollection instanceof DirectoryImageCollection) {
-         String msg = "Select a Texture Image Tile";
-         path = FileUtils.askFile(GUIUtil.getOwnerFrame(this), msg, true);
-         } else if (imageCollection instanceof TiledImageCollection) {
-         String msg = "Select a Directory with a Texture Tile Set";
-         path = FileUtils.askDirectory(GUIUtil.getOwnerFrame(this), msg, true, null);
-         }
-         if (path != null) {
-         MapLayer layer = getSelectedMapLayer();
-         if (layer != null) {
-         layer.setTextureURL(path);
-         }
-         writeGUI();
-         }
-         } catch (Exception ex) {
-         String msg = "Error";
-         String title = "The texture could not be loaded.";
-         ErrorDialog.showErrorDialog(msg, title, ex, this);
-         }
-         */
+        try {
+            String msg = "Select a Texture Image Tile";
+            String path = FileUtils.askFile(GUIUtil.getOwnerFrame(this), msg, true);
+            if (path != null) {
+                Layer layer = getSelectedMapLayer();
+                if (layer != null) {
+                    layer.setTextureTileFilePath(path);
+                }
+                writeGUI();
+            }
+        } catch (Exception ex) {
+            String msg = "Error";
+            String title = "The texture could not be loaded.";
+            ErrorDialog.showErrorDialog(msg, title, ex, this);
+        }
     }//GEN-LAST:event_textureSelectionButtonActionPerformed
 
     /**
@@ -1305,7 +1319,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private void textureClearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textureClearButtonActionPerformed
         Layer layer = getSelectedMapLayer();
         if (layer != null) {
-            layer.setTextureURL(null);
+            layer.setTextureTileFilePath(null);
         }
         writeGUI();
     }//GEN-LAST:event_textureClearButtonActionPerformed
@@ -1384,7 +1398,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     private void deleteCurveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCurveFileButtonActionPerformed
         getSelectedMapLayer().setCurveURL(null);
-        this.curveFilePathTextField.setText("");        
+        this.curveFilePathTextField.setText("");
     }//GEN-LAST:event_deleteCurveFileButtonActionPerformed
 
     /**
@@ -1510,7 +1524,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
 
             // texture
-            textureURLLabel.setText(selectedLayer.getTextureURL());
+            textureURLLabel.setText(selectedLayer.getTextureTileFilePath());
             this.writeTextureScale(selectedLayer.getTextureScale());
             this.textureScaleFormattedTextField.setValue(selectedLayer.getTextureScale());
             previewTexture();
@@ -1563,29 +1577,25 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * Displays a piece of texture in a preview thumbnail.
      */
     private void previewTexture() {
-        /*
-         // tiled textures are not currently supported
-         if (imageCollection instanceof DirectoryImageCollection == false) {
-         texturePreviewLabel.setIcon(null);
-         return;
-         }
-         String textureURL = getSelectedMapLayer().getTextureURL();
-         if (textureURL == null) {
-         texturePreviewLabel.setIcon(null);
-         return;
-         }
-         try {
-         int h = texturePreviewLabel.getHeight();
-         int w = texturePreviewLabel.getWidth();
-         BufferedImage texturePatch = ImageIO.read(new File(textureURL));
-         TileImageFilter tiler = new TileImageFilter(w, h);
-         BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-         img = tiler.filter(texturePatch, img);
-         texturePreviewLabel.setIcon(new ImageIcon(img));
-         } catch (Exception ex) {
-         texturePreviewLabel.setIcon(null);
-         }
-         */
+
+        texturePreviewLabel.setIcon(null);
+        String textureFilePath = getSelectedMapLayer().getTextureTileFilePath();
+        if (textureFilePath == null) {
+            texturePreviewLabel.setIcon(null);
+            return;
+        }
+        try {
+            int h = texturePreviewLabel.getHeight();
+            int w = texturePreviewLabel.getWidth();
+            BufferedImage texturePatch = ImageIO.read(new File(textureFilePath));
+            /*TileImageFilter tiler = new TileImageFilter(w, h);
+            BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+            img = tiler.filter(texturePatch, img);*/
+            texturePreviewLabel.setIcon(new ImageIcon(texturePatch));
+        } catch (Exception ex) {
+            texturePreviewLabel.setIcon(null);
+        }
+
     }
 
     /**
@@ -1635,7 +1645,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
         maskUrlTextField.setForeground(maskUrlTemplateIsValid ? okColor : Color.RED);
 
-        
         // mask
         // FIXME layer.setMaskName((String) this.maskComboBox.getSelectedItem());
         layer.setInvertMask(this.invertMaskCheckBox.isSelected());
