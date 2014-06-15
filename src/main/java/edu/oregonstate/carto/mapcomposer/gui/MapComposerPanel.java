@@ -197,7 +197,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         javax.swing.JLabel opacityLabel = new javax.swing.JLabel();
         opacitySlider = new javax.swing.JSlider();
         curveFilePathTextField = new javax.swing.JTextField();
-        curveFileButton = new javax.swing.JButton();
+        loadCurveFileButton = new javax.swing.JButton();
         javax.swing.JLabel gradationCurveLabel = new javax.swing.JLabel();
         javax.swing.JLabel tintLabel = new javax.swing.JLabel();
         tintCheckBox = new javax.swing.JCheckBox();
@@ -206,6 +206,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         urlTextField = new javax.swing.JTextField();
         opacityTextField = new javax.swing.JFormattedTextField();
         urlHintTextArea = new javax.swing.JTextArea();
+        deleteCurveFileButton = new javax.swing.JButton();
         southPanel = new javax.swing.JPanel();
         extentButton = new javax.swing.JButton();
         previewButton = new javax.swing.JButton();
@@ -858,17 +859,17 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         settingsPanel.add(curveFilePathTextField, gridBagConstraints);
 
-        curveFileButton.setText("File");
-        curveFileButton.addActionListener(new java.awt.event.ActionListener() {
+        loadCurveFileButton.setText("File");
+        loadCurveFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                curveFileButtonActionPerformed(evt);
+                loadCurveFileButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 2;
-        settingsPanel.add(curveFileButton, gridBagConstraints);
+        settingsPanel.add(loadCurveFileButton, gridBagConstraints);
 
         gradationCurveLabel.setText("Curve (ACV):");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -954,6 +955,19 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 4;
         settingsPanel.add(urlHintTextArea, gridBagConstraints);
+
+        deleteCurveFileButton.setText("Delete");
+        deleteCurveFileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteCurveFileButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        settingsPanel.add(deleteCurveFileButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1315,7 +1329,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
      *
      * @param evt
      */
-    private void curveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_curveFileButtonActionPerformed
+    private void loadCurveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCurveFileButtonActionPerformed
+        // read curves file
         String msg = "Select an Adobe Photoshop ACV File";
         String filePath = FileUtils.askFile(GUIUtil.getOwnerFrame(this), msg, true);
         if (filePath == null) {
@@ -1323,7 +1338,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
         this.curveFilePathTextField.setText("file://" + filePath);
         this.readGUI();
-    }//GEN-LAST:event_curveFileButtonActionPerformed
+    }//GEN-LAST:event_loadCurveFileButtonActionPerformed
 
     private void extentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extentButtonActionPerformed
         String title = "Tiles Extent";
@@ -1349,10 +1364,15 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.previewExtent = new Rectangle2D.Double(west, south, east - west, north - south);
             this.previewMinZoom = ((Number) minZoomSpinner.getValue()).intValue();
             this.previewMaxZoom = ((Number) maxZoomSpinner.getValue()).intValue();
-            
+
             writeExtentPreferences();
         }
     }//GEN-LAST:event_extentButtonActionPerformed
+
+    private void deleteCurveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCurveFileButtonActionPerformed
+        getSelectedMapLayer().setCurveURL(null);
+        this.curveFilePathTextField.setText("");        
+    }//GEN-LAST:event_deleteCurveFileButtonActionPerformed
 
     /**
      * Updates the value of the texture scale slider
@@ -1413,7 +1433,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.opacitySlider.setEnabled(on);
             this.opacityTextField.setEnabled(on);
             this.curveFilePathTextField.setEnabled(on);
-            this.curveFileButton.setEnabled(on);
+            this.loadCurveFileButton.setEnabled(on);
             this.tintCheckBox.setEnabled(on);
             this.tintColorButton.setEnabled(on);
             this.textureSelectionButton.setEnabled(on);
@@ -1639,8 +1659,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JButton addLayerButton;
     private javax.swing.ButtonGroup blendingButtonGroup;
     private javax.swing.JPanel centralPanel;
-    private javax.swing.JButton curveFileButton;
     private javax.swing.JTextField curveFilePathTextField;
+    private javax.swing.JButton deleteCurveFileButton;
     private javax.swing.JFormattedTextField eastField;
     private javax.swing.JPanel eastPanel;
     private javax.swing.JFormattedTextField embossAzimuthFormattedTextField;
@@ -1662,6 +1682,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private edu.oregonstate.carto.mapcomposer.gui.DraggableList layerList;
     private javax.swing.JToolBar layerListToolBar;
     private javax.swing.JPanel layersPanel;
+    private javax.swing.JButton loadCurveFileButton;
     private javax.swing.JSlider maskBlurSlider;
     private javax.swing.JComboBox maskComboBox;
     private javax.swing.JSpinner maxZoomSpinner;

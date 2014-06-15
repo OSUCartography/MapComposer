@@ -7,6 +7,10 @@ import com.jhlabs.image.ImageUtils;
 import com.jhlabs.image.LightFilter;
 import com.jhlabs.image.ShadowFilter;
 import com.jhlabs.image.TileImageFilter;
+import edu.oregonstate.carto.importer.AdobeCurveReader;
+import edu.oregonstate.carto.mapcomposer.gui.ErrorDialog;
+import edu.oregonstate.carto.mapcomposer.imageFilters.CurvesFilter;
+import edu.oregonstate.carto.mapcomposer.imageFilters.CurvesFilter.Curve;
 import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
 import edu.oregonstate.carto.tilemanager.ImageTileMerger;
 import edu.oregonstate.carto.tilemanager.Tile;
@@ -20,11 +24,17 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.xml.bind.annotation.XmlElement;
 
 /**
  * A map layer.
+ *
  * @author Nicholas Hallahan nick@theoutpost.io
  * @author Bernhard Jenny, Cartography and Geovisualization Group, Oregon State
  * University
@@ -32,57 +42,60 @@ import javax.xml.bind.annotation.XmlElement;
 public class Layer {
 
     public enum BlendType {
+
         NORMAL, MULTIPLY
     }
-    
+
     private static BufferedImage whiteMegaTile;
-    
+
     private TileSet imageTileSet;
     private TileSet maskTileSet;
-    
+
     @XmlElement(name = "visible")
     private boolean visible = true;
-    
+
     @XmlElement(name = "name")
     private String name;
-    
+
     @XmlElement(name = "textureURL")
     private String textureURL;
-    
+
     @XmlElement(name = "blending")
     private BlendType blending = BlendType.NORMAL;
-    
+
     @XmlElement(name = "opacity")
     private float opacity = 1;
-    
+
     @XmlElement(name = "curveURL")
     private String curveURL;
-    
+
+    private CurvesFilter.Curve[] curves = null;
+
     @XmlElement(name = "tint")
     private Tint tint = null;
-    
+
     @XmlElement(name = "textureScale")
     private float textureScale = 1f;
-    
+
     @XmlElement(name = "invertMask")
     private boolean invertMask = false;
-    
+
     @XmlElement(name = "maskBlur")
     private float maskBlur = 0;
-    
+
     @XmlElement(name = "shadow")
     private Shadow shadow = null;
-    
+
     @XmlElement(name = "emboss")
     private Emboss emboss = null;
 
     public Layer() {
     }
-    
+
     public Layer(String layerName) {
         this.name = layerName;
     }
-    
+
     public void renderToTile(Graphics2D g2d, int z, int x, int y) {
 
         if (isBlendingNormal()) {
@@ -117,7 +130,6 @@ public class Layer {
             }
         }
 
-
         // load tile image
         BufferedImage image = null;
         if (imageTileSet != null) {
@@ -136,13 +148,11 @@ public class Layer {
         if (image == null) {
             image = createWhiteMegaTile();
         }
-        
+
         // gradation curve
         if (this.curveURL != null && this.curveURL.length() > 0) {
-            // FIXME
-            //image = curve(image, this.curveURL);
+            image = curve(image);
         }
-
 
         // tinting
         if (this.tint != null) {
@@ -180,9 +190,9 @@ public class Layer {
                 maskImage = blurFilter.filter(maskImage, null);
             }
 
-            image = alphaChannelFromGrayImage(image, maskImage, this.invertMask);   
+            image = alphaChannelFromGrayImage(image, maskImage, this.invertMask);
         }
-        
+
         // embossing
         if (this.emboss != null) {
             // this solution works fine, but is slow
@@ -217,6 +227,42 @@ public class Layer {
         // draw this layer into the destination image
         BufferedImage tileImage = image.getSubimage(Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
         g2d.drawImage(tileImage, null, null);
+    }
+
+    /**
+     * Applies curve to image.
+     * @param image
+     * @return 
+     */
+    private BufferedImage curve(BufferedImage image) {
+        // load curve from file if it has not been loaded yet        
+        try {
+            
+            if (curves == null && curveURL != null) {
+                URI uri = new URI(curveURL);
+                if (!new File(uri).exists()) {
+                    ErrorDialog.showErrorDialog("Curves file does not exist.");
+                    return null;
+                }
+                AdobeCurveReader acr = new AdobeCurveReader();
+                acr.readACV(new URL(curveURL));
+                curves = acr.getCurves();
+                for (CurvesFilter.Curve c : curves) {
+                    c.normalize();
+                }                
+            }
+        } catch (IOException | URISyntaxException ex) {
+            Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // apply curve to image
+        if (curves != null) {
+            CurvesFilter curvesFilter = new CurvesFilter();
+            curvesFilter.setCurves(curves);
+            return curvesFilter.filter(image, null);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -262,9 +308,11 @@ public class Layer {
         g2d.dispose();
         return image;
     }
-    
+
     private static BufferedImage createWhiteMegaTile() {
-        if (whiteMegaTile != null) return whiteMegaTile;
+        if (whiteMegaTile != null) {
+            return whiteMegaTile;
+        }
         whiteMegaTile = new BufferedImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = whiteMegaTile.createGraphics();
         g.setColor(Color.WHITE);
@@ -385,6 +433,7 @@ public class Layer {
      * @param curveURL the curveURL to set
      */
     public void setCurveURL(String curveURL) {
+        curves = null;
         this.curveURL = curveURL;
     }
 
@@ -429,8 +478,7 @@ public class Layer {
     public void setMaskBlur(float maskBlur) {
         this.maskBlur = maskBlur;
     }
-    
-    
+
     /**
      * @return the blending
      */
@@ -479,7 +527,7 @@ public class Layer {
     public void setEmboss(Emboss emboss) {
         this.emboss = emboss;
     }
-    
+
     @Override
     public String toString() {
         return getName();
