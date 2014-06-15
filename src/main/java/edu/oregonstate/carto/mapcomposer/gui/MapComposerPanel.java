@@ -161,10 +161,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
         texturePreviewLabel = new javax.swing.JLabel();
         textureScaleFormattedTextField = new javax.swing.JFormattedTextField();
         javax.swing.JPanel maskPanel = new TransparentMacPanel();
-        maskComboBox = new javax.swing.JComboBox();
         invertMaskCheckBox = new javax.swing.JCheckBox();
         javax.swing.JLabel maskBlurLabel = new javax.swing.JLabel();
         maskBlurSlider = new javax.swing.JSlider();
+        maskUrlTextField = new javax.swing.JTextField();
+        javax.swing.JTextArea urlHintTextArea1 = new javax.swing.JTextArea();
         javax.swing.JPanel dropShadowPanel = new TransparentMacPanel();
         shadowCheckBox = new javax.swing.JCheckBox();
         shadowOffsetLabel = new javax.swing.JLabel();
@@ -205,7 +206,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JSeparator();
         urlTextField = new javax.swing.JTextField();
         opacityTextField = new javax.swing.JFormattedTextField();
-        urlHintTextArea = new javax.swing.JTextArea();
+        javax.swing.JTextArea urlHintTextArea = new javax.swing.JTextArea();
         deleteCurveFileButton = new javax.swing.JButton();
         southPanel = new javax.swing.JPanel();
         extentButton = new javax.swing.JButton();
@@ -477,19 +478,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         maskPanel.setLayout(new java.awt.GridBagLayout());
 
-        maskComboBox.setEditable(true);
-        maskComboBox.setMaximumRowCount(25);
-        maskComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        maskComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        maskPanel.add(maskComboBox, gridBagConstraints);
-
         invertMaskCheckBox.setText("Invert Mask");
         invertMaskCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         invertMaskCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
@@ -508,7 +496,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         maskBlurLabel.setText("Blur Mask:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 5;
         maskPanel.add(maskBlurLabel, gridBagConstraints);
 
         maskBlurSlider.setMinorTickSpacing(10);
@@ -521,8 +509,33 @@ public class MapComposerPanel extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 5;
         maskPanel.add(maskBlurSlider, gridBagConstraints);
+
+        maskUrlTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
+        maskUrlTextField.setPreferredSize(new java.awt.Dimension(600, 28));
+        // Listen for changes in the text
+        addDocumentListener(urlTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        maskPanel.add(maskUrlTextField, gridBagConstraints);
+
+        urlHintTextArea1.setEditable(false);
+        urlHintTextArea1.setColumns(20);
+        urlHintTextArea1.setFont(urlHintTextArea1.getFont().deriveFont(urlHintTextArea1.getFont().getSize()-2f));
+        urlHintTextArea1.setRows(4);
+        urlHintTextArea1.setText("Example: http://tile.stamen.com/toner/{z}/{x}/{y}.png");
+        urlHintTextArea1.setOpaque(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        maskPanel.add(urlHintTextArea1, gridBagConstraints);
 
         settingsTabbedPane.addTab("Mask", maskPanel);
 
@@ -1440,7 +1453,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.textureClearButton.setEnabled(on);
             this.textureURLLabel.setEnabled(on);
             this.textureScaleSlider.setEnabled(on);
-            this.maskComboBox.setEnabled(on);
+            this.maskUrlTextField.setEnabled(on);
             this.maskBlurSlider.setEnabled(on);
             this.invertMaskCheckBox.setEnabled(on);
             this.shadowCheckBox.setEnabled(on);
@@ -1465,7 +1478,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 this.nameTextField.setText(null);
                 this.urlTextField.setText(null);
                 this.curveFilePathTextField.setText(null);
-                this.maskComboBox.setSelectedItem(null);
+                this.maskUrlTextField.setText(null);
                 return;
             }
 
@@ -1503,7 +1516,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
             previewTexture();
 
             // mask
-            // FIXME this.maskComboBox.setSelectedItem(selectedLayer.getMaskName());
+            TileSet maskTileSet = selectedLayer.getMaskTileSet();
+            if (maskTileSet == null) {
+                this.maskUrlTextField.setText(null);
+            } else {
+                this.maskUrlTextField.setText(maskTileSet.getUrlTemplate());
+            }
             this.invertMaskCheckBox.setSelected(selectedLayer.isInvertMask());
             this.maskBlurSlider.setValue((int) (selectedLayer.getMaskBlur() * 10f));
 
@@ -1598,12 +1616,26 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 tileSet = new TileSet(tileSetURL);
                 layer.setImageTileSet(tileSet);
             } else {
-                tileSet.setUrlTemplate(urlTextField.getText());
+                tileSet.setUrlTemplate(tileSetURL);
             }
         }
         Color okColor = UIManager.getDefaults().getColor("TextField.foreground");
         urlTextField.setForeground(urlTemplateIsValid ? okColor : Color.RED);
 
+        String maskTileSetURL = maskUrlTextField.getText();
+        boolean maskUrlTemplateIsValid = TileSet.isURLTemplateValid(maskTileSetURL);
+        if (maskUrlTemplateIsValid) {
+            TileSet maskTileSet = layer.getMaskTileSet();
+            if (maskTileSet == null) {
+                maskTileSet = new TileSet(maskTileSetURL);
+                layer.setMaskTileSet(maskTileSet);
+            } else {
+                maskTileSet.setUrlTemplate(maskTileSetURL);
+            }
+        }
+        maskUrlTextField.setForeground(maskUrlTemplateIsValid ? okColor : Color.RED);
+
+        
         // mask
         // FIXME layer.setMaskName((String) this.maskComboBox.getSelectedItem());
         layer.setInvertMask(this.invertMaskCheckBox.isSelected());
@@ -1684,7 +1716,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel layersPanel;
     private javax.swing.JButton loadCurveFileButton;
     private javax.swing.JSlider maskBlurSlider;
-    private javax.swing.JComboBox maskComboBox;
+    private javax.swing.JTextField maskUrlTextField;
     private javax.swing.JSpinner maxZoomSpinner;
     private javax.swing.JSpinner minZoomSpinner;
     private javax.swing.JButton moveDownLayerButton;
@@ -1713,7 +1745,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel textureURLLabel;
     private javax.swing.JCheckBox tintCheckBox;
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton tintColorButton;
-    private javax.swing.JTextArea urlHintTextArea;
     private javax.swing.JTextField urlTextField;
     private javax.swing.JCheckBox visibleCheckBox;
     private javax.swing.JFormattedTextField westField;
