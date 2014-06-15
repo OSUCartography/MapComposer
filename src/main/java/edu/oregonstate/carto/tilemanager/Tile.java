@@ -15,6 +15,7 @@ import java.net.URL;
  */
 public abstract class Tile<TileData> {
 
+    public static final double MAX_LAT = 85.05112878;
     /**
      * Tiles are always 256 x 256 pixels.
      */
@@ -192,10 +193,5 @@ public abstract class Tile<TileData> {
         out.writeInt(z);
         out.writeInt(x);
         out.writeInt(y);
-    }
-    
-    @Override
-    public String toString() {
-        return "Tile(z=" + z + ", x=" + x + ", y=" + y + ")";
     }
 }

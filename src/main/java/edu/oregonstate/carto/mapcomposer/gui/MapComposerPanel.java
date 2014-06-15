@@ -10,6 +10,7 @@ import edu.oregonstate.carto.mapcomposer.Layer;
 import edu.oregonstate.carto.mapcomposer.Map;
 import edu.oregonstate.carto.mapcomposer.Shadow;
 import edu.oregonstate.carto.mapcomposer.Tint;
+import edu.oregonstate.carto.tilemanager.Tile;
 import edu.oregonstate.carto.tilemanager.TileGenerator;
 import edu.oregonstate.carto.tilemanager.TileSet;
 import edu.oregonstate.carto.utils.FileUtils;
@@ -23,8 +24,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javafx.embed.swing.JFXPanel;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
@@ -34,6 +34,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class MapComposerPanel extends javax.swing.JPanel {
+
+    private static final String PREFS_PREVIEW_WEST = "preview_extent_west";
+    private static final String PREFS_PREVIEW_EAST = "preview_extent_east";
+    private static final String PREFS_PREVIEW_SOUTH = "preview_extent_south";
+    private static final String PREFS_PREVIEW_NORTH = "preview_extent_north";
+    private static final String PREFS_PREVIEW_MIN_ZOOM = "preview_min_zoom";
+    private static final String PREFS_PREVIEW_MAX_ZOOM = "preview_max_zoom";
 
     /**
      * This map is the model.
@@ -49,7 +56,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     /**
      * Extent of the preview in lat/lon coordinates in degrees
      */
-    private Rectangle2D.Double previewExtent = new Rectangle2D.Double(-180, -85.05112878, 360, 2 * 85.05112878);
+    private Rectangle2D.Double previewExtent = new Rectangle2D.Double(-180, -Tile.MAX_LAT, 360, 2 * Tile.MAX_LAT);
 
     /**
      * minimum zoom level for preview
@@ -65,6 +72,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * Creates new form MapComposerPanel
      */
     public MapComposerPanel() {
+        readExtentPreferences();
         initComponents();
         writeGUI();
     }
@@ -77,6 +85,35 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private Layer getSelectedMapLayer() {
         int index = layerList.getSelectedIndex();
         return index == -1 ? null : map.getLayer(index);
+    }
+
+    /**
+     * Reads extent and zoom levels for preview from user preferences.
+     */
+    private void readExtentPreferences() {
+        Preferences prefs = Preferences.userNodeForPackage(MapComposerPanel.class);
+        double w = prefs.getDouble(PREFS_PREVIEW_WEST, previewExtent.getMinX());
+        double e = prefs.getDouble(PREFS_PREVIEW_EAST, previewExtent.getMaxX());
+        double s = prefs.getDouble(PREFS_PREVIEW_SOUTH, previewExtent.getMinY());
+        double n = prefs.getDouble(PREFS_PREVIEW_NORTH, previewExtent.getMaxY());
+        previewExtent.setFrame(w, s, e - w, n - s);
+
+        previewMinZoom = prefs.getInt(PREFS_PREVIEW_MIN_ZOOM, previewMinZoom);
+        previewMaxZoom = prefs.getInt(PREFS_PREVIEW_MAX_ZOOM, previewMaxZoom);
+    }
+
+    /**
+     * Writes extent and zoom levels for preview to user preferences.
+     */
+    private void writeExtentPreferences() {
+        Preferences prefs = Preferences.userNodeForPackage(MapComposerPanel.class);
+        prefs.putDouble(PREFS_PREVIEW_WEST, previewExtent.getMinX());
+        prefs.putDouble(PREFS_PREVIEW_EAST, previewExtent.getMaxX());
+        prefs.putDouble(PREFS_PREVIEW_SOUTH, previewExtent.getMinY());
+        prefs.putDouble(PREFS_PREVIEW_NORTH, previewExtent.getMaxY());
+
+        prefs.putInt(PREFS_PREVIEW_MIN_ZOOM, previewMinZoom);
+        prefs.putInt(PREFS_PREVIEW_MAX_ZOOM, previewMaxZoom);
     }
 
     /**
@@ -1312,6 +1349,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.previewExtent = new Rectangle2D.Double(west, south, east - west, north - south);
             this.previewMinZoom = ((Number) minZoomSpinner.getValue()).intValue();
             this.previewMaxZoom = ((Number) maxZoomSpinner.getValue()).intValue();
+            
+            writeExtentPreferences();
         }
     }//GEN-LAST:event_extentButtonActionPerformed
 
