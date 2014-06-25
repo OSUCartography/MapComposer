@@ -68,6 +68,7 @@ public abstract class Tile<TileData> {
      * returned. This may block the calling thread until the image is loaded.
      *
      * @return BufferedImage or Grid
+     * @throws java.io.IOException
      */
     public abstract TileData fetch() throws IOException;
 

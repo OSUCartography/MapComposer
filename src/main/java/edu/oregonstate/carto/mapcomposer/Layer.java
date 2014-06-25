@@ -10,7 +10,6 @@ import com.jhlabs.image.TileImageFilter;
 import edu.oregonstate.carto.importer.AdobeCurveReader;
 import edu.oregonstate.carto.mapcomposer.gui.ErrorDialog;
 import edu.oregonstate.carto.mapcomposer.imageFilters.CurvesFilter;
-import edu.oregonstate.carto.mapcomposer.imageFilters.CurvesFilter.Curve;
 import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
 import edu.oregonstate.carto.tilemanager.ImageTileMerger;
 import edu.oregonstate.carto.tilemanager.Tile;

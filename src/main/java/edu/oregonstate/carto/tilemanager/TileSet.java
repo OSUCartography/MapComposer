@@ -61,7 +61,16 @@ public class TileSet {
      */
     public static TileSet createFileTileSet(File directory) {
         StringBuilder sb = new StringBuilder();
-        sb.append("file://");
+        sb.append("file:///");
+        // triple slash is OK.
+        // http://superuser.com/questions/352133/what-is-the-reason-that-file-urls-start-with-three-slashes-file-etc
+        // From RFC 1738 – Uniform Resource Locators (URL):
+        // A file URL takes the form:
+        // file://<host>/<path>
+        // As a special case, <host> can be the string "localhost" or the empty 
+        // string; this is interpreted as 'the machine from which the URL is 
+        // being interpreted'.
+        
         sb.append(directory.getAbsolutePath());
         sb.append(File.separator);
         sb.append("{z}");
@@ -76,7 +85,7 @@ public class TileSet {
      *
      * @param urlTemplate Examples:
      * http://tile.openstreetmap.org/{z}/{x}/{y}.png
-     * file://C:/Users/nick/Documents/TMS_tiles_MountHood/buildingMask/{z}/{x}/{y}.png
+     * file:///C:/Users/nick/Documents/TMS_tiles_MountHood/buildingMask/{z}/{x}/{y}.png
      * @param cache
      * @param type
      * @param tmsSchema

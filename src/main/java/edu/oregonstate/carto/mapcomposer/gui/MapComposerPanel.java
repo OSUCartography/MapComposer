@@ -1363,7 +1363,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         if (filePath == null) {
             return;
         }
-        this.curveFilePathTextField.setText("file://" + filePath);
+        this.curveFilePathTextField.setText("file:///" + filePath);
         this.readGUI();
     }//GEN-LAST:event_loadCurveFileButtonActionPerformed
 
