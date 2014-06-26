@@ -95,6 +95,13 @@ public class Layer {
         this.name = layerName;
     }
 
+    /**
+     * Render a tile of this layer.
+     * @param g2d Graphics2D destination: render into this canvas
+     * @param z Zoom level of tile
+     * @param x Horizontal x coordinate of tile.
+     * @param y Vertical y coordinate of tile.
+     */
     public void renderToTile(Graphics2D g2d, int z, int x, int y) {
 
         if (isBlendingNormal()) {
@@ -220,8 +227,10 @@ public class Layer {
             shadowImage = shadowFilter.filter(shadowImage, null);
             shadowImage = shadowImage.getSubimage(Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
             g2d.drawImage(shadowImage, null, null);
-
         }
+        
+        // blur
+        // FIXME: to be done
 
         // draw this layer into the destination image
         BufferedImage tileImage = image.getSubimage(Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
