@@ -3,6 +3,7 @@ package edu.oregonstate.carto.mapcomposer;
 import com.jhlabs.composite.MultiplyComposite;
 import com.jhlabs.image.BicubicScaleFilter;
 import com.jhlabs.image.BoxBlurFilter;
+import com.jhlabs.image.GaussianFilter;
 import com.jhlabs.image.ImageUtils;
 import com.jhlabs.image.LightFilter;
 import com.jhlabs.image.ShadowFilter;
@@ -87,6 +88,9 @@ public class Layer {
 
     @XmlElement(name = "emboss")
     private Emboss emboss = null;
+    
+    //gaussian blur stuff here:
+    private float gaussBlur = 0;
 
     public Layer() {
     }
@@ -231,7 +235,15 @@ public class Layer {
         
         // blur
         // FIXME: to be done
-
+        //Should this be done similar to how masking process is done, except on 
+        //the whole image (subImage instead of megaTile?)
+        
+            if (this.gaussBlur > 0) {
+                GaussianFilter gaussFilter = new GaussianFilter();
+                gaussFilter.setRadius(this.gaussBlur);
+                image = gaussFilter.filter(image, image);
+            }
+       
         // draw this layer into the destination image
         BufferedImage tileImage = image.getSubimage(Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
         g2d.drawImage(tileImage, null, null);
@@ -535,6 +547,22 @@ public class Layer {
      */
     public void setEmboss(Emboss emboss) {
         this.emboss = emboss;
+    }
+    
+    //When I refactored/encapsulated "gaussBlur", it put these under the Layer
+    //method, so I moved them down here with the others:
+        /**
+     * @return the gaussBlur
+     */
+    public float getGaussBlur() {
+        return gaussBlur;
+    }
+
+    /**
+     * @param gaussBlur the gaussBlur to set
+     */
+    public void setGaussBlur(float gaussBlur) {
+        this.gaussBlur = gaussBlur;
     }
 
     @Override

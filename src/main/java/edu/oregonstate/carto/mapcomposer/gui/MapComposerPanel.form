@@ -960,6 +960,32 @@
                 </Component>
               </SubComponents>
             </Container>
+            <Container class="javax.swing.JPanel" name="gaussBlurPanel">
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                  <JTabbedPaneConstraints tabName="Gaussian Blur">
+                    <Property name="tabTitle" type="java.lang.String" value="Gaussian Blur"/>
+                  </JTabbedPaneConstraints>
+                </Constraint>
+              </Constraints>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="gaussBlurLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Gaussian Blur"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JSlider" name="gaussBlurSlider">
+                  <Properties>
+                    <Property name="majorTickSpacing" type="int" value="25"/>
+                    <Property name="minorTickSpacing" type="int" value="5"/>
+                    <Property name="paintLabels" type="boolean" value="true"/>
+                    <Property name="paintTicks" type="boolean" value="true"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="settingsPanel">

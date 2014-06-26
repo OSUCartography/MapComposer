@@ -190,6 +190,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         embossElevationFormattedTextField = new javax.swing.JFormattedTextField();
         embossHeightFormattedTextField = new javax.swing.JFormattedTextField();
         embossSoftnessFormattedTextField = new javax.swing.JFormattedTextField();
+        gaussBlurPanel = new javax.swing.JPanel();
+        gaussBlurLabel = new javax.swing.JLabel();
+        gaussBlurSlider = new javax.swing.JSlider();
         settingsPanel = new javax.swing.JPanel();
         visibleCheckBox = new javax.swing.JCheckBox();
         javax.swing.JLabel nameLabel = new javax.swing.JLabel();
@@ -773,6 +776,17 @@ public class MapComposerPanel extends javax.swing.JPanel {
         embossPanel.add(embossSoftnessFormattedTextField, gridBagConstraints);
 
         settingsTabbedPane.addTab("Emboss", embossPanel);
+
+        gaussBlurLabel.setText("Gaussian Blur");
+        gaussBlurPanel.add(gaussBlurLabel);
+
+        gaussBlurSlider.setMajorTickSpacing(25);
+        gaussBlurSlider.setMinorTickSpacing(5);
+        gaussBlurSlider.setPaintLabels(true);
+        gaussBlurSlider.setPaintTicks(true);
+        gaussBlurPanel.add(gaussBlurSlider);
+
+        settingsTabbedPane.addTab("Gaussian Blur", gaussBlurPanel);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1568,8 +1582,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
             } else {
                 this.embossCheckBox.setSelected(false);
             }
+            
+            //gaussian blur stuff goes here?
+            this.gaussBlurSlider.setValue((int) (selectedLayer.getGaussBlur()));
+            
         } finally {
             this.updating = false;
+            
+            
         }
     }
 
@@ -1684,6 +1704,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         } else {
             layer.setEmboss(null);
         }
+        
+        //gaussian blur goes here?
+        layer.setGaussBlur(this.gaussBlurSlider.getValue());
     }
 
     public Map getMap() {
@@ -1715,6 +1738,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JSlider embossSoftnessSlider;
     private javax.swing.JButton extentButton;
     private javax.swing.JPanel extentPanel;
+    private javax.swing.JLabel gaussBlurLabel;
+    private javax.swing.JPanel gaussBlurPanel;
+    private javax.swing.JSlider gaussBlurSlider;
     private javax.swing.JCheckBox invertMaskCheckBox;
     private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JPanel jPanel1;
