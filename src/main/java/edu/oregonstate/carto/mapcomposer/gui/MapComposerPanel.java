@@ -203,7 +203,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         multiplyBlendingRadioButton = new javax.swing.JRadioButton();
         javax.swing.JLabel opacityLabel = new javax.swing.JLabel();
         opacitySlider = new javax.swing.JSlider();
-        curveFilePathTextField = new javax.swing.JTextField();
         loadCurveFileButton = new javax.swing.JButton();
         javax.swing.JLabel gradationCurveLabel = new javax.swing.JLabel();
         javax.swing.JLabel tintLabel = new javax.swing.JLabel();
@@ -212,8 +211,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JSeparator();
         urlTextField = new javax.swing.JTextField();
         opacityTextField = new javax.swing.JFormattedTextField();
-        javax.swing.JTextArea urlHintTextArea = new javax.swing.JTextArea();
+        curveTextArea = new javax.swing.JTextArea();
         deleteCurveFileButton = new javax.swing.JButton();
+        javax.swing.JTextArea urlHintTextArea = new javax.swing.JTextArea();
         southPanel = new javax.swing.JPanel();
         extentButton = new javax.swing.JButton();
         previewButton = new javax.swing.JButton();
@@ -594,7 +594,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 2;
         dropShadowPanel.add(shadowColorButton, gridBagConstraints);
 
-        DropShadowFuzinessLabel.setText("Fuziness:");
+        DropShadowFuzinessLabel.setText("Fuzziness:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -894,19 +894,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         settingsPanel.add(opacitySlider, gridBagConstraints);
 
-        curveFilePathTextField.setEditable(false);
-        curveFilePathTextField.setBackground(null);
-        curveFilePathTextField.setFont(curveFilePathTextField.getFont().deriveFont((float)10));
-        curveFilePathTextField.setText("file:///Volumes/FireWireHD/Java/MapComposer/data/forestcurve.acv");
-        curveFilePathTextField.setBorder(null);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        settingsPanel.add(curveFilePathTextField, gridBagConstraints);
-
         loadCurveFileButton.setText("File");
         loadCurveFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -992,17 +979,19 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         settingsPanel.add(opacityTextField, gridBagConstraints);
 
-        urlHintTextArea.setEditable(false);
-        urlHintTextArea.setColumns(20);
-        urlHintTextArea.setFont(urlHintTextArea.getFont().deriveFont(urlHintTextArea.getFont().getSize()-2f));
-        urlHintTextArea.setRows(4);
-        urlHintTextArea.setText("Examples:\nhttp://tile.openstreetmap.org/{z}/{x}/{y}.png\nhttp://tile.stamen.com/watercolor/{z}/{x}/{y}.png\nhttp://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}.png");
-        urlHintTextArea.setOpaque(false);
+        curveTextArea.setEditable(false);
+        curveTextArea.setColumns(20);
+        curveTextArea.setFont(curveTextArea.getFont().deriveFont(curveTextArea.getFont().getSize()-2f));
+        curveTextArea.setRows(1);
+        curveTextArea.setText("file:///Volumes/FireWireHD/Java/MapComposer/data/forestcurve.acv");
+        curveTextArea.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 4;
-        settingsPanel.add(urlHintTextArea, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 15, 0);
+        settingsPanel.add(curveTextArea, gridBagConstraints);
 
         deleteCurveFileButton.setText("Delete");
         deleteCurveFileButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1016,6 +1005,20 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         settingsPanel.add(deleteCurveFileButton, gridBagConstraints);
+
+        urlHintTextArea.setEditable(false);
+        urlHintTextArea.setColumns(20);
+        urlHintTextArea.setFont(urlHintTextArea.getFont().deriveFont(urlHintTextArea.getFont().getSize()-2f));
+        urlHintTextArea.setRows(4);
+        urlHintTextArea.setText("Examples:\nhttp://tile.openstreetmap.org/{z}/{x}/{y}.png\nhttp://tile.stamen.com/watercolor/{z}/{x}/{y}.png\nhttp://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}.png");
+        urlHintTextArea.setOpaque(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        settingsPanel.add(urlHintTextArea, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1377,7 +1380,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         if (filePath == null) {
             return;
         }
-        this.curveFilePathTextField.setText("file:///" + filePath);
+        curveTextArea.setText("file:///" + filePath);
         this.readGUI();
     }//GEN-LAST:event_loadCurveFileButtonActionPerformed
 
@@ -1412,7 +1415,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     private void deleteCurveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCurveFileButtonActionPerformed
         getSelectedMapLayer().setCurveURL(null);
-        this.curveFilePathTextField.setText("");
+        curveTextArea.setText("");
     }//GEN-LAST:event_deleteCurveFileButtonActionPerformed
 
     /**
@@ -1473,7 +1476,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.multiplyBlendingRadioButton.setEnabled(on);
             this.opacitySlider.setEnabled(on);
             this.opacityTextField.setEnabled(on);
-            this.curveFilePathTextField.setEnabled(on);
+            this.curveTextArea.setEnabled(on);
             this.loadCurveFileButton.setEnabled(on);
             this.tintCheckBox.setEnabled(on);
             this.tintColorButton.setEnabled(on);
@@ -1505,7 +1508,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             if (selectedLayer == null) {
                 this.nameTextField.setText(null);
                 this.urlTextField.setText(null);
-                this.curveFilePathTextField.setText(null);
+                this.curveTextArea.setText(null);
                 this.maskUrlTextField.setText(null);
                 return;
             }
@@ -1527,7 +1530,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.opacityTextField.setValue((int) (selectedLayer.getOpacity() * 100));
 
             // curve
-            this.curveFilePathTextField.setText(selectedLayer.getCurveURL());
+            this.curveTextArea.setText(selectedLayer.getCurveURL());
 
             // tinting
             if (selectedLayer.getTint() != null) {
@@ -1635,8 +1638,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layer.setName(nameTextField.getText());
         layer.setBlending(this.normalBlendingRadioButton.isSelected()
                 ? Layer.BlendType.NORMAL : Layer.BlendType.MULTIPLY);
-        layer.setOpacity(this.opacitySlider.getValue() / 100.f);
-        layer.setCurveURL(this.curveFilePathTextField.getText());
+        layer.setOpacity(opacitySlider.getValue() / 100.f);
+        layer.setCurveURL(curveTextArea.getText());
 
         String tileSetURL = urlTextField.getText();
         boolean urlTemplateIsValid = TileSet.isURLTemplateValid(tileSetURL);
@@ -1723,7 +1726,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JButton addLayerButton;
     private javax.swing.ButtonGroup blendingButtonGroup;
     private javax.swing.JPanel centralPanel;
-    private javax.swing.JTextField curveFilePathTextField;
+    private javax.swing.JTextArea curveTextArea;
     private javax.swing.JButton deleteCurveFileButton;
     private javax.swing.JFormattedTextField eastField;
     private javax.swing.JPanel eastPanel;

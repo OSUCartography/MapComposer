@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -255,15 +256,9 @@ public class Layer {
      * @return 
      */
     private BufferedImage curve(BufferedImage image) {
-        // load curve from file if it has not been loaded yet        
+        // load curve from URL if it has not been loaded yet        
         try {
-            
             if (curves == null && curveURL != null) {
-                URI uri = new URI(curveURL);
-                if (!new File(uri).exists()) {
-                    ErrorDialog.showErrorDialog("Curves file does not exist.");
-                    return null;
-                }
                 AdobeCurveReader acr = new AdobeCurveReader();
                 acr.readACV(new URL(curveURL));
                 curves = acr.getCurves();
@@ -271,7 +266,7 @@ public class Layer {
                     c.normalize();
                 }                
             }
-        } catch (IOException | URISyntaxException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
         }
 
