@@ -31,6 +31,8 @@ import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 /**
@@ -40,6 +42,8 @@ import javax.xml.bind.annotation.XmlElement;
  * @author Bernhard Jenny, Cartography and Geovisualization Group, Oregon State
  * University
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+
 public class Layer {
 
     public enum BlendType {
@@ -61,7 +65,7 @@ public class Layer {
     @XmlElement(name = "textureTileFilePath")
     private String textureTileFilePath;
 
-    @XmlElement(name = "blending")
+    @XmlElement (name = "blending")
     private BlendType blending = BlendType.NORMAL;
 
     @XmlElement(name = "opacity")
@@ -234,11 +238,7 @@ public class Layer {
             g2d.drawImage(shadowImage, null, null);
         }
         
-        // blur
-        // FIXME: to be done
-        //Should this be done similar to how masking process is done, except on 
-        //the whole image (subImage instead of megaTile?)
-        
+        // Gaussian Blur
             if (this.gaussBlur > 0) {
                 GaussianFilter gaussFilter = new GaussianFilter();
                 gaussFilter.setRadius(this.gaussBlur);

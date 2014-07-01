@@ -15,13 +15,20 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Nicholas Hallahan nick@theoutpost.io
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Map {
-
+    
+    @XmlElement
     private final ArrayList<Layer> layers = new ArrayList<>();
 
     public BufferedImage generateTile(int z, int x, int y) {
@@ -93,7 +100,7 @@ public class Map {
     
     public void marshal(String fileName) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Map.class);
+             JAXBContext context = JAXBContext.newInstance(Map.class);
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             m.marshal(this, new FileOutputStream(fileName));

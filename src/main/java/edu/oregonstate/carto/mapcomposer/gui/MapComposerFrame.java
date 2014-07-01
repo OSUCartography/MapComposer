@@ -8,6 +8,11 @@ package edu.oregonstate.carto.mapcomposer.gui;
 import edu.oregonstate.carto.mapcomposer.Map;
 import edu.oregonstate.carto.utils.FileUtils;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 /**
  * Main window for composing a map consisting of multiple layers. The UI
@@ -76,7 +81,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
         fileMenu.add(loadDataMenu);
         fileMenu.add(jSeparator1);
 
-        saveMapMenuItem.setText("Save Map");
+        saveMapMenuItem.setText("Save Tiles");
         saveMapMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveMapMenuItemActionPerformed(evt);
@@ -85,7 +90,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
         fileMenu.add(saveMapMenuItem);
         fileMenu.add(jSeparator2);
 
-        loadStyleMenuItem.setText("Load Style");
+        loadStyleMenuItem.setText("Load Map Settings");
         loadStyleMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadStyleMenuItemActionPerformed(evt);
@@ -93,7 +98,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
         });
         fileMenu.add(loadStyleMenuItem);
 
-        saveStyleMenuItem.setText("Save Style");
+        saveStyleMenuItem.setText("Save Map Settings");
         saveStyleMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveStyleMenuItemActionPerformed(evt);
@@ -223,12 +228,12 @@ public class MapComposerFrame extends javax.swing.JFrame {
 
     private void saveStyleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveStyleMenuItemActionPerformed
 
-        String filePath = FileUtils.askFile(null, "Save XML Style", null, false, "xml");
-        if (filePath == null) {
-            return;
-        }
-        File file = new File(filePath);
-        mapComposerPanel.getMap().marshal(file.getAbsolutePath());
+            String filePath = FileUtils.askFile(null, "Save XML Style", null, false, "xml");
+            if (filePath == null) {
+                return;
+            }
+            File file = new File(filePath);
+            mapComposerPanel.getMap().marshal(file.getAbsolutePath());
     }//GEN-LAST:event_saveStyleMenuItemActionPerformed
 
     private void createTextureMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createTextureMenuItemActionPerformed

@@ -36,7 +36,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="saveMapMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Save Map"/>
+                <Property name="text" type="java.lang.String" value="Save Tiles"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveMapMenuItemActionPerformed"/>
@@ -46,7 +46,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="loadStyleMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Load Style"/>
+                <Property name="text" type="java.lang.String" value="Load Map Settings"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadStyleMenuItemActionPerformed"/>
@@ -54,7 +54,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="saveStyleMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Save Style"/>
+                <Property name="text" type="java.lang.String" value="Save Map Settings"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveStyleMenuItemActionPerformed"/>
