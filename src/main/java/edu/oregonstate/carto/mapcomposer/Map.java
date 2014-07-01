@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,10 +26,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Nicholas Hallahan nick@theoutpost.io
  */
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class Map {
     
-    @XmlElement
+    @XmlElement (name = "layer")
     private final ArrayList<Layer> layers = new ArrayList<>();
 
     public BufferedImage generateTile(int z, int x, int y) {
@@ -82,19 +83,22 @@ public class Map {
     }
     
     public static Map unmarshal(String fileName) {
+        FileInputStream in = null;
         try {
             JAXBContext context = JAXBContext.newInstance(Map.class);
             Unmarshaller m = context.createUnmarshaller();
-            Map map = (Map)m.unmarshal(new FileInputStream(fileName));
+            in = new FileInputStream(fileName);
+            Map map = (Map)m.unmarshal(in);
             return map;
-            
-        } catch (JAXBException ex) {
-            // FIXME
+        } catch (JAXBException | FileNotFoundException ex) {
             Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+        } finally  {
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
         return new Map();
     }
     

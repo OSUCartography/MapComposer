@@ -34,6 +34,7 @@ import javax.imageio.ImageIO;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * A map layer.
@@ -51,6 +52,7 @@ public class Layer {
         NORMAL, MULTIPLY
     }
 
+    @XmlTransient
     private static BufferedImage whiteMegaTile;
 
     @XmlElement(name = "imageTileSet")
@@ -77,6 +79,7 @@ public class Layer {
     @XmlElement(name = "curveURL")
     private String curveURL;
 
+    
     private CurvesFilter.Curve[] curves = null;
 
     @XmlElement(name = "tint")
