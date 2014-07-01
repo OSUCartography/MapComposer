@@ -53,7 +53,10 @@ public class Layer {
 
     private static BufferedImage whiteMegaTile;
 
+    @XmlElement(name = "imageTileSet")
     private TileSet imageTileSet;
+    
+    @XmlElement(name = "maskTileSet")
     private TileSet maskTileSet;
 
     @XmlElement(name = "visible")

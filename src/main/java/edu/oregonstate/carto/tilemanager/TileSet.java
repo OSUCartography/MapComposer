@@ -100,6 +100,10 @@ public class TileSet {
     public TileSet(String urlTemplate) {
         this(urlTemplate, MemCache.getInstance(), TileType.IMAGE, false);
     }
+    
+    public TileSet(){
+        this(null);
+    }
 
     /**
      * Constructs the URL corresponding to a given tile.
