@@ -43,6 +43,9 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Bernhard Jenny, Cartography and Geovisualization Group, Oregon State
  * University
  */
+
+//Every non static, non transient field in a JAXB-bound class will be 
+//automatically bound to XML, unless annotated by @XmlTransient
 @XmlAccessorType(XmlAccessType.FIELD)
 
 public class Layer {
@@ -52,55 +55,56 @@ public class Layer {
         NORMAL, MULTIPLY
     }
 
+    //
     @XmlTransient
     private static BufferedImage whiteMegaTile;
 
-    @XmlElement(name = "imageTileSet")
+    //@XmlElement(name = "imageTileSet")
     private TileSet imageTileSet;
     
-    @XmlElement(name = "maskTileSet")
+    //@XmlElement(name = "maskTileSet")
     private TileSet maskTileSet;
 
-    @XmlElement(name = "visible")
+    //@XmlElement(name = "visible")
     private boolean visible = true;
 
-    @XmlElement(name = "name")
+    //@XmlElement(name = "name")
     private String name;
 
-    @XmlElement(name = "textureTileFilePath")
+    //@XmlElement(name = "textureTileFilePath")
     private String textureTileFilePath;
 
-    @XmlElement (name = "blending")
+    //@XmlElement (name = "blending")
     private BlendType blending = BlendType.NORMAL;
 
-    @XmlElement(name = "opacity")
+    //@XmlElement(name = "opacity")
     private float opacity = 1;
 
-    @XmlElement(name = "curveURL")
+    //@XmlElement(name = "curveURL")
     private String curveURL;
 
     
     private CurvesFilter.Curve[] curves = null;
 
-    @XmlElement(name = "tint")
+    //@XmlElement(name = "tint")
     private Tint tint = null;
 
-    @XmlElement(name = "textureScale")
+    //@XmlElement(name = "textureScale")
     private float textureScale = 1f;
 
-    @XmlElement(name = "invertMask")
+    //@XmlElement(name = "invertMask")
     private boolean invertMask = false;
 
-    @XmlElement(name = "maskBlur")
+    //@XmlElement(name = "maskBlur")
     private float maskBlur = 0;
 
-    @XmlElement(name = "shadow")
+    //@XmlElement(name = "shadow")
     private Shadow shadow = null;
 
-    @XmlElement(name = "emboss")
+    //@XmlElement(name = "emboss")
     private Emboss emboss = null;
     
-    //gaussian blur stuff here:
+    //gaussian blur
     private float gaussBlur = 0;
 
     public Layer() {

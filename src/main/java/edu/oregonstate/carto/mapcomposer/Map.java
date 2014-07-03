@@ -25,10 +25,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Nicholas Hallahan nick@theoutpost.io
  */
+
+//Defines root element of XML file
 @XmlRootElement
+
+//None of the fields or properties is bound to XML unless they are specifically 
+//annotated with JAXB annotations (such as @XmlElement).
 @XmlAccessorType(XmlAccessType.NONE)
+
 public class Map {
     
+    //@XmlElement defines an element in the XML file. name = "" sets the name 
+    //in the XML file.
     @XmlElement (name = "layer")
     private final ArrayList<Layer> layers = new ArrayList<>();
 
