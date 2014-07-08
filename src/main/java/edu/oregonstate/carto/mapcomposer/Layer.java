@@ -59,49 +59,34 @@ public class Layer {
     @XmlTransient
     private static BufferedImage whiteMegaTile;
 
-    //@XmlElement(name = "imageTileSet")
     private TileSet imageTileSet;
     
-    //@XmlElement(name = "maskTileSet")
     private TileSet maskTileSet;
 
-    //@XmlElement(name = "visible")
     private boolean visible = true;
 
-    //@XmlElement(name = "name")
     private String name;
 
-    //@XmlElement(name = "textureTileFilePath")
     private String textureTileFilePath;
 
-    //@XmlElement (name = "blending")
     private BlendType blending = BlendType.NORMAL;
 
-    //@XmlElement(name = "opacity")
     private float opacity = 1;
 
-    //@XmlElement(name = "curveURL")
     private String curveURL;
-
     
     private CurvesFilter.Curve[] curves = null;
 
-    //@XmlElement(name = "tint")
     private Tint tint = null;
 
-    //@XmlElement(name = "textureScale")
     private float textureScale = 1f;
 
-    //@XmlElement(name = "invertMask")
     private boolean invertMask = false;
 
-    //@XmlElement(name = "maskBlur")
     private float maskBlur = 0;
 
-    //@XmlElement(name = "shadow")
     private Shadow shadow = null;
 
-    //@XmlElement(name = "emboss")
     private Emboss emboss = null;
     
     //gaussian blur
