@@ -1450,7 +1450,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         if (directoryPath == null) {
             return;
         }
-        urlTextField.setText("file:///" + directoryPath + "\\{z}\\{x}\\{y}.png");
+        urlTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}.png");
         this.readGUI();
     }//GEN-LAST:event_loadDirectoryPathButtonActionPerformed
 

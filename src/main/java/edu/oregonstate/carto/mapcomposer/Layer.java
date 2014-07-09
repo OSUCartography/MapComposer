@@ -9,7 +9,6 @@ import com.jhlabs.image.LightFilter;
 import com.jhlabs.image.ShadowFilter;
 import com.jhlabs.image.TileImageFilter;
 import edu.oregonstate.carto.importer.AdobeCurveReader;
-import edu.oregonstate.carto.mapcomposer.gui.ErrorDialog;
 import edu.oregonstate.carto.mapcomposer.imageFilters.CurvesFilter;
 import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
 import edu.oregonstate.carto.tilemanager.ImageTileMerger;
@@ -24,16 +23,12 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -180,7 +175,7 @@ public class Layer {
         }
         
         // masking
-        BufferedImage maskImage = null;
+        BufferedImage maskImage;
         if (maskTileSet != null) {
             Tile tile = maskTileSet.getTile(z, x, y);
             try {
