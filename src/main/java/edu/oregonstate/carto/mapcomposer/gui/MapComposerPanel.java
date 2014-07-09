@@ -1000,7 +1000,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 15, 0);
         settingsPanel.add(curveTextArea, gridBagConstraints);
 
-        deleteCurveFileButton.setText("Delete");
+        deleteCurveFileButton.setText("Remove");
         deleteCurveFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteCurveFileButtonActionPerformed(evt);

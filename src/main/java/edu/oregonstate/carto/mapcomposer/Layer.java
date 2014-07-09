@@ -170,13 +170,13 @@ public class Layer {
         }
 
         // gradation curve
-        if (this.curveURL != null && this.curveURL.length() > 0) {
+        if (this.curves != null) {
             image = curve(image);
         }
         
         // masking
-        BufferedImage maskImage;
         if (maskTileSet != null) {
+            BufferedImage maskImage;
             Tile tile = maskTileSet.getTile(z, x, y);
             try {
                 maskImage = ImageTileMerger.createMegaTile(tile);
@@ -246,20 +246,6 @@ public class Layer {
      * @return 
      */
     private BufferedImage curve(BufferedImage image) {
-        // load curve from URL if it has not been loaded yet        
-        try {
-            if (curves == null && curveURL != null) {
-                AdobeCurveReader acr = new AdobeCurveReader();
-                acr.readACV(new URL(curveURL));
-                curves = acr.getCurves();
-                for (CurvesFilter.Curve c : curves) {
-                    c.normalize();
-                }                
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
         // apply curve to image
         if (curves != null) {
             CurvesFilter curvesFilter = new CurvesFilter();
@@ -439,8 +425,25 @@ public class Layer {
      * @param curveURL the curveURL to set
      */
     public void setCurveURL(String curveURL) {
-        curves = null;
         this.curveURL = curveURL;
+        
+        // reset curves (curveURL can be null)
+        curves = null;
+        
+        // load curve from URL
+        try {
+            if (curveURL != null && !curveURL.isEmpty()) {
+                AdobeCurveReader acr = new AdobeCurveReader();
+                acr.readACV(new URL(curveURL));
+                curves = acr.getCurves();
+                for (CurvesFilter.Curve c : curves) {
+                    c.normalize();
+                }                
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
+            curves = null;
+        }        
     }
 
     /**
