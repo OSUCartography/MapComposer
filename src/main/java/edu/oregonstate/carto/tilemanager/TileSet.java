@@ -52,7 +52,7 @@ public class TileSet {
      * OpenStreetMap tile schema, we need to flip the y coordinate to our
      * internal schema (OpenStreetMap schema)
      */
-    protected final boolean tmsSchema;
+    private boolean tmsSchema;
 
     /**
      * Creates a local file based TileSet
@@ -317,5 +317,19 @@ public class TileSet {
                 && template.contains("//")
                 && template.contains(".")
                 && !template.contains(" ");
+    }
+
+    /**
+     * @return the tmsSchema
+     */
+    public boolean isTMSSchema() {
+        return tmsSchema;
+    }
+
+    /**
+     * @param tmsSchema the tmsSchema to set
+     */
+    public void setTMSSchema(boolean tmsSchema) {
+        this.tmsSchema = tmsSchema;
     }
 }
