@@ -8,11 +8,6 @@ package edu.oregonstate.carto.mapcomposer.gui;
 import edu.oregonstate.carto.mapcomposer.Map;
 import edu.oregonstate.carto.utils.FileUtils;
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 /**
  * Main window for composing a map consisting of multiple layers. The UI
@@ -41,12 +36,8 @@ public class MapComposerFrame extends javax.swing.JFrame {
         mapComposerPanel = new edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        loadDataMenu = new javax.swing.JMenu();
-        loadImageDirectoryMenuItem = new javax.swing.JMenuItem();
-        loadTileSetDirectoryMenuItem = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         saveMapMenuItem = new javax.swing.JMenuItem();
-        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        javax.swing.JPopupMenu.Separator jSeparator2 = new javax.swing.JPopupMenu.Separator();
         loadStyleMenuItem = new javax.swing.JMenuItem();
         saveStyleMenuItem = new javax.swing.JMenuItem();
         mapMenu = new javax.swing.JMenu();
@@ -63,27 +54,6 @@ public class MapComposerFrame extends javax.swing.JFrame {
         getContentPane().add(mapComposerPanel, java.awt.BorderLayout.CENTER);
 
         fileMenu.setText("File");
-
-        loadDataMenu.setText("Load Data");
-
-        loadImageDirectoryMenuItem.setText("Select Image Directory");
-        loadImageDirectoryMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadImageDirectoryMenuItemActionPerformed(evt);
-            }
-        });
-        loadDataMenu.add(loadImageDirectoryMenuItem);
-
-        loadTileSetDirectoryMenuItem.setText("Select Tile Sets Directory");
-        loadTileSetDirectoryMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadTileSetDirectoryMenuItemActionPerformed(evt);
-            }
-        });
-        loadDataMenu.add(loadTileSetDirectoryMenuItem);
-
-        fileMenu.add(loadDataMenu);
-        fileMenu.add(jSeparator1);
 
         saveMapMenuItem.setText("Save Tiles");
         saveMapMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -152,52 +122,6 @@ public class MapComposerFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loadImageDirectoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadImageDirectoryMenuItemActionPerformed
-        /*try {
-            String directoryPath = FileUtils.askDirectory(this, "Image Directory", true, null);
-            if (directoryPath == null) {
-                // user canceled
-                return;
-            }
-            ImageCollection imageCollection = new DirectoryImageCollection(directoryPath);
-            mapComposerPanel.setImageCollection(imageCollection);
-
-            // FIXME size of resulting image must be derived from input images
-            mapComposerPanel.getMap().setImageHeight(1000);
-            mapComposerPanel.getMap().setImageWidth(1000);
-            mapComposerPanel.getMap().setImage(new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB));
-
-        } catch (IOException ex) {
-            String msg = "An error occured when reading the image directory.";
-            ErrorDialog.showErrorDialog(msg, "Error", ex, GUIUtil.getOwnerFrame(this));
-        }
-        */ 
-    }//GEN-LAST:event_loadImageDirectoryMenuItemActionPerformed
-
-    private void loadTileSetDirectoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadTileSetDirectoryMenuItemActionPerformed
-        /*try {
-            String directoryPath = FileUtils.askDirectory(this, "Directory with Tiles Collections", true, null);
-            if (directoryPath == null) {
-                // user canceled
-                return;
-            }
-            ImageCollection imageCollection = new TiledImageCollection(directoryPath);
-            mapComposerPanel.setImageCollection(imageCollection);
-
-            // FIXME
-            //TODO Adapt if layers have different tile sizes
-            int tileSize = ((TiledImageCollection) mapComposerPanel.getImageCollection()).getLayers().get(0).getTileSize();
-            mapComposerPanel.getMap().setImageHeight(tileSize);
-            mapComposerPanel.getMap().setImageWidth(tileSize);
-            mapComposerPanel.getMap().setTiledImage(new TiledImage(FileUtils.createTempDirectory().getAbsolutePath()));
-
-        } catch (IOException ex) {
-            String msg = "An error occured when reading the tiles collection directory.";
-            ErrorDialog.showErrorDialog(msg, "Error", ex, GUIUtil.getOwnerFrame(this));
-        }
-        * */
-    }//GEN-LAST:event_loadTileSetDirectoryMenuItemActionPerformed
-
     private void loadStyleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadStyleMenuItemActionPerformed
         String filePath = FileUtils.askFile(null, "Load Style.xml file", null, true, "xml");
         if (filePath != null) {
@@ -254,7 +178,6 @@ public class MapComposerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_saveMapMenuItemActionPerformed
 
     private void saveStyleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveStyleMenuItemActionPerformed
-
             String filePath = FileUtils.askFile(null, "Save XML Style", null, false, "xml");
             if (filePath == null) {
                 return;
@@ -279,12 +202,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem addLayerMenuItem;
     private javax.swing.JMenuItem createTextureMenuItem;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JPopupMenu.Separator jSeparator2;
-    private javax.swing.JMenu loadDataMenu;
-    private javax.swing.JMenuItem loadImageDirectoryMenuItem;
     private javax.swing.JMenuItem loadStyleMenuItem;
-    private javax.swing.JMenuItem loadTileSetDirectoryMenuItem;
     private edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel mapComposerPanel;
     private javax.swing.JMenu mapMenu;
     private javax.swing.JMenuBar menuBar;
