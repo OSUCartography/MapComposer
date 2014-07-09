@@ -8,6 +8,9 @@ package edu.oregonstate.carto.mapcomposer.gui;
 import edu.oregonstate.carto.mapcomposer.Map;
 import edu.oregonstate.carto.utils.FileUtils;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Main window for composing a map consisting of multiple layers. The UI
@@ -130,51 +133,17 @@ public class MapComposerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_loadStyleMenuItemActionPerformed
 
     private void saveMapMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMapMenuItemActionPerformed
-        /*
         try {
-            File styleFile = null;
-            Map map = mapComposerPanel.getMap();
-            ImageCollection imageCollection = mapComposerPanel.getImageCollection();
-
-            // make sure the latest user settings are used
+            String directoryPath = FileUtils.askDirectory(null, "Save Tiled Images", false, null);
+            if (directoryPath == null) {
+                // user canceled
+                return;
+            }
             mapComposerPanel.readGUI();
-
-            if (imageCollection instanceof DirectoryImageCollection) {
-                String filePath = FileUtils.askFile(null, "Save PNG Image", null, false, "png");
-                if (filePath == null) {
-                    return;
-                }
-
-                MapTileGenerator generator = new MapTileGenerator(map, imageCollection);
-                ImageIO.write(generator.createTile("map"), "png", new File(filePath));
-                styleFile = new File(FileUtils.getFileNameWithoutExtension(new File(filePath).getName()) + "_style");
-            } else if (imageCollection instanceof TiledImageCollection) {
-                String directoryPath = FileUtils.askDirectory(null, "Save Tiled Images", false, null);
-                if (directoryPath == null) {
-                    return;
-                }
-                File resultDirectory = new File(directoryPath);
-                resultDirectory.mkdir();
-
-                TileGenerator generator = new MapTileGenerator(map, imageCollection);
-                map.setTiledImage(new TiledImage(resultDirectory.getAbsolutePath()));
-
-                // FIXME there should be a better way to specify the required extent and zoom levels
-                File refDir = ((TiledImageCollection) (imageCollection)).getRefDir();
-                map.getTiledImage().createTiledImage(refDir, true, generator, null);
-
-                File htmlFile = mapComposerPanel.copyHTML(resultDirectory.getPath());
-                Desktop.getDesktop().browse(htmlFile.toURI());
-
-                styleFile = new File(resultDirectory, resultDirectory.getName());
-            }
-            if (styleFile != null) {
-                map.marshal(styleFile.getAbsolutePath() + ".xml");
-            }
-        } catch (Exception exc) {
-            ErrorDialog.showErrorDialog("The image could not be saved.", exc);
+            mapComposerPanel.renderTilesWithProgressDialog(new File(directoryPath));
+        } catch (IOException ex) {
+            Logger.getLogger(MapComposerFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        */ 
     }//GEN-LAST:event_saveMapMenuItemActionPerformed
 
     private void saveStyleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveStyleMenuItemActionPerformed

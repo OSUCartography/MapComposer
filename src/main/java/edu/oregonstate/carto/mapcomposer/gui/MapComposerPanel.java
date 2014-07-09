@@ -1175,7 +1175,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         return dest.toURI().toURL();
     }
 
-    private void renderTilesWithProgressDialog() {
+    protected void renderTilesWithProgressDialog(final File directory) {
         SwingWorkerWithProgressIndicator worker;
         String dialogTitle = "Rendering Tiles";
         Frame ownerFrame = GUIUtil.getOwnerFrame(this);
@@ -1211,7 +1211,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 start();
 
                 // create tiles
-                TileGenerator tileGenerator = new TileGenerator();
+                TileGenerator tileGenerator = new TileGenerator(directory);
                 tileGenerator.setExtent(previewExtent.getMinX(),
                         previewExtent.getMaxX(),
                         previewExtent.getMinY(),
@@ -1219,7 +1219,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 tileGenerator.setZoomRange(previewMinZoom, previewMaxZoom);
                 tileGenerator.generateTiles(map, this);
 
-                // copy html file to directory with tiles and open in web browser
+                // copy html file to directory with tiles
                 URL htmlMapViewerURL = generateHTMLMapViewer(
                         tileGenerator.getDirectory(),
                         previewMinZoom,
@@ -1664,7 +1664,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * Reads user settings from the GUI and passes the settings to the currently
      * selected layer.
      */
-    public void readGUI() {
+    protected void readGUI() {
         if (this.updating) {
             return;
         }
@@ -1765,7 +1765,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     void addLayer() {
         int layerID = this.layerList.getSelectedIndex() + 1;
-        String name = "Layer " + (layerID + 1);
+        String name = "Layer " + (map.getLayerCount() + 1);
         name = JOptionPane.showInputDialog(this, "Layer Name", name);
         if (name == null) {
             return;
@@ -1780,7 +1780,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      */
     void previewMap() {
         readGUI();
-        renderTilesWithProgressDialog();
+        renderTilesWithProgressDialog(null);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
