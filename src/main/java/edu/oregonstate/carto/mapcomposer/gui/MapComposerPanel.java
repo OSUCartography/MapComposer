@@ -25,6 +25,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javafx.embed.swing.JFXPanel;
 import javax.imageio.ImageIO;
@@ -214,6 +216,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         curveTextArea = new javax.swing.JTextArea();
         deleteCurveFileButton = new javax.swing.JButton();
         javax.swing.JTextArea urlHintTextArea = new javax.swing.JTextArea();
+        loadDirectoryPathButton = new javax.swing.JButton();
         southPanel = new javax.swing.JPanel();
         extentButton = new javax.swing.JButton();
         previewButton = new javax.swing.JButton();
@@ -1020,6 +1023,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         settingsPanel.add(urlHintTextArea, gridBagConstraints);
 
+        loadDirectoryPathButton.setText("Load Directory Path");
+        loadDirectoryPathButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadDirectoryPathButtonActionPerformed(evt);
+            }
+        });
+        settingsPanel.add(loadDirectoryPathButton, new java.awt.GridBagConstraints());
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -1418,6 +1429,23 @@ public class MapComposerPanel extends javax.swing.JPanel {
         curveTextArea.setText("");
     }//GEN-LAST:event_deleteCurveFileButtonActionPerformed
 
+    private void loadDirectoryPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDirectoryPathButtonActionPerformed
+       // read tile diectory
+        String msg = "Select a Directory";
+ 
+        String directoryPath = null;
+        try {
+            directoryPath = FileUtils.askDirectory(GUIUtil.getOwnerFrame(this), msg, updating, msg);
+        } catch (IOException ex) {
+            Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (directoryPath == null) {
+            return;
+        }
+        urlTextField.setText("file:///" + directoryPath + "\\{z}\\{x}\\{y}.png");
+        this.readGUI();
+    }//GEN-LAST:event_loadDirectoryPathButtonActionPerformed
+
     /**
      * Updates the value of the texture scale slider
      *
@@ -1753,6 +1781,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar layerListToolBar;
     private javax.swing.JPanel layersPanel;
     private javax.swing.JButton loadCurveFileButton;
+    private javax.swing.JButton loadDirectoryPathButton;
     private javax.swing.JSlider maskBlurSlider;
     private javax.swing.JTextField maskUrlTextField;
     private javax.swing.JSpinner maxZoomSpinner;
