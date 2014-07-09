@@ -77,6 +77,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private int previewMaxZoom = 2;
 
     /**
+     * counts the number of layers created
+     */
+    private int layerCounter = 0;
+
+    /**
      * Creates new form MapComposerPanel
      */
     public MapComposerPanel() {
@@ -352,6 +357,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         jScrollPane2.setPreferredSize(new java.awt.Dimension(200, 132));
 
         layerList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        layerList.setNextFocusableComponent(nameTextField);
         layerList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 layerListValueChanged(evt);
@@ -1096,19 +1102,29 @@ public class MapComposerPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 // text was changed
-                readGUI();
+                documentChanged();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 // text was deleted
-                readGUI();
+                documentChanged();
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 // text was inserted
+                documentChanged();
+            }
+
+            private void documentChanged() {
                 readGUI();
+                try {
+                    updating = true;
+                    updateLayerList();
+                } finally {
+                    updating = false;
+                }
             }
         });
     }
@@ -1368,21 +1384,31 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         this.updating = true;
         try {
-            int opacity = ((Number) opacityTextField.getValue()).intValue();
-            this.opacitySlider.setValue(opacity);
+            if (opacityTextField.getValue() != null) {
+                int opacity = ((Number) opacityTextField.getValue()).intValue();
+                this.opacitySlider.setValue(opacity);
+            }
+            if (textureScaleFormattedTextField.getValue() != null) {
+                float textureScale = ((Number) textureScaleFormattedTextField.getValue()).floatValue();
+                this.writeTextureScale(textureScale);
+            }
+            if (embossAzimuthFormattedTextField.getValue() != null) {
+                int embossAzimuth = ((Number) embossAzimuthFormattedTextField.getValue()).intValue();
+                this.embossAzimuthSlider.setValue(embossAzimuth);
+            }
+            if (embossElevationFormattedTextField.getValue() != null) {
+                int embossElevation = ((Number) embossElevationFormattedTextField.getValue()).intValue();
+                this.embossElevationSlider.setValue(embossElevation);
+            }
 
-            float textureScale = ((Number) textureScaleFormattedTextField.getValue()).floatValue();
-            this.writeTextureScale(textureScale);
-
-            int embossAzimuth = ((Number) embossAzimuthFormattedTextField.getValue()).intValue();
-            int embossElevation = ((Number) embossElevationFormattedTextField.getValue()).intValue();
-            int embossHeight = ((Number) embossHeightFormattedTextField.getValue()).intValue();
-            int embossSoftness = ((Number) embossSoftnessFormattedTextField.getValue()).intValue();
-            this.embossAzimuthSlider.setValue(embossAzimuth);
-            this.embossElevationSlider.setValue(embossElevation);
-            this.embossHeightSlider.setValue(embossHeight);
-            this.embossSoftnessSlider.setValue(embossSoftness);
-
+            if (embossHeightFormattedTextField.getValue() != null) {
+                int embossHeight = ((Number) embossHeightFormattedTextField.getValue()).intValue();
+                this.embossHeightSlider.setValue(embossHeight);
+            }
+            if (embossSoftnessFormattedTextField.getValue() != null) {
+                int embossSoftness = ((Number) embossSoftnessFormattedTextField.getValue()).intValue();
+                this.embossSoftnessSlider.setValue(embossSoftness);
+            }
         } finally {
             this.updating = false;
         }
@@ -1402,7 +1428,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
         curveTextArea.setText("file:///" + filePath);
         readGUI();
-        
+
         // update enable state of remove button
         writeGUI();
     }//GEN-LAST:event_loadCurveFileButtonActionPerformed
@@ -1447,8 +1473,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         String directoryPath = null;
         try {
             directoryPath = FileUtils.askDirectory(GUIUtil.getOwnerFrame(this), msg, true, null);
+
         } catch (IOException ex) {
-            Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MapComposerPanel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         if (directoryPath == null) {
             return;
@@ -1487,22 +1515,24 @@ public class MapComposerPanel extends javax.swing.JPanel {
         return textureScale;
     }
 
+    private void updateLayerList() {
+        int selectedID = layerList.getSelectedIndex();
+        layerList.setListData(map.getLayers());
+        layerList.setSelectedIndex(selectedID);
+    }
+
     /**
      * Writes settings of the currently selected layer to the GUI.
      */
-    final void writeGUI() {
+    private void writeGUI() {
         if (this.updating) {
             return;
         }
 
         try {
             this.updating = true;
-
-            // update the layers list
-            int selectedID = layerList.getSelectedIndex();
-            layerList.setListData(map.getLayers());
-            layerList.setSelectedIndex(selectedID);
-
+            updateLayerList();
+            int selectedLayerID = layerList.getSelectedIndex();
             Layer selectedLayer = getSelectedMapLayer();
 
             // enable or disable user interface elements depending on whether
@@ -1543,10 +1573,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.embossAzimuthFormattedTextField.setEnabled(on);
             this.embossElevationSlider.setEnabled(on);
             this.embossElevationFormattedTextField.setEnabled(on);
+            this.gaussBlurSlider.setEnabled(on);
             this.previewButton.setEnabled(on);
             this.removeLayerButton.setEnabled(on);
-            this.moveUpLayerButton.setEnabled(on && selectedID != 0);
-            this.moveDownLayerButton.setEnabled(on && selectedID != map.getLayerCount() - 1);
+            this.moveUpLayerButton.setEnabled(on && selectedLayerID != 0);
+            this.moveDownLayerButton.setEnabled(on && selectedLayerID != map.getLayerCount() - 1);
 
             if (selectedLayer == null) {
                 this.nameTextField.setText(null);
@@ -1632,12 +1663,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 this.embossCheckBox.setSelected(false);
             }
 
-            //gaussian blur stuff goes here?
+            // gaussian blur
             this.gaussBlurSlider.setValue((int) (selectedLayer.getGaussBlur()));
 
         } finally {
             this.updating = false;
-
         }
     }
 
@@ -1684,7 +1714,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layer.setBlending(this.normalBlendingRadioButton.isSelected()
                 ? Layer.BlendType.NORMAL : Layer.BlendType.MULTIPLY);
         layer.setOpacity(opacitySlider.getValue() / 100.f);
-        
+
         // curve
         layer.setCurveURL(curveTextArea.getText());
 
@@ -1775,18 +1805,24 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     void addLayer() {
         int layerID = this.layerList.getSelectedIndex() + 1;
-        String name = "Layer " + (map.getLayerCount() + 1);
-        name = JOptionPane.showInputDialog(this, "Layer Name", name);
-        if (name == null) {
-            return;
+        String name = "Layer " + (++layerCounter);
+        map.addLayer(layerID, new Layer(name));
+        writeGUI();
+        layerList.setSelectedIndex(layerID);
+        
+        // select text in name field
+        try {
+            updating = true;
+            nameTextField.requestFocus();
+            nameTextField.selectAll();
+        } finally {
+            updating = false;
         }
-        this.map.addLayer(layerID, new Layer(name));
-        this.writeGUI();
-        this.layerList.setSelectedIndex(layerID);
     }
-    
+
     /**
-     * Preview the map. Creates tiles and has the default web browser render them.
+     * Preview the map. Creates tiles and has the default web browser render
+     * them.
      */
     void previewMap() {
         readGUI();
