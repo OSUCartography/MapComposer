@@ -17,6 +17,7 @@ import edu.oregonstate.carto.utils.FileUtils;
 import edu.oregonstate.carto.utils.GUIUtil;
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -30,6 +31,7 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javafx.embed.swing.JFXPanel;
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
@@ -1023,13 +1025,21 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         settingsPanel.add(urlHintTextArea, gridBagConstraints);
 
-        loadDirectoryPathButton.setText("Load Directory Path");
+        Icon folderIcon = UIManager.getDefaults().getIcon("FileView.directoryIcon");
+        loadDirectoryPathButton.setIcon(folderIcon);
+        int iconH = folderIcon.getIconHeight();
+        int iconW = folderIcon.getIconWidth();
+        loadDirectoryPathButton.setPreferredSize(new Dimension(iconW + 18, iconH + 18));
         loadDirectoryPathButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadDirectoryPathButtonActionPerformed(evt);
             }
         });
-        settingsPanel.add(loadDirectoryPathButton, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        settingsPanel.add(loadDirectoryPathButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1177,7 +1187,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                     completeProgress();
                     if (!isAborted()) {
                         ErrorDialog.showErrorDialog("Could not open a preview browser window.", ex);
-                        ex.printStackTrace();
+                        Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } finally {
                     // hide the progress dialog
@@ -1430,12 +1440,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteCurveFileButtonActionPerformed
 
     private void loadDirectoryPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDirectoryPathButtonActionPerformed
-       // read tile diectory
-        String msg = "Select a Directory";
- 
+        String msg = "Select Tiles Directory";
         String directoryPath = null;
         try {
-            directoryPath = FileUtils.askDirectory(GUIUtil.getOwnerFrame(this), msg, updating, msg);
+            directoryPath = FileUtils.askDirectory(GUIUtil.getOwnerFrame(this), msg, true, null);
         } catch (IOException ex) {
             Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1500,6 +1508,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.visibleCheckBox.setEnabled(on);
             this.nameTextField.setEnabled(on);
             this.urlTextField.setEnabled(on);
+            this.loadDirectoryPathButton.setEnabled(on);
             this.normalBlendingRadioButton.setEnabled(on);
             this.multiplyBlendingRadioButton.setEnabled(on);
             this.opacitySlider.setEnabled(on);
@@ -1613,14 +1622,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
             } else {
                 this.embossCheckBox.setSelected(false);
             }
-            
+
             //gaussian blur stuff goes here?
             this.gaussBlurSlider.setValue((int) (selectedLayer.getGaussBlur()));
-            
+
         } finally {
             this.updating = false;
-            
-            
+
         }
     }
 
@@ -1640,8 +1648,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
             int w = texturePreviewLabel.getWidth();
             BufferedImage texturePatch = ImageIO.read(new File(textureFilePath));
             /*TileImageFilter tiler = new TileImageFilter(w, h);
-            BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-            img = tiler.filter(texturePatch, img);*/
+             BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+             img = tiler.filter(texturePatch, img);*/
             texturePreviewLabel.setIcon(new ImageIcon(texturePatch));
         } catch (Exception ex) {
             texturePreviewLabel.setIcon(null);
@@ -1735,7 +1743,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         } else {
             layer.setEmboss(null);
         }
-        
+
         //gaussian blur goes here?
         layer.setGaussBlur(this.gaussBlurSlider.getValue());
     }

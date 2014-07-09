@@ -1319,15 +1319,15 @@
               </Constraints>
             </Component>
             <Component class="javax.swing.JButton" name="loadDirectoryPathButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Load Directory Path"/>
-              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadDirectoryPathButtonActionPerformed"/>
               </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="Icon folderIcon = UIManager.getDefaults().getIcon(&quot;FileView.directoryIcon&quot;);&#xa;loadDirectoryPathButton.setIcon(folderIcon);&#xa;int iconH = folderIcon.getIconHeight();&#xa;int iconW = folderIcon.getIconWidth();&#xa;loadDirectoryPathButton.setPreferredSize(new Dimension(iconW + 18, iconH + 18));&#xa;"/>
+              </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                  <GridBagConstraints gridX="-1" gridY="-1" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
+                  <GridBagConstraints gridX="5" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="21" weightX="0.0" weightY="0.0"/>
                 </Constraint>
               </Constraints>
             </Component>
