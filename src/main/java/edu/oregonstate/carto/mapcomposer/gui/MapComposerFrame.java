@@ -49,6 +49,10 @@ public class MapComposerFrame extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         loadStyleMenuItem = new javax.swing.JMenuItem();
         saveStyleMenuItem = new javax.swing.JMenuItem();
+        mapMenu = new javax.swing.JMenu();
+        addLayerMenuItem = new javax.swing.JMenuItem();
+        javax.swing.JPopupMenu.Separator jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        previewMenuItem = new javax.swing.JMenuItem();
         textureMenu = new javax.swing.JMenu();
         createTextureMenuItem = new javax.swing.JMenuItem();
 
@@ -107,6 +111,29 @@ public class MapComposerFrame extends javax.swing.JFrame {
         fileMenu.add(saveStyleMenuItem);
 
         menuBar.add(fileMenu);
+
+        mapMenu.setText("Map");
+
+        addLayerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N,    java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        addLayerMenuItem.setText("Add Layer");
+        addLayerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addLayerMenuItemActionPerformed(evt);
+            }
+        });
+        mapMenu.add(addLayerMenuItem);
+        mapMenu.add(jSeparator3);
+
+        previewMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P,    java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        previewMenuItem.setText("Preview");
+        previewMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previewMenuItemActionPerformed(evt);
+            }
+        });
+        mapMenu.add(previewMenuItem);
+
+        menuBar.add(mapMenu);
 
         textureMenu.setText("Texture");
 
@@ -240,7 +267,16 @@ public class MapComposerFrame extends javax.swing.JFrame {
         // FIXME new TextureComposerFrame().setVisible(true);
     }//GEN-LAST:event_createTextureMenuItemActionPerformed
 
+    private void addLayerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLayerMenuItemActionPerformed
+        mapComposerPanel.addLayer();
+    }//GEN-LAST:event_addLayerMenuItemActionPerformed
+
+    private void previewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewMenuItemActionPerformed
+        mapComposerPanel.previewMap();
+    }//GEN-LAST:event_previewMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem addLayerMenuItem;
     private javax.swing.JMenuItem createTextureMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JPopupMenu.Separator jSeparator1;
@@ -250,7 +286,9 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem loadStyleMenuItem;
     private javax.swing.JMenuItem loadTileSetDirectoryMenuItem;
     private edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel mapComposerPanel;
+    private javax.swing.JMenu mapMenu;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem previewMenuItem;
     private javax.swing.JMenuItem saveMapMenuItem;
     private javax.swing.JMenuItem saveStyleMenuItem;
     private javax.swing.JMenu textureMenu;

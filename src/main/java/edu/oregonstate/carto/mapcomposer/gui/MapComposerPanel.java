@@ -18,6 +18,7 @@ import edu.oregonstate.carto.utils.GUIUtil;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -1177,8 +1178,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private void renderTilesWithProgressDialog() {
         SwingWorkerWithProgressIndicator worker;
         String dialogTitle = "Rendering Tiles";
-
-        worker = new SwingWorkerWithProgressIndicator<URL>(null, dialogTitle, "", true) {
+        Frame ownerFrame = GUIUtil.getOwnerFrame(this);
+        worker = new SwingWorkerWithProgressIndicator<URL>(ownerFrame, dialogTitle, "", true) {
 
             @Override
             public void done() {
@@ -1234,15 +1235,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Event handler to generate a preview of the current map. Either displays
-     * an image in a new window, or creates tiles and has the default web
-     * browser render them.
+     * Event handler to generate a preview of the current map.
      *
      * @param evt
      */
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
-        readGUI();
-        renderTilesWithProgressDialog();
+        previewMap();
     }//GEN-LAST:event_previewButtonActionPerformed
 
     /**
@@ -1298,15 +1296,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void addLayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLayerButtonActionPerformed
-        String name = JOptionPane.showInputDialog(this, "Layer Name", "Layer");
-        if (name == null) {
-            return;
-        }
-
-        int selectedLayerID = this.layerList.getSelectedIndex();
-        this.map.addLayer(++selectedLayerID, new Layer(name));
-        this.writeGUI();
-        this.layerList.setSelectedIndex(selectedLayerID);
+        addLayer();
     }//GEN-LAST:event_addLayerButtonActionPerformed
 
     private void embossCheckBoxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_embossCheckBoxStateChanged
@@ -1568,7 +1558,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             } else {
                 this.urlTextField.setText(tileSet.getUrlTemplate());
             }
-            
+
             // TMS schema
             this.tmsCheckBox.setSelected(tileSet != null ? tileSet.isTMSSchema() : false);
 
@@ -1707,7 +1697,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         // TMS
         layer.getImageTileSet().setTMSSchema(tmsCheckBox.isSelected());
-        
+
         // mask
         String maskTileSetURL = maskUrlTextField.getText();
         boolean maskUrlTemplateIsValid = TileSet.isURLTemplateValid(maskTileSetURL);
@@ -1771,6 +1761,26 @@ public class MapComposerPanel extends javax.swing.JPanel {
         this.map = map;
         layerList.setSelectedIndex(layerList.getFirstVisibleIndex());
         this.writeGUI();
+    }
+
+    void addLayer() {
+        int layerID = this.layerList.getSelectedIndex() + 1;
+        String name = "Layer " + (layerID + 1);
+        name = JOptionPane.showInputDialog(this, "Layer Name", name);
+        if (name == null) {
+            return;
+        }
+        this.map.addLayer(layerID, new Layer(name));
+        this.writeGUI();
+        this.layerList.setSelectedIndex(layerID);
+    }
+    
+    /**
+     * Preview the map. Creates tiles and has the default web browser render them.
+     */
+    void previewMap() {
+        readGUI();
+        renderTilesWithProgressDialog();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
