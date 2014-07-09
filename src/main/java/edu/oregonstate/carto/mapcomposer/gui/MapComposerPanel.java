@@ -1401,7 +1401,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
             return;
         }
         curveTextArea.setText("file:///" + filePath);
-        this.readGUI();
+        readGUI();
+        
+        // update enable state of remove button
+        writeGUI();
     }//GEN-LAST:event_loadCurveFileButtonActionPerformed
 
     private void extentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extentButtonActionPerformed
@@ -1435,7 +1438,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     private void deleteCurveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCurveFileButtonActionPerformed
         getSelectedMapLayer().setCurveURL(null);
-        curveTextArea.setText("");
+        // update enable state of remove button and curve text area
+        writeGUI();
     }//GEN-LAST:event_deleteCurveFileButtonActionPerformed
 
     private void loadDirectoryPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDirectoryPathButtonActionPerformed
@@ -1504,6 +1508,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             // enable or disable user interface elements depending on whether
             // a layer is currently selected
             final boolean on = selectedLayer != null;
+            boolean hasCurveURL = selectedLayer != null && selectedLayer.getCurveURL() != null;
             this.visibleCheckBox.setEnabled(on);
             this.nameTextField.setEnabled(on);
             this.urlTextField.setEnabled(on);
@@ -1515,6 +1520,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.opacityTextField.setEnabled(on);
             this.curveTextArea.setEnabled(on);
             this.loadCurveFileButton.setEnabled(on);
+            this.deleteCurveFileButton.setEnabled(on && hasCurveURL);
             this.tintCheckBox.setEnabled(on);
             this.tintColorButton.setEnabled(on);
             this.textureSelectionButton.setEnabled(on);
@@ -1678,6 +1684,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layer.setBlending(this.normalBlendingRadioButton.isSelected()
                 ? Layer.BlendType.NORMAL : Layer.BlendType.MULTIPLY);
         layer.setOpacity(opacitySlider.getValue() / 100.f);
+        
+        // curve
         layer.setCurveURL(curveTextArea.getText());
 
         // URL
@@ -1696,7 +1704,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         urlTextField.setForeground(urlTemplateIsValid ? okColor : Color.RED);
 
         // TMS
-        layer.getImageTileSet().setTMSSchema(tmsCheckBox.isSelected());
+        if (layer.getImageTileSet() != null) {
+            layer.getImageTileSet().setTMSSchema(tmsCheckBox.isSelected());
+        }
 
         // mask
         String maskTileSetURL = maskUrlTextField.getText();

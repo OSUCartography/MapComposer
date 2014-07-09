@@ -12,7 +12,8 @@ import java.io.*;
 import java.net.URL;
 
 /**
- *
+ * Reader for Adobe ACV file format
+ * http://www.adobe.com/devnet-apps/photoshop/fileformatashtml/PhotoshopFileFormats.htm#50577411_32675
  * @author Bernhard Jenny, Institute of Cartography, ETH Zurich.
  */
 public class AdobeCurveReader {
@@ -33,8 +34,9 @@ public class AdobeCurveReader {
             din = new DataInputStream(acvURL.openStream());
             
             int version = din.readShort();
-            //if (version != 1) // CS2 and CS3 write undocumented 4 instead of 1
-            //    throw new IOException("Not a ACV file.");
+            if (version != 1 && version != 4) {
+                throw new IOException("Not a ACV file.");
+            }
             
             int curvesCount = din.readShort();
             if (curvesCount < 1)

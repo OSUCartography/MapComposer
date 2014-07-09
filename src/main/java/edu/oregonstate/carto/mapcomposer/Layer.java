@@ -425,6 +425,9 @@ public class Layer {
      * @param curveURL the curveURL to set
      */
     public void setCurveURL(String curveURL) {
+        if (curveURL != null && curveURL.trim().isEmpty()) {
+            curveURL = null;
+        }
         this.curveURL = curveURL;
         
         // reset curves (curveURL can be null)
@@ -438,7 +441,7 @@ public class Layer {
                 curves = acr.getCurves();
                 for (CurvesFilter.Curve c : curves) {
                     c.normalize();
-                }                
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
