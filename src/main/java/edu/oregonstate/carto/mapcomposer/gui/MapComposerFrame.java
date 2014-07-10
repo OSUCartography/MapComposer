@@ -174,7 +174,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addLayerMenuItemActionPerformed
 
     private void previewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewMenuItemActionPerformed
-        mapComposerPanel.previewMap();
+        mapComposerPanel.renderTilesWithProgressDialog(null);
     }//GEN-LAST:event_previewMenuItemActionPerformed
 
     private void removeLayerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLayerMenuItemActionPerformed

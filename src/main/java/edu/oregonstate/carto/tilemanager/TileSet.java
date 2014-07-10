@@ -311,7 +311,8 @@ public class TileSet {
      */
     public static boolean isURLTemplateValid(String template) {
         // FIXME use regular expression
-        return template.contains("{x}")
+        return template != null
+                && template.contains("{x}")
                 && template.contains("{y}")
                 && template.contains("{z}")
                 && template.contains("//")

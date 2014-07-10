@@ -1284,10 +1284,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     protected void renderTilesWithProgressDialog(final File directory) {
-        SwingWorkerWithProgressIndicator worker;
+        final TileGenerator tileGenerator = new TileGenerator(directory);;
         String dialogTitle = "Rendering Tiles";
-        Frame ownerFrame = GUIUtil.getOwnerFrame(this);
-        worker = new SwingWorkerWithProgressIndicator<URL>(ownerFrame, dialogTitle, "", true) {
+        Frame frame = GUIUtil.getOwnerFrame(this);
+        SwingWorkerWithProgressIndicator worker;
+        worker = new SwingWorkerWithProgressIndicator<Void>(frame, dialogTitle, "", true) {
 
             @Override
             public void done() {
@@ -1297,11 +1298,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
                     // a call to get() will throw an ExecutionException if an 
                     // exception occured in doInBackground
-                    URL htmlMapViewerURL = get();
+                    get();
 
-                    // open web browser
-                    Desktop.getDesktop().browse(htmlMapViewerURL.toURI());
-                } catch (URISyntaxException | IOException | ExecutionException | InterruptedException | CancellationException ex) {
+                } catch (ExecutionException | InterruptedException | CancellationException ex) {
                     completeProgress();
                     if (!isAborted()) {
                         ErrorDialog.showErrorDialog("Could not open a preview browser window.", ex);
@@ -1310,32 +1309,41 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 } finally {
                     // hide the progress dialog
                     completeProgress();
+
+                    try {
+                        // copy html file to directory with tiles
+                        URL htmlMapViewerURL = generateHTMLMapViewer(
+                                tileGenerator.getDirectory(),
+                                previewMinZoom,
+                                previewExtent.getCenterY(), previewExtent.getCenterX());
+
+                        // open web browser
+                        if (htmlMapViewerURL != null) {
+                            Desktop.getDesktop().browse(htmlMapViewerURL.toURI());
+                        }
+                    } catch (IOException | URISyntaxException ex) {
+                        Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
 
             @Override
-            protected URL doInBackground() throws Exception {
+            protected Void doInBackground() throws Exception {
                 // start progress dialog
                 start();
 
                 // create tiles
-                TileGenerator tileGenerator = new TileGenerator(directory);
-                tileGenerator.setExtent(previewExtent.getMinX(),
-                        previewExtent.getMaxX(),
-                        previewExtent.getMinY(),
-                        previewExtent.getMaxY());
-                tileGenerator.setZoomRange(previewMinZoom, previewMaxZoom);
                 tileGenerator.generateTiles(map, this);
 
-                // copy html file to directory with tiles
-                URL htmlMapViewerURL = generateHTMLMapViewer(
-                        tileGenerator.getDirectory(),
-                        previewMinZoom,
-                        previewExtent.getCenterY(), previewExtent.getCenterX());
-                return htmlMapViewerURL;
+                return null;
             }
         };
 
+        tileGenerator.setExtent(previewExtent.getMinX(),
+                previewExtent.getMaxX(),
+                previewExtent.getMinY(),
+                previewExtent.getMaxY());
+        tileGenerator.setZoomRange(previewMinZoom, previewMaxZoom);
         worker.setMaxTimeWithoutDialogMilliseconds(0);
         worker.setIndeterminate(true);
         worker.setMessage("");
@@ -1348,7 +1356,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
-        previewMap();
+        renderTilesWithProgressDialog(null);
     }//GEN-LAST:event_previewButtonActionPerformed
 
     /**
@@ -1910,15 +1918,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         updateLayerList();
         this.writeGUI();
         this.layerList.setSelectedIndex(--selectedLayerID);
-    }
-
-    /**
-     * Preview the map. Creates tiles and has the default web browser render
-     * them.
-     */
-    void previewMap() {
-        readGUI();
-        renderTilesWithProgressDialog(null);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
