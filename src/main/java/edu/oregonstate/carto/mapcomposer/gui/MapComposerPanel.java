@@ -1165,13 +1165,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * Event handler for removing a layer.
      */
     private void removeLayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLayerButtonActionPerformed
-        int selectedLayerID = this.layerList.getSelectedIndex();
-        if (selectedLayerID < 0) {
-            return;
-        }
-        this.map.removeLayer(selectedLayerID);
-        this.writeGUI();
-        this.layerList.setSelectedIndex(--selectedLayerID);
+        removeLayer();
     }//GEN-LAST:event_removeLayerButtonActionPerformed
 
     private URL generateHTMLMapViewer(File directory,
@@ -1819,6 +1813,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
             updating = false;
         }
     }
+    
+    void removeLayer() {
+        int selectedLayerID = this.layerList.getSelectedIndex();
+        if (selectedLayerID < 0) {
+            return;
+        }
+        this.map.removeLayer(selectedLayerID);
+        this.writeGUI();
+        this.layerList.setSelectedIndex(--selectedLayerID);
+    }
 
     /**
      * Preview the map. Creates tiles and has the default web browser render
@@ -1896,5 +1900,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox visibleCheckBox;
     private javax.swing.JFormattedTextField westField;
     // End of variables declaration//GEN-END:variables
+
 
 }

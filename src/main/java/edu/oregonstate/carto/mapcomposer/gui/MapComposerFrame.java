@@ -45,6 +45,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
         saveStyleMenuItem = new javax.swing.JMenuItem();
         mapMenu = new javax.swing.JMenu();
         addLayerMenuItem = new javax.swing.JMenuItem();
+        removeLayerMenuItem = new javax.swing.JMenuItem();
         javax.swing.JPopupMenu.Separator jSeparator3 = new javax.swing.JPopupMenu.Separator();
         previewMenuItem = new javax.swing.JMenuItem();
         textureMenu = new javax.swing.JMenu();
@@ -87,7 +88,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
 
         mapMenu.setText("Map");
 
-        addLayerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N,    java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        addLayerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PLUS, java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         addLayerMenuItem.setText("Add Layer");
         addLayerMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -95,6 +96,15 @@ public class MapComposerFrame extends javax.swing.JFrame {
             }
         });
         mapMenu.add(addLayerMenuItem);
+
+        removeLayerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_MINUS,    java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        removeLayerMenuItem.setText("Remove Layer");
+        removeLayerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeLayerMenuItemActionPerformed(evt);
+            }
+        });
+        mapMenu.add(removeLayerMenuItem);
         mapMenu.add(jSeparator3);
 
         previewMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P,    java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -167,6 +177,10 @@ public class MapComposerFrame extends javax.swing.JFrame {
         mapComposerPanel.previewMap();
     }//GEN-LAST:event_previewMenuItemActionPerformed
 
+    private void removeLayerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLayerMenuItemActionPerformed
+        mapComposerPanel.removeLayer();
+    }//GEN-LAST:event_removeLayerMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addLayerMenuItem;
     private javax.swing.JMenuItem createTextureMenuItem;
@@ -176,6 +190,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private javax.swing.JMenu mapMenu;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem previewMenuItem;
+    private javax.swing.JMenuItem removeLayerMenuItem;
     private javax.swing.JMenuItem saveMapMenuItem;
     private javax.swing.JMenuItem saveStyleMenuItem;
     private javax.swing.JMenu textureMenu;
