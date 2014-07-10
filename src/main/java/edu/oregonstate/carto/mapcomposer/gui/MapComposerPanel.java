@@ -1567,7 +1567,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
         return directoryPath;
     }
-    
     private void loadDirectoryPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDirectoryPathButtonActionPerformed
         String directoryPath = askTilesDirectory("Select Tiles Directory");
         if (directoryPath != null) {

@@ -54,9 +54,9 @@ public class Layer {
     @XmlTransient
     private static BufferedImage whiteMegaTile;
 
-    private TileSet imageTileSet;
+    private final TileSet imageTileSet;
     
-    private TileSet maskTileSet;
+    private final TileSet maskTileSet = new TileSet(null);;
 
     private boolean visible = true;
 
@@ -88,10 +88,17 @@ public class Layer {
     private float gaussBlur = 0;
 
     public Layer() {
+        imageTileSet = new TileSet(null);
     }
 
     public Layer(String layerName) {
         this.name = layerName;
+        imageTileSet = new TileSet(null);
+    }
+    
+    public Layer(String layerName, String urlTemplate) {
+        this.name = layerName;
+        imageTileSet = new TileSet(urlTemplate);
     }
 
     /**
@@ -136,7 +143,7 @@ public class Layer {
         }
 
         // load tile image
-        if (imageTileSet != null) {
+        if (isImageTileSetValid()) {
             Tile tile = imageTileSet.getTile(z, x, y);
             try {
                 image = ImageTileMerger.createMegaTile(tile);
@@ -175,7 +182,7 @@ public class Layer {
         }
         
         // masking
-        if (maskTileSet != null) {
+        if (isMaskTileSetValid()) {
             BufferedImage maskImage;
             Tile tile = maskTileSet.getTile(z, x, y);
             try {
@@ -346,27 +353,17 @@ public class Layer {
     public TileSet getImageTileSet() {
         return imageTileSet;
     }
-
-    /**
-     * @param imageTileSet the imageTileSet to set
-     */
-    public void setImageTileSet(TileSet imageTileSet) {
-        this.imageTileSet = imageTileSet;
-    }
     
     public void setImageTileSetURLTemplate(String urlTemplate) {
-        if (imageTileSet == null) {
-            imageTileSet = new TileSet(urlTemplate);
-        } else {
-            imageTileSet.setUrlTemplate(urlTemplate);
-        }
+        imageTileSet.setUrlTemplate(urlTemplate);
     }
 
     public void setImageTileSetTMSSchema(boolean tmsSchema) {
-        if (imageTileSet == null) {
-            imageTileSet = new TileSet(null);
-        }
         imageTileSet.setTMSSchema(tmsSchema);
+    }
+    
+    public boolean isImageTileSetValid() {
+        return imageTileSet.isURLTemplateValid();
     }
     
     /**
@@ -391,25 +388,11 @@ public class Layer {
         return maskTileSet;
     }
 
-    /**
-     * @param maskTileSet the maskTileSet to set
-     */
-    public void setMaskTileSet(TileSet maskTileSet) {
-        this.maskTileSet = maskTileSet;
-    }
-
     public void setMaskTileSetURLTemplate(String maskTileSetURL) {
-        if (maskTileSet == null) {
-            maskTileSet = new TileSet(maskTileSetURL);
-        } else {
-            maskTileSet.setUrlTemplate(maskTileSetURL);
-        }
+        maskTileSet.setUrlTemplate(maskTileSetURL);
     }
 
     public void setMaskTileSetTMSSchema(boolean tmsSchema) {
-        if (maskTileSet == null) {
-            maskTileSet = new TileSet(null);
-        }
         maskTileSet.setTMSSchema(tmsSchema);
     }
     
@@ -519,6 +502,10 @@ public class Layer {
      */
     public void setMaskBlur(float maskBlur) {
         this.maskBlur = maskBlur;
+    }
+    
+    public boolean isMaskTileSetValid() {
+        return maskTileSet.isURLTemplateValid();
     }
 
     /**

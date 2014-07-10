@@ -37,9 +37,7 @@ public class Cache {
             @QueryParam("source") String source) { //NH Why does this work? Numbers are put in the format.
 
         Map map = new Map();
-        TileSet tileSet = new TileSet(source);
-        Layer layer = new Layer();
-        layer.setImageTileSet(tileSet);
+        Layer layer = new Layer(null, source);
         map.addLayer(layer);
         BufferedImage img = map.generateTile(z, x, y);
 

@@ -25,32 +25,12 @@ public class RestAPIExample1 {
     private UriInfo context;
     
     private Map map;
-    private TileSet esriSatelliteSet, watercolorSet;
     private Layer layer1, layer2;
 
     public RestAPIExample1() {
         map = new Map();
-        
-        esriSatelliteSet = new TileSet("http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
-//        esriSatelliteSet = new HTTPTileSet(
-//                "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-//                SQLiteCache.getInstance(),
-//                TileSet.TileType.IMAGE,
-//                false);
-        
-        watercolorSet = new TileSet("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
-//        watercolorSet = new HTTPTileSet(
-//                "http://tile.stamen.com/watercolor/{z}/{x}/{y}.png",
-//                SQLiteCache.getInstance(),
-//                TileSet.TileType.IMAGE,
-//                false);
-        //glacierMask = new FileTileSet("data/TMS_tiles_MountHood/glacierMask", true);
-        
-        layer1 = new Layer();
-        layer2 = new Layer();
-        layer1.setImageTileSet(esriSatelliteSet);
-        layer2.setImageTileSet(watercolorSet);
-        //layer2.setMaskTileSet(glacierMask);
+        layer1 = new Layer("Esri", "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
+        layer2 = new Layer("Stamen", "http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
         map.addLayer(layer1);
         map.addLayer(layer2);
     }

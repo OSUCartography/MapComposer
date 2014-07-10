@@ -305,9 +305,9 @@ public class TileSet {
     }
 
     /**
-     * Returns true if the current URL template string seems to be valid.
+     * Returns true if the passed URL template string seems to be valid.
      * @param template URL template string to test.
-     * @return True if passed URL template string is valid.
+     * @return True if passed URL template string seems to be valid.
      */
     public static boolean isURLTemplateValid(String template) {
         // FIXME use regular expression
@@ -317,6 +317,14 @@ public class TileSet {
                 && template.contains("//")
                 && template.contains(".")
                 && !template.contains(" ");
+    }
+    
+    /**
+     * Returns true if the passed URL template string seems to be valid.
+     * @return True if the URL template string seems to be valid.
+     */
+    public boolean isURLTemplateValid() {
+        return isURLTemplateValid(urlTemplate);
     }
 
     /**
