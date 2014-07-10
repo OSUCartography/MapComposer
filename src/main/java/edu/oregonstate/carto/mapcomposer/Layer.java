@@ -353,7 +353,22 @@ public class Layer {
     public void setImageTileSet(TileSet imageTileSet) {
         this.imageTileSet = imageTileSet;
     }
+    
+    public void setImageTileSetURLTemplate(String urlTemplate) {
+        if (imageTileSet == null) {
+            imageTileSet = new TileSet(urlTemplate);
+        } else {
+            imageTileSet.setUrlTemplate(urlTemplate);
+        }
+    }
 
+    public void setImageTileSetTMSSchema(boolean tmsSchema) {
+        if (imageTileSet == null) {
+            imageTileSet = new TileSet(null);
+        }
+        imageTileSet.setTMSSchema(tmsSchema);
+    }
+    
     /**
      * @return the textureTileFilePath
      */
@@ -383,6 +398,21 @@ public class Layer {
         this.maskTileSet = maskTileSet;
     }
 
+    public void setMaskTileSetURLTemplate(String maskTileSetURL) {
+        if (maskTileSet == null) {
+            maskTileSet = new TileSet(maskTileSetURL);
+        } else {
+            maskTileSet.setUrlTemplate(maskTileSetURL);
+        }
+    }
+
+    public void setMaskTileSetTMSSchema(boolean tmsSchema) {
+        if (maskTileSet == null) {
+            maskTileSet = new TileSet(null);
+        }
+        maskTileSet.setTMSSchema(tmsSchema);
+    }
+    
     /**
      *
      * @return true if the blend type is normal

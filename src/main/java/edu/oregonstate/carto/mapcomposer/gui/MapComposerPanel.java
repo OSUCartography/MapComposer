@@ -81,12 +81,87 @@ public class MapComposerPanel extends javax.swing.JPanel {
      */
     private int layerCounter = 0;
 
+    private abstract class DocumentListenerAdaptor implements DocumentListener {
+
+        protected abstract void textChanged(Layer layer, DocumentEvent e);
+
+        private void upate(DocumentEvent e) {
+            Layer layer = getSelectedMapLayer();
+            if (layer != null) {
+                boolean initialUpdating = updating;
+                try {
+                    updating = true;
+                    textChanged(layer, e);
+                } finally {
+                    updating = initialUpdating;
+                }
+            }
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            // text was inserted
+            upate(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            // text was deleted
+            upate(e);
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            // text was changed
+            upate(e);
+        }
+
+    }
+
     /**
      * Creates new form MapComposerPanel
      */
     public MapComposerPanel() {
         readExtentPreferences();
         initComponents();
+
+        // add document listener to name text field
+        nameTextField.getDocument().addDocumentListener(new DocumentListenerAdaptor() {
+            @Override
+            protected void textChanged(Layer layer, DocumentEvent e) {
+                layer.setName(nameTextField.getText());
+                updateLayerList();
+            }
+        });
+
+        // add document listener to URL text field
+        urlTextField.getDocument().addDocumentListener(new DocumentListenerAdaptor() {
+            @Override
+            protected void textChanged(Layer layer, DocumentEvent e) {
+                // change color to red if URL is not valid
+                String tileSetURL = urlTextField.getText();
+                boolean urlTemplateIsValid = TileSet.isURLTemplateValid(tileSetURL);
+                Color okColor = UIManager.getDefaults().getColor("TextField.foreground");
+                urlTextField.setForeground(urlTemplateIsValid ? okColor : Color.RED);
+
+                layer.setImageTileSetURLTemplate(tileSetURL);
+            }
+        });
+
+        // add document listener to maskURL text field
+        maskUrlTextField.getDocument().addDocumentListener(new DocumentListenerAdaptor() {
+            @Override
+            protected void textChanged(Layer layer, DocumentEvent e) {
+                // change color to red if URL is not valid
+                String tileSetURL = maskUrlTextField.getText();
+                boolean urlTemplateIsValid = TileSet.isURLTemplateValid(tileSetURL);
+                Color okColor = UIManager.getDefaults().getColor("TextField.foreground");
+                maskUrlTextField.setForeground(urlTemplateIsValid ? okColor : Color.RED);
+
+                layer.setMaskTileSetURLTemplate(tileSetURL);
+            }
+        });
+
         writeGUI();
     }
 
@@ -171,14 +246,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         tmsCheckBox = new javax.swing.JCheckBox();
         javax.swing.JTextArea urlHintTextArea = new javax.swing.JTextArea();
         loadDirectoryPathButton = new javax.swing.JButton();
-        javax.swing.JPanel texturePanel = new TransparentMacPanel();
-        textureSelectionButton = new javax.swing.JButton();
-        javax.swing.JLabel textureScaleLabel = new javax.swing.JLabel();
-        textureScaleSlider = new javax.swing.JSlider();
-        textureURLLabel = new javax.swing.JLabel();
-        textureClearButton = new javax.swing.JButton();
-        texturePreviewLabel = new javax.swing.JLabel();
-        textureScaleFormattedTextField = new javax.swing.JFormattedTextField();
         javax.swing.JPanel maskPanel = new TransparentMacPanel();
         maskInvertCheckBox = new javax.swing.JCheckBox();
         javax.swing.JLabel maskBlurLabel = new javax.swing.JLabel();
@@ -187,6 +254,15 @@ public class MapComposerPanel extends javax.swing.JPanel {
         javax.swing.JTextArea urlHintTextArea1 = new javax.swing.JTextArea();
         maskLoadDirectoryPathButton = new javax.swing.JButton();
         maskTMSCheckBox = new javax.swing.JCheckBox();
+        javax.swing.JLabel urlLabel1 = new javax.swing.JLabel();
+        javax.swing.JPanel texturePanel = new TransparentMacPanel();
+        textureSelectionButton = new javax.swing.JButton();
+        javax.swing.JLabel textureScaleLabel = new javax.swing.JLabel();
+        textureScaleSlider = new javax.swing.JSlider();
+        textureURLLabel = new javax.swing.JLabel();
+        textureClearButton = new javax.swing.JButton();
+        texturePreviewLabel = new javax.swing.JLabel();
+        textureScaleFormattedTextField = new javax.swing.JFormattedTextField();
         javax.swing.JPanel dropShadowPanel = new TransparentMacPanel();
         shadowCheckBox = new javax.swing.JCheckBox();
         shadowOffsetLabel = new javax.swing.JLabel();
@@ -226,7 +302,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         tintCheckBox = new javax.swing.JCheckBox();
         tintColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
         jSeparator1 = new javax.swing.JSeparator();
-        opacityTextField = new javax.swing.JFormattedTextField();
         curveTextArea = new javax.swing.JTextArea();
         deleteCurveFileButton = new javax.swing.JButton();
         southPanel = new javax.swing.JPanel();
@@ -427,27 +502,29 @@ public class MapComposerPanel extends javax.swing.JPanel {
         urlLabel.setText("URL:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         tilesPanel.add(urlLabel, gridBagConstraints);
 
         urlTextField.setFont(urlTextField.getFont().deriveFont(urlTextField.getFont().getSize()-1f));
         urlTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
         urlTextField.setPreferredSize(new java.awt.Dimension(600, 28));
-        // Listen for changes in the text
-        addDocumentListener(urlTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         tilesPanel.add(urlTextField, gridBagConstraints);
 
         tmsCheckBox.setText("TMS");
+        tmsCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MapComposerPanel.this.actionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         tilesPanel.add(tmsCheckBox, gridBagConstraints);
 
@@ -459,8 +536,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         urlHintTextArea.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         tilesPanel.add(urlHintTextArea, gridBagConstraints);
@@ -476,12 +553,106 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         tilesPanel.add(loadDirectoryPathButton, gridBagConstraints);
 
         settingsTabbedPane.addTab("Tiles", tilesPanel);
+
+        maskPanel.setLayout(new java.awt.GridBagLayout());
+
+        maskInvertCheckBox.setText("Invert Mask");
+        maskInvertCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        maskInvertCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        maskInvertCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MapComposerPanel.this.actionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        maskPanel.add(maskInvertCheckBox, gridBagConstraints);
+
+        maskBlurLabel.setText("Blur Mask:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        maskPanel.add(maskBlurLabel, gridBagConstraints);
+
+        maskBlurSlider.setMinorTickSpacing(10);
+        maskBlurSlider.setPaintTicks(true);
+        maskBlurSlider.setValue(0);
+        maskBlurSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sliderStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        maskPanel.add(maskBlurSlider, gridBagConstraints);
+
+        maskUrlTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
+        maskUrlTextField.setPreferredSize(new java.awt.Dimension(600, 28));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        maskPanel.add(maskUrlTextField, gridBagConstraints);
+
+        urlHintTextArea1.setEditable(false);
+        urlHintTextArea1.setColumns(20);
+        urlHintTextArea1.setFont(urlHintTextArea1.getFont().deriveFont(urlHintTextArea1.getFont().getSize()-2f));
+        urlHintTextArea1.setRows(1);
+        urlHintTextArea1.setText("Example: http://tile.stamen.com/toner/{z}/{x}/{y}.png");
+        urlHintTextArea1.setOpaque(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        maskPanel.add(urlHintTextArea1, gridBagConstraints);
+
+        maskLoadDirectoryPathButton.setIcon(folderIcon);
+        maskLoadDirectoryPathButton.setPreferredSize(new Dimension(iconW + 18, iconH + 18));
+
+        maskLoadDirectoryPathButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskLoadDirectoryPathButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        maskPanel.add(maskLoadDirectoryPathButton, gridBagConstraints);
+
+        maskTMSCheckBox.setText("TMS");
+        maskTMSCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MapComposerPanel.this.actionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        maskPanel.add(maskTMSCheckBox, gridBagConstraints);
+
+        urlLabel1.setText("URL:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        maskPanel.add(urlLabel1, gridBagConstraints);
+
+        settingsTabbedPane.addTab("Mask", maskPanel);
 
         texturePanel.setLayout(new java.awt.GridBagLayout());
 
@@ -562,91 +733,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         texturePanel.add(textureScaleFormattedTextField, gridBagConstraints);
 
         settingsTabbedPane.addTab("Texture", texturePanel);
-
-        maskPanel.setLayout(new java.awt.GridBagLayout());
-
-        maskInvertCheckBox.setText("Invert Mask");
-        maskInvertCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        maskInvertCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        maskInvertCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        maskPanel.add(maskInvertCheckBox, gridBagConstraints);
-
-        maskBlurLabel.setText("Blur Mask:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        maskPanel.add(maskBlurLabel, gridBagConstraints);
-
-        maskBlurSlider.setMinorTickSpacing(10);
-        maskBlurSlider.setPaintTicks(true);
-        maskBlurSlider.setValue(0);
-        maskBlurSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                sliderStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        maskPanel.add(maskBlurSlider, gridBagConstraints);
-
-        maskUrlTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
-        maskUrlTextField.setPreferredSize(new java.awt.Dimension(600, 28));
-        // Listen for changes in the text
-        addDocumentListener(urlTextField);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        maskPanel.add(maskUrlTextField, gridBagConstraints);
-
-        urlHintTextArea1.setEditable(false);
-        urlHintTextArea1.setColumns(20);
-        urlHintTextArea1.setFont(urlHintTextArea1.getFont().deriveFont(urlHintTextArea1.getFont().getSize()-2f));
-        urlHintTextArea1.setRows(1);
-        urlHintTextArea1.setText("Example: http://tile.stamen.com/toner/{z}/{x}/{y}.png");
-        urlHintTextArea1.setOpaque(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
-        maskPanel.add(urlHintTextArea1, gridBagConstraints);
-
-        maskLoadDirectoryPathButton.setIcon(folderIcon);
-        maskLoadDirectoryPathButton.setPreferredSize(new Dimension(iconW + 18, iconH + 18));
-
-        maskLoadDirectoryPathButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maskLoadDirectoryPathButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        maskPanel.add(maskLoadDirectoryPathButton, gridBagConstraints);
-
-        maskTMSCheckBox.setText("TMS");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        maskPanel.add(maskTMSCheckBox, gridBagConstraints);
-
-        settingsTabbedPane.addTab("Mask", maskPanel);
 
         dropShadowPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -919,8 +1005,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         settingsPanel.add(nameLabel, gridBagConstraints);
 
         nameTextField.setText("Forest");
-        // Listen for changes in the text
-        addDocumentListener(nameTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -1042,23 +1126,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
         settingsPanel.add(jSeparator1, gridBagConstraints);
-
-        opacityTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
-        opacityTextField.setPreferredSize(new java.awt.Dimension(60, 28));
-        javax.swing.text.NumberFormatter nf = new javax.swing.text.NumberFormatter();
-        nf.setMinimum(0);
-        nf.setMaximum(100);
-        opacityTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nf));
-        opacityTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                numberFieldChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        settingsPanel.add(opacityTextField, gridBagConstraints);
 
         curveTextArea.setEditable(false);
         curveTextArea.setColumns(20);
@@ -1187,6 +1254,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
         Layer layer = map.removeLayer(selectedLayerID);
         map.addLayer(--selectedLayerID, layer);
+        updateLayerList();
         this.layerList.setSelectedIndex(selectedLayerID);
         this.writeGUI();
     }//GEN-LAST:event_moveUpLayerButtonActionPerformed
@@ -1290,24 +1358,23 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void sliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderStateChanged
-        if (this.updating) {
+        if (updating) {
             return;
         }
 
-        this.updating = true;
+        updating = true;
         try {
-            this.opacityTextField.setValue(opacitySlider.getValue());
-            this.textureScaleFormattedTextField.setValue(readTextureScale());
-            this.embossAzimuthFormattedTextField.setValue(embossAzimuthSlider.getValue());
-            this.embossElevationFormattedTextField.setValue(embossElevationSlider.getValue());
-            this.embossHeightFormattedTextField.setValue(embossHeightSlider.getValue());
-            this.embossSoftnessFormattedTextField.setValue(embossSoftnessSlider.getValue());
+            textureScaleFormattedTextField.setValue(readTextureScale());
+            embossAzimuthFormattedTextField.setValue(embossAzimuthSlider.getValue());
+            embossElevationFormattedTextField.setValue(embossElevationSlider.getValue());
+            embossHeightFormattedTextField.setValue(embossHeightSlider.getValue());
+            embossSoftnessFormattedTextField.setValue(embossSoftnessSlider.getValue());
         } finally {
-            this.updating = false;
+            updating = false;
         }
 
         if (((JSlider) evt.getSource()).getValueIsAdjusting() == false) {
-            this.readGUI();
+            readGUI();
         }
     }//GEN-LAST:event_sliderStateChanged
 
@@ -1318,7 +1385,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void actionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionPerformed
-        this.readGUI();
+        readGUI();
     }//GEN-LAST:event_actionPerformed
 
     /**
@@ -1327,7 +1394,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void layerListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_layerListValueChanged
-        this.writeGUI();
+        if (!evt.getValueIsAdjusting()) {
+            writeGUI();
+        }
     }//GEN-LAST:event_layerListValueChanged
 
     /**
@@ -1402,16 +1471,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_textureClearButtonActionPerformed
 
     private void numberFieldChanged(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_numberFieldChanged
-        if (this.updating || "value".equals(evt.getPropertyName()) == false) {
+        if ("value".equals(evt.getPropertyName()) == false || updating) {
             return;
         }
 
         this.updating = true;
         try {
-            if (opacityTextField.getValue() != null) {
-                int opacity = ((Number) opacityTextField.getValue()).intValue();
-                this.opacitySlider.setValue(opacity);
-            }
             if (textureScaleFormattedTextField.getValue() != null) {
                 float textureScale = ((Number) textureScaleFormattedTextField.getValue()).floatValue();
                 this.writeTextureScale(textureScale);
@@ -1496,14 +1561,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
         String directoryPath = null;
         try {
             directoryPath = FileUtils.askDirectory(GUIUtil.getOwnerFrame(this), msg, true, null);
-
         } catch (IOException ex) {
-            Logger.getLogger(MapComposerPanel.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
             directoryPath = null;
         }
         return directoryPath;
     }
+    
     private void loadDirectoryPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDirectoryPathButtonActionPerformed
         String directoryPath = askTilesDirectory("Select Tiles Directory");
         if (directoryPath != null) {
@@ -1566,7 +1630,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         try {
             this.updating = true;
-            updateLayerList();
             int selectedLayerID = layerList.getSelectedIndex();
             Layer selectedLayer = getSelectedMapLayer();
 
@@ -1582,7 +1645,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.normalBlendingRadioButton.setEnabled(on);
             this.multiplyBlendingRadioButton.setEnabled(on);
             this.opacitySlider.setEnabled(on);
-            this.opacityTextField.setEnabled(on);
             this.curveTextArea.setEnabled(on);
             this.loadCurveFileButton.setEnabled(on);
             this.deleteCurveFileButton.setEnabled(on && hasCurveURL);
@@ -1637,11 +1699,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.tmsCheckBox.setSelected(tileSet != null ? tileSet.isTMSSchema() : false);
 
             // blending
-            this.normalBlendingRadioButton.setSelected(selectedLayer.isBlendingNormal());
+            if (selectedLayer.isBlendingNormal()) {
+                this.normalBlendingRadioButton.setSelected(true);
+            } else {
+                multiplyBlendingRadioButton.setSelected(true);
+            }
 
             // opacity
             this.opacitySlider.setValue((int) (selectedLayer.getOpacity() * 100));
-            this.opacityTextField.setValue((int) (selectedLayer.getOpacity() * 100));
 
             // curve
             this.curveTextArea.setText(selectedLayer.getCurveURL());
@@ -1652,6 +1717,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 this.tintColorButton.setColor(selectedLayer.getTint().getTintColor());
             } else {
                 this.tintCheckBox.setSelected(false);
+                this.tintColorButton.setColor(Color.BLACK);
             }
 
             // texture
@@ -1749,7 +1815,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         layer.setVisible(visibleCheckBox.isSelected());
         layer.setName(nameTextField.getText());
-        layer.setBlending(this.normalBlendingRadioButton.isSelected()
+        layer.setBlending(normalBlendingRadioButton.isSelected()
                 ? Layer.BlendType.NORMAL : Layer.BlendType.MULTIPLY);
         layer.setOpacity(opacitySlider.getValue() / 100.f);
 
@@ -1757,42 +1823,15 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layer.setCurveURL(curveTextArea.getText());
 
         // URL
-        String tileSetURL = urlTextField.getText();
-        boolean urlTemplateIsValid = TileSet.isURLTemplateValid(tileSetURL);
-        if (urlTemplateIsValid) {
-            TileSet tileSet = layer.getImageTileSet();
-            if (tileSet == null) {
-                tileSet = new TileSet(tileSetURL);
-                layer.setImageTileSet(tileSet);
-            } else {
-                tileSet.setUrlTemplate(tileSetURL);
-            }
-        }
-        Color okColor = UIManager.getDefaults().getColor("TextField.foreground");
-        urlTextField.setForeground(urlTemplateIsValid ? okColor : Color.RED);
+        layer.setImageTileSetURLTemplate(urlTextField.getText());
 
         // TMS
-        if (layer.getImageTileSet() != null) {
-            layer.getImageTileSet().setTMSSchema(tmsCheckBox.isSelected());
-        }
+        layer.setImageTileSetTMSSchema(tmsCheckBox.isSelected());
 
         // mask
-        String maskTileSetURL = maskUrlTextField.getText();
-        boolean maskUrlTemplateIsValid = TileSet.isURLTemplateValid(maskTileSetURL);
-        TileSet maskTileSet = layer.getMaskTileSet();
-        if (maskUrlTemplateIsValid) {
-            if (maskTileSet == null) {
-                maskTileSet = new TileSet(maskTileSetURL);
-                layer.setMaskTileSet(maskTileSet);
-            } else {
-                maskTileSet.setUrlTemplate(maskTileSetURL);
-            }
-        }
-        maskUrlTextField.setForeground(maskUrlTemplateIsValid ? okColor : Color.RED);
+        layer.setMaskTileSetURLTemplate(maskUrlTextField.getText());
         layer.setInvertMask(this.maskInvertCheckBox.isSelected());
-        if (maskTileSet != null) {
-            maskTileSet.setTMSSchema(maskTMSCheckBox.isSelected());
-        }
+        layer.setMaskTileSetTMSSchema(maskTMSCheckBox.isSelected());
         layer.setMaskBlur(this.maskBlurSlider.getValue() / 10f);
 
         // tint
@@ -1848,6 +1887,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         int layerID = this.layerList.getSelectedIndex() + 1;
         String name = "Layer " + (++layerCounter);
         map.addLayer(layerID, new Layer(name));
+        updateLayerList();
         writeGUI();
         layerList.setSelectedIndex(layerID);
 
@@ -1867,6 +1907,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             return;
         }
         this.map.removeLayer(selectedLayerID);
+        updateLayerList();
         this.writeGUI();
         this.layerList.setSelectedIndex(--selectedLayerID);
     }
@@ -1925,7 +1966,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton normalBlendingRadioButton;
     private javax.swing.JFormattedTextField northField;
     private javax.swing.JSlider opacitySlider;
-    private javax.swing.JFormattedTextField opacityTextField;
     private javax.swing.JButton previewButton;
     private javax.swing.JButton removeLayerButton;
     private javax.swing.JPanel settingsPanel;
