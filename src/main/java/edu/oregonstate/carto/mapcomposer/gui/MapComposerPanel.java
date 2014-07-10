@@ -165,6 +165,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
         moveDownLayerButton = new javax.swing.JButton();
         centralPanel = new javax.swing.JPanel();
         javax.swing.JTabbedPane settingsTabbedPane = new javax.swing.JTabbedPane();
+        tilesPanel = new TransparentMacPanel();
+        javax.swing.JLabel urlLabel = new javax.swing.JLabel();
+        urlTextField = new javax.swing.JTextField();
+        tmsCheckBox = new javax.swing.JCheckBox();
+        javax.swing.JTextArea urlHintTextArea = new javax.swing.JTextArea();
+        loadDirectoryPathButton = new javax.swing.JButton();
         javax.swing.JPanel texturePanel = new TransparentMacPanel();
         textureSelectionButton = new javax.swing.JButton();
         javax.swing.JLabel textureScaleLabel = new javax.swing.JLabel();
@@ -207,7 +213,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         visibleCheckBox = new javax.swing.JCheckBox();
         javax.swing.JLabel nameLabel = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
-        javax.swing.JLabel urlLabel = new javax.swing.JLabel();
         javax.swing.JLabel blendingModeLabel = new javax.swing.JLabel();
         normalBlendingRadioButton = new javax.swing.JRadioButton();
         multiplyBlendingRadioButton = new javax.swing.JRadioButton();
@@ -219,13 +224,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         tintCheckBox = new javax.swing.JCheckBox();
         tintColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
         jSeparator1 = new javax.swing.JSeparator();
-        urlTextField = new javax.swing.JTextField();
         opacityTextField = new javax.swing.JFormattedTextField();
         curveTextArea = new javax.swing.JTextArea();
         deleteCurveFileButton = new javax.swing.JButton();
-        javax.swing.JTextArea urlHintTextArea = new javax.swing.JTextArea();
-        loadDirectoryPathButton = new javax.swing.JButton();
-        tmsCheckBox = new javax.swing.JCheckBox();
         southPanel = new javax.swing.JPanel();
         extentButton = new javax.swing.JButton();
         previewButton = new javax.swing.JButton();
@@ -418,6 +419,67 @@ public class MapComposerPanel extends javax.swing.JPanel {
         add(layersPanel, java.awt.BorderLayout.WEST);
 
         centralPanel.setLayout(new java.awt.GridBagLayout());
+
+        tilesPanel.setLayout(new java.awt.GridBagLayout());
+
+        urlLabel.setText("URL:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        tilesPanel.add(urlLabel, gridBagConstraints);
+
+        urlTextField.setFont(urlTextField.getFont().deriveFont(urlTextField.getFont().getSize()-1f));
+        urlTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
+        urlTextField.setPreferredSize(new java.awt.Dimension(600, 28));
+        // Listen for changes in the text
+        addDocumentListener(urlTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        tilesPanel.add(urlTextField, gridBagConstraints);
+
+        tmsCheckBox.setText("TMS");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        tilesPanel.add(tmsCheckBox, gridBagConstraints);
+
+        urlHintTextArea.setEditable(false);
+        urlHintTextArea.setColumns(20);
+        urlHintTextArea.setFont(urlHintTextArea.getFont().deriveFont(urlHintTextArea.getFont().getSize()-2f));
+        urlHintTextArea.setRows(4);
+        urlHintTextArea.setText("Examples:\nhttp://tile.openstreetmap.org/{z}/{x}/{y}.png\nhttp://tile.stamen.com/watercolor/{z}/{x}/{y}.png\nhttp://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}.png");
+        urlHintTextArea.setOpaque(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        tilesPanel.add(urlHintTextArea, gridBagConstraints);
+
+        Icon folderIcon = UIManager.getDefaults().getIcon("FileView.directoryIcon");
+        loadDirectoryPathButton.setIcon(folderIcon);
+        int iconH = folderIcon.getIconHeight();
+        int iconW = folderIcon.getIconWidth();
+        loadDirectoryPathButton.setPreferredSize(new Dimension(iconW + 18, iconH + 18));
+        loadDirectoryPathButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadDirectoryPathButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        tilesPanel.add(loadDirectoryPathButton, gridBagConstraints);
+
+        settingsTabbedPane.addTab("Tiles", tilesPanel);
 
         texturePanel.setLayout(new java.awt.GridBagLayout());
 
@@ -842,13 +904,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         settingsPanel.add(nameTextField, gridBagConstraints);
 
-        urlLabel.setText("URL:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        settingsPanel.add(urlLabel, gridBagConstraints);
-
         blendingModeLabel.setText("Blending Mode:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -964,17 +1019,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
         settingsPanel.add(jSeparator1, gridBagConstraints);
 
-        urlTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
-        urlTextField.setPreferredSize(new java.awt.Dimension(600, 28));
-        // Listen for changes in the text
-        addDocumentListener(urlTextField);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        settingsPanel.add(urlTextField, gridBagConstraints);
-
         opacityTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
         opacityTextField.setPreferredSize(new java.awt.Dimension(60, 28));
         javax.swing.text.NumberFormatter nf = new javax.swing.text.NumberFormatter();
@@ -1018,44 +1062,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         settingsPanel.add(deleteCurveFileButton, gridBagConstraints);
-
-        urlHintTextArea.setEditable(false);
-        urlHintTextArea.setColumns(20);
-        urlHintTextArea.setFont(urlHintTextArea.getFont().deriveFont(urlHintTextArea.getFont().getSize()-2f));
-        urlHintTextArea.setRows(4);
-        urlHintTextArea.setText("Examples:\nhttp://tile.openstreetmap.org/{z}/{x}/{y}.png\nhttp://tile.stamen.com/watercolor/{z}/{x}/{y}.png\nhttp://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}.png");
-        urlHintTextArea.setOpaque(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        settingsPanel.add(urlHintTextArea, gridBagConstraints);
-
-        Icon folderIcon = UIManager.getDefaults().getIcon("FileView.directoryIcon");
-        loadDirectoryPathButton.setIcon(folderIcon);
-        int iconH = folderIcon.getIconHeight();
-        int iconW = folderIcon.getIconWidth();
-        loadDirectoryPathButton.setPreferredSize(new Dimension(iconW + 18, iconH + 18));
-        loadDirectoryPathButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadDirectoryPathButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        settingsPanel.add(loadDirectoryPathButton, gridBagConstraints);
-
-        tmsCheckBox.setText("TMS");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        settingsPanel.add(tmsCheckBox, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1893,6 +1899,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JSlider textureScaleSlider;
     private javax.swing.JButton textureSelectionButton;
     private javax.swing.JLabel textureURLLabel;
+    private javax.swing.JPanel tilesPanel;
     private javax.swing.JCheckBox tintCheckBox;
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton tintColorButton;
     private javax.swing.JCheckBox tmsCheckBox;
