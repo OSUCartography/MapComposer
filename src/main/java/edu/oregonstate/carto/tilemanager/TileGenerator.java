@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 
 /**
@@ -45,6 +46,13 @@ public class TileGenerator {
         this.maxZoom = maxZoom;
     }
 
+    private static String formatTimeInterval(final long ms) {
+        final long hr = TimeUnit.MILLISECONDS.toHours(ms);
+        final long min = TimeUnit.MILLISECONDS.toMinutes(ms - TimeUnit.HOURS.toMillis(hr));
+        final long sec = TimeUnit.MILLISECONDS.toSeconds(ms - TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min));
+        return String.format("%02d:%02d:%02d", hr, min, sec);
+    }
+
     public void generateTiles(Map map, ProgressIndicator progress) throws IOException, URISyntaxException {
         // Write tiles to a temporary directory if no directory is specified
         if (directory == null) {
@@ -55,18 +63,21 @@ public class TileGenerator {
             // A more clever solution is needed here.
             directory.deleteOnExit();
         }
+
+        long startTimeMillis = System.currentTimeMillis();
+
         TileSet outputTileSet = TileSet.createFileTileSet(directory);
         TileIterator iterator = outputTileSet.createIterator(south, west, north, east, minZoom, maxZoom);
         while (iterator.hasNext() && !progress.isAborted()) {
             Tile tile = iterator.next();
-            progress.setMessage("Tile: " + tile.toString());
+            long ms = System.currentTimeMillis() - startTimeMillis;
+            progress.setMessage("<html>Current tile: " + tile.toDescription()
+                    + "<br>Time spent: " + formatTimeInterval(ms) + "</html>");
             BufferedImage img = map.generateTile(tile.getZ(), tile.getX(), tile.getY());
             File file = new File(tile.getURL().toURI());
             // make sure a directory for each zoom level exists
             file.getParentFile().mkdirs();
             ImageIO.write(img, "png", file);
-            // FIXME
-            System.out.println("created tile " + file.getAbsolutePath());
         }
     }
 

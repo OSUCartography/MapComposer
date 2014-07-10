@@ -196,6 +196,10 @@ public abstract class Tile<TileData> {
         out.writeInt(y);
     }
 
+    public String toDescription() {
+        return "Zoom " + z + ", x: " + x + ", y: " + y;
+    }
+    
     @Override
     public String toString() {
         return "Tile(z=" + z + ", x=" + x + ", y=" + y + ")";
