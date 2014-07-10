@@ -1791,7 +1791,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         maskUrlTextField.setForeground(maskUrlTemplateIsValid ? okColor : Color.RED);
         layer.setInvertMask(this.maskInvertCheckBox.isSelected());
         if (maskTileSet != null) {
-            maskTileSet.setTMSSchema(tmsCheckBox.isSelected());
+            maskTileSet.setTMSSchema(maskTMSCheckBox.isSelected());
         }
         layer.setMaskBlur(this.maskBlurSlider.getValue() / 10f);
 
