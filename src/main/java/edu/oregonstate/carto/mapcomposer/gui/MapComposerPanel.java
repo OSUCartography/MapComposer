@@ -1878,6 +1878,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     public void setMap(Map map) {
         this.map = map;
+        updateLayerList();
         layerList.setSelectedIndex(layerList.getFirstVisibleIndex());
         this.writeGUI();
     }
