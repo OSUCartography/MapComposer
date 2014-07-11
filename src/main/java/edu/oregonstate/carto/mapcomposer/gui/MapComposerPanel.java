@@ -304,6 +304,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JSeparator();
         curveTextArea = new javax.swing.JTextArea();
         deleteCurveFileButton = new javax.swing.JButton();
+        opacityValueLabel = new javax.swing.JLabel();
         southPanel = new javax.swing.JPanel();
         extentButton = new javax.swing.JButton();
         previewButton = new javax.swing.JButton();
@@ -1057,6 +1058,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         settingsPanel.add(opacityLabel, gridBagConstraints);
 
+        opacitySlider.setMajorTickSpacing(20);
+        opacitySlider.setMinorTickSpacing(5);
+        opacitySlider.setPaintLabels(true);
+        opacitySlider.setPaintTicks(true);
         opacitySlider.setValue(100);
         opacitySlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1153,6 +1158,15 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         settingsPanel.add(deleteCurveFileButton, gridBagConstraints);
+
+        opacityValueLabel.setFont(opacityValueLabel.getFont().deriveFont(opacityValueLabel.getFont().getSize()-2f));
+        opacityValueLabel.setText("100");
+        opacityValueLabel.setPreferredSize(new java.awt.Dimension(30, 14));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        settingsPanel.add(opacityValueLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1372,6 +1386,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         updating = true;
         try {
+            opacityValueLabel.setText(Integer.toString(opacitySlider.getValue()));
             textureScaleFormattedTextField.setValue(readTextureScale());
             embossAzimuthFormattedTextField.setValue(embossAzimuthSlider.getValue());
             embossElevationFormattedTextField.setValue(embossElevationSlider.getValue());
@@ -1714,6 +1729,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
             // opacity
             this.opacitySlider.setValue((int) (selectedLayer.getOpacity() * 100));
+            opacityValueLabel.setText(Integer.toString(opacitySlider.getValue()));
 
             // curve
             this.curveTextArea.setText(selectedLayer.getCurveURL());
@@ -1965,6 +1981,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton normalBlendingRadioButton;
     private javax.swing.JFormattedTextField northField;
     private javax.swing.JSlider opacitySlider;
+    private javax.swing.JLabel opacityValueLabel;
     private javax.swing.JButton previewButton;
     private javax.swing.JButton removeLayerButton;
     private javax.swing.JPanel settingsPanel;
