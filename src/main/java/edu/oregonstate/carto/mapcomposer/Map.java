@@ -53,7 +53,8 @@ public class Map {
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, Tile.TILE_SIZE, Tile.TILE_SIZE);
 
-        for (Layer layer : layers) {
+        for (int i = layers.size() - 1; i >= 0; i--) {
+            Layer layer = layers.get(i);
             if (!layer.isVisible()) {
                 continue;
             }
