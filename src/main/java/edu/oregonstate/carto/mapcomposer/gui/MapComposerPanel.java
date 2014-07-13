@@ -242,7 +242,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param centerLat Central latitude of map.
      * @return HTML document wit map preview.
      */
-    public String loadHTMLPreviewMap(Number zoom, Number centerLon, Number centerLat) {
+    private String loadHTMLPreviewMap(Number zoom, Number centerLon, Number centerLat) {
         try {
             URL inputUrl = getClass().getResource("/index_with_variables.html");
             File file = new File(inputUrl.toURI());
@@ -261,7 +261,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * Reloads the tiles of the preview map. Call this method after changing 
      * map settings. To be called from the Swing thread.
      */
-    private void reloadMap() {
+    public void reloadMap() {
         // run in JavaFX thread
         Platform.runLater(new Runnable() {
             @Override
