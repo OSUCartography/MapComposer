@@ -53,7 +53,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        mapComposerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        mapComposerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
         getContentPane().add(mapComposerPanel, java.awt.BorderLayout.CENTER);
 
         fileMenu.setText("File");

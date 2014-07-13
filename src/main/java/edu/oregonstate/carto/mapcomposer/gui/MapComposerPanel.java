@@ -345,7 +345,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         jFormattedTextField3 = new javax.swing.JFormattedTextField();
         layersPanel = new javax.swing.JPanel();
         javax.swing.JLabel layersLabel = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        layerListScrollPane = new javax.swing.JScrollPane();
         layerList = new edu.oregonstate.carto.mapcomposer.gui.DraggableList();
         layerListToolBar = new javax.swing.JToolBar();
         addLayerButton = new javax.swing.JButton();
@@ -353,8 +353,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         moveUpLayerButton = new javax.swing.JButton();
         moveDownLayerButton = new javax.swing.JButton();
         centralPanel = new javax.swing.JPanel();
-        southPanel = new javax.swing.JPanel();
-        extentButton = new javax.swing.JButton();
         eastPanel = new javax.swing.JPanel();
         javax.swing.JTabbedPane settingsTabbedPane = new javax.swing.JTabbedPane();
         tilesPanel = new TransparentMacPanel();
@@ -422,6 +420,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         curveTextArea = new javax.swing.JTextArea();
         deleteCurveFileButton = new javax.swing.JButton();
         opacityValueLabel = new javax.swing.JLabel();
+        extentButton = new javax.swing.JButton();
 
         extentPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -545,8 +544,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layersLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 10, 1));
         layersPanel.add(layersLabel, java.awt.BorderLayout.PAGE_START);
 
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(200, 132));
+        layerListScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        layerListScrollPane.setPreferredSize(new java.awt.Dimension(200, 132));
 
         layerList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         layerList.setNextFocusableComponent(nameTextField);
@@ -555,9 +554,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 layerListValueChanged(evt);
             }
         });
-        jScrollPane2.setViewportView(layerList);
+        layerListScrollPane.setViewportView(layerList);
 
-        layersPanel.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+        layersPanel.add(layerListScrollPane, java.awt.BorderLayout.CENTER);
 
         layerListToolBar.setFloatable(false);
 
@@ -612,18 +611,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         centralPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         centralPanel.setLayout(new java.awt.BorderLayout());
         add(centralPanel, java.awt.BorderLayout.CENTER);
-
-        southPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
-
-        extentButton.setText("Extent");
-        extentButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                extentButtonActionPerformed(evt);
-            }
-        });
-        southPanel.add(extentButton);
-
-        add(southPanel, java.awt.BorderLayout.SOUTH);
 
         final JFXPanel fxPanel = new JFXPanel();
         eastPanel.add(fxPanel);
@@ -1298,6 +1285,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         settingsPanel.add(opacityValueLabel, gridBagConstraints);
+
+        extentButton.setText("Extent");
+        extentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                extentButtonActionPerformed(evt);
+            }
+        });
+        settingsPanel.add(extentButton, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -2069,9 +2064,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JSlider gaussBlurSlider;
     private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private edu.oregonstate.carto.mapcomposer.gui.DraggableList layerList;
+    private javax.swing.JScrollPane layerListScrollPane;
     private javax.swing.JToolBar layerListToolBar;
     private javax.swing.JPanel layersPanel;
     private javax.swing.JButton loadCurveFileButton;
@@ -2099,7 +2094,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel shadowOffsetLabel;
     private javax.swing.JSlider shadowOffsetSlider;
     private javax.swing.JFormattedTextField southField;
-    private javax.swing.JPanel southPanel;
     private javax.swing.JButton textureClearButton;
     private javax.swing.JLabel texturePreviewLabel;
     private javax.swing.JFormattedTextField textureScaleFormattedTextField;
