@@ -8,9 +8,11 @@ package edu.oregonstate.carto.mapcomposer.gui;
 import edu.oregonstate.carto.mapcomposer.Map;
 import edu.oregonstate.carto.utils.FileUtils;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
 
 /**
  * Main window for composing a map consisting of multiple layers. The UI
@@ -46,13 +48,10 @@ public class MapComposerFrame extends javax.swing.JFrame {
         mapMenu = new javax.swing.JMenu();
         addLayerMenuItem = new javax.swing.JMenuItem();
         removeLayerMenuItem = new javax.swing.JMenuItem();
-        javax.swing.JPopupMenu.Separator jSeparator3 = new javax.swing.JPopupMenu.Separator();
-        previewMenuItem = new javax.swing.JMenuItem();
         textureMenu = new javax.swing.JMenu();
         createTextureMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
 
         mapComposerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
         getContentPane().add(mapComposerPanel, java.awt.BorderLayout.CENTER);
@@ -105,16 +104,6 @@ public class MapComposerFrame extends javax.swing.JFrame {
             }
         });
         mapMenu.add(removeLayerMenuItem);
-        mapMenu.add(jSeparator3);
-
-        previewMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P,    java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        previewMenuItem.setText("Preview");
-        previewMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                previewMenuItemActionPerformed(evt);
-            }
-        });
-        mapMenu.add(previewMenuItem);
 
         menuBar.add(mapMenu);
 
@@ -138,7 +127,14 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private void loadStyleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadStyleMenuItemActionPerformed
         String filePath = FileUtils.askFile(null, "Load Style.xml file", null, true, "xml");
         if (filePath != null) {
-            mapComposerPanel.setMap(Map.unmarshal(filePath));
+            try {
+                mapComposerPanel.setMap(Map.unmarshal(filePath));
+            } catch (JAXBException | FileNotFoundException ex) {
+                Logger.getLogger(MapComposerFrame.class.getName()).log(Level.SEVERE, null, ex);
+                String msg = "Could not load style file";
+                String title = "Error";
+                ErrorDialog.showErrorDialog(msg, title, ex, rootPane);
+            }
         }
     }//GEN-LAST:event_loadStyleMenuItemActionPerformed
 
@@ -157,12 +153,19 @@ public class MapComposerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_saveMapMenuItemActionPerformed
 
     private void saveStyleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveStyleMenuItemActionPerformed
-            String filePath = FileUtils.askFile(null, "Save XML Style", null, false, "xml");
-            if (filePath == null) {
-                return;
-            }
-            File file = new File(filePath);
+        String filePath = FileUtils.askFile(null, "Save XML Style", null, false, "xml");
+        if (filePath == null) {
+            return;
+        }
+        File file = new File(filePath);
+        try {
             mapComposerPanel.getMap().marshal(file.getAbsolutePath());
+        } catch (JAXBException | FileNotFoundException ex) {
+            Logger.getLogger(MapComposerFrame.class.getName()).log(Level.SEVERE, null, ex);
+            String msg = "Could not save style file";
+            String title = "Error";
+            ErrorDialog.showErrorDialog(msg, title, ex, rootPane);
+        }
     }//GEN-LAST:event_saveStyleMenuItemActionPerformed
 
     private void createTextureMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createTextureMenuItemActionPerformed
@@ -172,10 +175,6 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private void addLayerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLayerMenuItemActionPerformed
         mapComposerPanel.addLayer();
     }//GEN-LAST:event_addLayerMenuItemActionPerformed
-
-    private void previewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewMenuItemActionPerformed
-        mapComposerPanel.renderTilesWithProgressDialog(null);
-    }//GEN-LAST:event_previewMenuItemActionPerformed
 
     private void removeLayerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLayerMenuItemActionPerformed
         mapComposerPanel.removeLayer();
@@ -189,7 +188,6 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel mapComposerPanel;
     private javax.swing.JMenu mapMenu;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem previewMenuItem;
     private javax.swing.JMenuItem removeLayerMenuItem;
     private javax.swing.JMenuItem saveMapMenuItem;
     private javax.swing.JMenuItem saveStyleMenuItem;

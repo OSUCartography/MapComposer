@@ -22,10 +22,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Main model class. Contains an array of layers.
  *
+ * @author Bernhard Jenny, Cartography and Geovisualization Group, Oregon State
+ * University
  * @author Nicholas Hallahan nick@theoutpost.io
+ * @author Jane Darbyshire, Cartography and Geovisualization Group, Oregon State
+ * University
  */
-
 //Defines root element of XML file
 @XmlRootElement
 
@@ -34,12 +38,38 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 
 public class Map {
+
+    /**
+     * A static reference to the map, required for the "map" URL protocol.
+     * This can be extended to an array if multiple maps are to be supported.
+     */
+    private static Map map;
     
+    /**
+     * Access to the static map reference.
+     * @return 
+     */
+    public static Map getMap() {
+        return map;
+    }
+
     //@XmlElement defines an element in the XML file. name = "" sets the name 
     //in the XML file.
-    @XmlElement (name = "layer")
+    @XmlElement(name = "layer")
     private final ArrayList<Layer> layers = new ArrayList<>();
 
+    public Map() {
+        Map.map = this;
+    }
+
+    /**
+     * Renders an image for one tile.
+     *
+     * @param z Zoom level of the tile.
+     * @param x X coordinate of the tile.
+     * @param y Y coordinate of the tile.
+     * @return The rendered image.
+     */
     public BufferedImage generateTile(int z, int x, int y) {
 
         BufferedImage tileImage = new BufferedImage(
@@ -90,39 +120,29 @@ public class Map {
     public Layer[] getLayers() {
         return layers.toArray(new Layer[layers.size()]);
     }
-    
-    public static Map unmarshal(String fileName) {
+
+    public static Map unmarshal(String fileName) throws JAXBException, FileNotFoundException {
         FileInputStream in = null;
         try {
             JAXBContext context = JAXBContext.newInstance(Map.class);
             Unmarshaller m = context.createUnmarshaller();
             in = new FileInputStream(fileName);
-            Map map = (Map)m.unmarshal(in);
-            return map;
-        } catch (JAXBException | FileNotFoundException ex) {
-            Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
-        } finally  {
+            return (Map) m.unmarshal(in);
+        } finally {
             try {
-                in.close();
+                if (in != null) {
+                    in.close();
+                }
             } catch (IOException ex) {
                 Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return new Map();
     }
-    
-    public void marshal(String fileName) {
-        try {
-             JAXBContext context = JAXBContext.newInstance(Map.class);
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            m.marshal(this, new FileOutputStream(fileName));
-            
-        } catch (JAXBException ex) {
-            // FIXME
-            Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+    public void marshal(String fileName) throws JAXBException, FileNotFoundException {
+        JAXBContext context = JAXBContext.newInstance(Map.class);
+        Marshaller m = context.createMarshaller();
+        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        m.marshal(this, new FileOutputStream(fileName));
     }
 }

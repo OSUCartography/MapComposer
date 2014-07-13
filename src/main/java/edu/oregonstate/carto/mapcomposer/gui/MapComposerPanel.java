@@ -15,10 +15,13 @@ import edu.oregonstate.carto.tilemanager.TileGenerator;
 import edu.oregonstate.carto.tilemanager.TileSet;
 import edu.oregonstate.carto.utils.FileUtils;
 import edu.oregonstate.carto.utils.GUIUtil;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -30,7 +33,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -54,6 +62,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * This map is the model.
      */
     private Map map = new Map();
+
     /**
      * updating is true while any code in this class is modifying the GUI. While
      * this flag is true, event handlers should not modify the GUI to avoid
@@ -80,6 +89,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * counts the number of layers created
      */
     private int layerCounter = 0;
+
+    /**
+     * A JavaFX web renderer for the preview map. Must only be accessed from
+     * within the JavaFX thread, not the Swing event dispatching thread.
+     */
+    private WebView webView;
 
     private abstract class DocumentListenerAdaptor implements DocumentListener {
 
@@ -115,7 +130,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
             // text was changed
             upate(e);
         }
-
     }
 
     /**
@@ -124,6 +138,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     public MapComposerPanel() {
         readExtentPreferences();
         initComponents();
+        initMap();
 
         // add document listener to name text field
         nameTextField.getDocument().addDocumentListener(new DocumentListenerAdaptor() {
@@ -145,6 +160,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 urlTextField.setForeground(urlTemplateIsValid ? okColor : Color.RED);
 
                 layer.setImageTileSetURLTemplate(tileSetURL);
+                // re-render map preview
+                reloadMap();
             }
         });
 
@@ -159,6 +176,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 maskUrlTextField.setForeground(urlTemplateIsValid ? okColor : Color.RED);
 
                 layer.setMaskTileSetURLTemplate(tileSetURL);
+                // re-render map preview
+                reloadMap();
             }
         });
 
@@ -166,9 +185,104 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     /**
+     * Creates the preview map.
+     */
+    private void initMap() {      
+        final JFXPanel fxPanel = new JFXPanel();
+        centralPanel.add(fxPanel, BorderLayout.CENTER);
+        final String html = loadHTMLPreviewMap(0, 0, 0);
+
+        // run in the JavaFX thread
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Group group = new Group();
+                Scene scene = new Scene(group);
+                fxPanel.setScene(scene);
+                webView = new WebView();
+                group.getChildren().add(webView);
+                webView.getEngine().loadContent(html);
+            }
+        });
+
+        // add resize event handler to the JavaFX panel to
+        // adjust the size of the HTML page to the FXPanel size.
+        fxPanel.addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                final int w = fxPanel.getWidth();
+                final int h = fxPanel.getHeight();
+                // run in the JavaFX thread
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        webView.setPrefSize(w, h);
+                    }
+                });
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+            }
+        });
+    }
+
+    /**
+     * Loads HTML map file and fills placeholders for map center and zoom
+     * @param zoom Zoom level of map.
+     * @param centerLon Central longitude of map.
+     * @param centerLat Central latitude of map.
+     * @return HTML document wit map preview.
+     */
+    public String loadHTMLPreviewMap(Number zoom, Number centerLon, Number centerLat) {
+        try {
+            URL inputUrl = getClass().getResource("/index_with_variables.html");
+            File file = new File(inputUrl.toURI());
+            String html = org.apache.commons.io.FileUtils.readFileToString(file);
+            // replace placeholders with zoom and central location of map
+            html = html.replace("$$viewZoomlevel$$", zoom.toString());
+            html = html.replace("$$viewCenterLatitude$$", centerLat.toString());
+            html = html.replace("$$viewCenterLongitude$$", centerLon.toString());
+            return html;
+        } catch (URISyntaxException | IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /**
+     * Reloads the tiles of the preview map. Call this method after changing 
+     * map settings. To be called from the Swing thread.
+     */
+    private void reloadMap() {
+        // run in JavaFX thread
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                WebEngine webEngine = webView.getEngine();
+                // run scripts to retreive current map center and zoom
+                Number centerLat = (Number) webEngine.executeScript("map.getCenter().lat");
+                Number centerLon = (Number) webEngine.executeScript("map.getCenter().lng");
+                Number zoom = (Number) webEngine.executeScript("map.getZoom()");
+                
+                // create and load new HTML page with same map center and zoom
+                String html = loadHTMLPreviewMap(zoom, centerLon, centerLat);
+                webEngine.loadContent(html);
+            }
+        });
+    }
+
+    /**
      * Returns the MapLayer currently selected by the user.
      *
-     * @return
+     * @return The selected map layer.
      */
     private Layer getSelectedMapLayer() {
         int index = layerList.getSelectedIndex();
@@ -239,6 +353,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         moveUpLayerButton = new javax.swing.JButton();
         moveDownLayerButton = new javax.swing.JButton();
         centralPanel = new javax.swing.JPanel();
+        southPanel = new javax.swing.JPanel();
+        extentButton = new javax.swing.JButton();
+        eastPanel = new javax.swing.JPanel();
         javax.swing.JTabbedPane settingsTabbedPane = new javax.swing.JTabbedPane();
         tilesPanel = new TransparentMacPanel();
         javax.swing.JLabel urlLabel = new javax.swing.JLabel();
@@ -305,10 +422,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         curveTextArea = new javax.swing.JTextArea();
         deleteCurveFileButton = new javax.swing.JButton();
         opacityValueLabel = new javax.swing.JLabel();
-        southPanel = new javax.swing.JPanel();
-        extentButton = new javax.swing.JButton();
-        previewButton = new javax.swing.JButton();
-        eastPanel = new javax.swing.JPanel();
 
         extentPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -496,7 +609,25 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         add(layersPanel, java.awt.BorderLayout.WEST);
 
-        centralPanel.setLayout(new java.awt.GridBagLayout());
+        centralPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        centralPanel.setLayout(new java.awt.BorderLayout());
+        add(centralPanel, java.awt.BorderLayout.CENTER);
+
+        southPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        extentButton.setText("Extent");
+        extentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                extentButtonActionPerformed(evt);
+            }
+        });
+        southPanel.add(extentButton);
+
+        add(southPanel, java.awt.BorderLayout.SOUTH);
+
+        final JFXPanel fxPanel = new JFXPanel();
+        eastPanel.add(fxPanel);
+        eastPanel.setLayout(new java.awt.GridBagLayout());
 
         tilesPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -978,7 +1109,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        centralPanel.add(settingsTabbedPane, gridBagConstraints);
+        eastPanel.add(settingsTabbedPane, gridBagConstraints);
 
         settingsPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -1173,32 +1304,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 20, 10);
-        centralPanel.add(settingsPanel, gridBagConstraints);
+        eastPanel.add(settingsPanel, gridBagConstraints);
 
-        add(centralPanel, java.awt.BorderLayout.CENTER);
-
-        southPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
-
-        extentButton.setText("Extent");
-        extentButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                extentButtonActionPerformed(evt);
-            }
-        });
-        southPanel.add(extentButton);
-
-        previewButton.setText("Preview");
-        previewButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                previewButtonActionPerformed(evt);
-            }
-        });
-        southPanel.add(previewButton);
-
-        add(southPanel, java.awt.BorderLayout.SOUTH);
-
-        final JFXPanel fxPanel = new JFXPanel();
-        eastPanel.add(fxPanel);
         add(eastPanel, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1280,25 +1387,34 @@ public class MapComposerPanel extends javax.swing.JPanel {
         removeLayer();
     }//GEN-LAST:event_removeLayerButtonActionPerformed
 
+    /**
+     * Writes a HTML file for viewing a tile set.
+     *
+     * @param directory Directory to contain the HTML file.
+     * @param zoom Default zoom level of the HTML map.
+     * @param centerLat Central latitude of the HTML map.
+     * @param centerLon Central longitude of the HTML map.
+     * @return URL to the created file.
+     * @throws IOException
+     * @throws URISyntaxException
+     */
     private URL generateHTMLMapViewer(File directory,
             int zoom, double centerLat, double centerLon)
             throws IOException, URISyntaxException {
-        if (directory == null) {
-            throw new IllegalStateException("no directory for HTML map");
-        }
+        String html = loadHTMLPreviewMap(zoom, centerLon, centerLat);
         String path = directory.getAbsolutePath();
-        URL inputUrl = getClass().getResource("/index_with_variables.html");
         File dest = new File(path + File.separator + "index.html");
-        String html = org.apache.commons.io.FileUtils.readFileToString(new File(inputUrl.toURI()));
-        html = html.replace("$$viewZoomlevel$$", Integer.toString(zoom));
-        html = html.replace("$$viewCenterLatitude$$", Double.toString(centerLat));
-        html = html.replace("$$viewCenterLongitude$$", Double.toString(centerLon));
         org.apache.commons.io.FileUtils.writeStringToFile(dest, html);
         return dest.toURI().toURL();
     }
 
+    /**
+     * Renders map tiles to a directory.
+     *
+     * @param directory
+     */
     protected void renderTilesWithProgressDialog(final File directory) {
-        final TileGenerator tileGenerator = new TileGenerator(directory);;
+        final TileGenerator tileGenerator = new TileGenerator(directory);
         String dialogTitle = "Rendering Tiles";
         Frame frame = GUIUtil.getOwnerFrame(this);
         SwingWorkerWithProgressIndicator worker;
@@ -1363,15 +1479,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         worker.setMessage("");
         worker.execute();
     }
-
-    /**
-     * Event handler to generate a preview of the current map.
-     *
-     * @param evt
-     */
-    private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
-        renderTilesWithProgressDialog(null);
-    }//GEN-LAST:event_previewButtonActionPerformed
 
     /**
      * A general event handler for when a slider value changes. Used by various
@@ -1581,7 +1688,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteCurveFileButtonActionPerformed
 
     private String askTilesDirectory(String msg) {
-        String directoryPath = null;
+        String directoryPath;
         try {
             directoryPath = FileUtils.askDirectory(GUIUtil.getOwnerFrame(this), msg, true, null);
         } catch (IOException ex) {
@@ -1695,7 +1802,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.embossElevationSlider.setEnabled(on);
             this.embossElevationFormattedTextField.setEnabled(on);
             this.gaussBlurSlider.setEnabled(on);
-            this.previewButton.setEnabled(on);
             this.removeLayerButton.setEnabled(on);
             this.moveUpLayerButton.setEnabled(on && selectedLayerID != 0);
             this.moveDownLayerButton.setEnabled(on && selectedLayerID != map.getLayerCount() - 1);
@@ -1894,6 +2000,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         //gaussian blur
         layer.setGaussBlur(this.gaussBlurSlider.getValue());
+
+        // re-render map preview
+        reloadMap();
     }
 
     public Map getMap() {
@@ -1901,7 +2010,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     public void setMap(Map map) {
-        this.map = map;
+        this.map = map;        
         updateLayerList();
         layerList.setSelectedIndex(layerList.getFirstVisibleIndex());
         this.writeGUI();
@@ -1982,7 +2091,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JFormattedTextField northField;
     private javax.swing.JSlider opacitySlider;
     private javax.swing.JLabel opacityValueLabel;
-    private javax.swing.JButton previewButton;
     private javax.swing.JButton removeLayerButton;
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JCheckBox shadowCheckBox;

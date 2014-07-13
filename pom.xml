@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
     <version>0.1.1</version>
     <name>MapComposerGit</name>
-
+    
     <dependencyManagement>
         <dependencies>
             <dependency>

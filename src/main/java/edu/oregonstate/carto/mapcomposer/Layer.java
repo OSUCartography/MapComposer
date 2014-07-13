@@ -273,7 +273,7 @@ public class Layer {
 
         // convert mask to grayscale image if necessary
         if (mask.getType() != BufferedImage.TYPE_BYTE_GRAY) {
-            System.out.println("!!!! Alpha Mask not in Grayscale Modus !!!!");
+            //System.out.println("!!!! Alpha Mask not in Grayscale Modus !!!!");
             BufferedImage tmpMask = new BufferedImage(mask.getWidth(),
                     mask.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
             ColorConvertOp toGray = new ColorConvertOp(null);

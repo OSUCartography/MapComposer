@@ -30,10 +30,6 @@ public class TileGenerator {
         this.directory = directory;
     }
 
-    public TileGenerator() {
-        this.directory = null;
-    }
-
     public void setExtent(double west, double east, double south, double north) {
         this.west = west;
         this.east = east;
@@ -54,16 +50,6 @@ public class TileGenerator {
     }
 
     public void generateTiles(Map map, ProgressIndicator progress) throws IOException, URISyntaxException {
-        // Write tiles to a temporary directory if no directory is specified
-        if (directory == null) {
-            directory = FileUtils.createTempDirectory();
-
-            // FIXME the directory will be deleted when the virtual machine 
-            // terminates. This may still result in a huge number of files.
-            // A more clever solution is needed here.
-            directory.deleteOnExit();
-        }
-
         long startTimeMillis = System.currentTimeMillis();
 
         TileSet outputTileSet = TileSet.createFileTileSet(directory);
