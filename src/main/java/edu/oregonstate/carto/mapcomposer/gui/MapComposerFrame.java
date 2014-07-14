@@ -108,7 +108,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
         mapMenu.add(removeLayerMenuItem);
         mapMenu.add(jSeparator1);
 
-        mapExtentMenuItem.setText("Extent");
+        mapExtentMenuItem.setText("Set Map Extent");
         mapExtentMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mapExtentMenuItemActionPerformed(evt);

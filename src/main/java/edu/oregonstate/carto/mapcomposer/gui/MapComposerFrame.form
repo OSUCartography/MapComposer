@@ -76,7 +76,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mapExtentMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Extent"/>
+                <Property name="text" type="java.lang.String" value="Set Map Extent"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mapExtentMenuItemActionPerformed"/>

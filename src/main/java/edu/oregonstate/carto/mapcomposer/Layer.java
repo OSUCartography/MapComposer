@@ -163,7 +163,6 @@ public class Layer {
             if (image != null) {
                 TintFilter tintFilter = new TintFilter();
                 tintFilter.setTint(tint.getTintColor());
-                System.out.println(tint.getTintColor().toString());
                 image = tintFilter.filter(image, null);
             } else {
                 // no pre-existing image, create a solid color image
