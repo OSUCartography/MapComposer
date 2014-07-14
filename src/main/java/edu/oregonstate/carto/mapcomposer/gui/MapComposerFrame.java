@@ -49,11 +49,13 @@ public class MapComposerFrame extends javax.swing.JFrame {
         addLayerMenuItem = new javax.swing.JMenuItem();
         removeLayerMenuItem = new javax.swing.JMenuItem();
         javax.swing.JPopupMenu.Separator jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        mapExtentMenuItem = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         reloadMapPreviewMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        mapComposerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        mapComposerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
         getContentPane().add(mapComposerPanel, java.awt.BorderLayout.CENTER);
 
         fileMenu.setText("File");
@@ -105,6 +107,15 @@ public class MapComposerFrame extends javax.swing.JFrame {
         });
         mapMenu.add(removeLayerMenuItem);
         mapMenu.add(jSeparator1);
+
+        mapExtentMenuItem.setText("Extent");
+        mapExtentMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mapExtentMenuItemActionPerformed(evt);
+            }
+        });
+        mapMenu.add(mapExtentMenuItem);
+        mapMenu.add(jSeparator3);
 
         reloadMapPreviewMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         reloadMapPreviewMenuItem.setText("Reload Map Preview");
@@ -167,7 +178,8 @@ public class MapComposerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_saveStyleMenuItemActionPerformed
 
     private void addLayerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLayerMenuItemActionPerformed
-        mapComposerPanel.addLayer();
+        boolean focusList = true;
+        mapComposerPanel.addLayer(focusList);
     }//GEN-LAST:event_addLayerMenuItemActionPerformed
 
     private void removeLayerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLayerMenuItemActionPerformed
@@ -178,11 +190,17 @@ public class MapComposerFrame extends javax.swing.JFrame {
         mapComposerPanel.reloadMap();
     }//GEN-LAST:event_reloadMapPreviewMenuItemActionPerformed
 
+    private void mapExtentMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mapExtentMenuItemActionPerformed
+        mapComposerPanel.askMapExtent();
+    }//GEN-LAST:event_mapExtentMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addLayerMenuItem;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JMenuItem loadStyleMenuItem;
     private edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel mapComposerPanel;
+    private javax.swing.JMenuItem mapExtentMenuItem;
     private javax.swing.JMenu mapMenu;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem reloadMapPreviewMenuItem;

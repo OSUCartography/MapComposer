@@ -6,7 +6,6 @@
 
 package edu.oregonstate.carto.mapcomposer.gui;
 
-import edu.oregonstate.carto.mapcomposer.gui.DnDListModel;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.io.*;
@@ -48,7 +47,7 @@ public class DraggableList extends JList implements DragSourceListener,
     
     /** Remember the selected list items while dragging.
      */
-    private int[] selectedIndicies;
+    private int[] selectedIndices;
     
     /** Name of the property changed event that is sent after the model
      * has changed due to a dragging operation.*/
@@ -110,8 +109,9 @@ public class DraggableList extends JList implements DragSourceListener,
         dropTarget = new DropTarget( this, this );
     }
     
+    @Override
     public void dragGestureRecognized(DragGestureEvent dge) {
-        this.selectedIndicies = this.getSelectedIndices();
+        this.selectedIndices = this.getSelectedIndices();
         Object[] selectedObjects = this.getSelectedValues();
         if( selectedObjects.length > 0 ) {
             
@@ -137,17 +137,21 @@ public class DraggableList extends JList implements DragSourceListener,
         }
     }
     
+    @Override
     public void dragDropEnd(DragSourceDropEvent dsde) {
         this.dragging = false;
     }
     
+    @Override
     public void dragExit(DropTargetEvent dte) {
         this.overIndex = -1;
     }
+    @Override
     public void dragEnter(DropTargetDragEvent dtde) {
         this.overIndex = this.locationToIndex( dtde.getLocation() );
         this.setSelectedIndex( this.overIndex );
     }
+    @Override
     public void dragOver(DropTargetDragEvent dtde) {
         // See who we are over...
         int overIndex = this.locationToIndex( dtde.getLocation() );
@@ -161,6 +165,7 @@ public class DraggableList extends JList implements DragSourceListener,
     }
     
     
+    @Override
     public void drop(DropTargetDropEvent dtde) {
         try {
             
@@ -186,7 +191,7 @@ public class DraggableList extends JList implements DragSourceListener,
                 // otherwise just add them...
                 if( this.dragging ) {
                     //model.itemsMoved( newIndex, items );
-                    model.itemsMoved( newIndex, this.selectedIndicies );
+                    model.itemsMoved( newIndex, this.selectedIndices );
                 } else {
                     //                   model.insertItems( newIndex, items );
                 }
@@ -223,7 +228,7 @@ public class DraggableList extends JList implements DragSourceListener,
                 
                 // move the items in the list
                 DnDListModel model = ( DnDListModel )this.getModel();
-                model.itemsMoved( newIndex, this.selectedIndicies );
+                model.itemsMoved( newIndex, this.selectedIndices );
                 
                 // Update the selected indicies
                 List list = (List)transferable.getTransferData(dataFlavor);
@@ -243,29 +248,30 @@ public class DraggableList extends JList implements DragSourceListener,
                 dtde.rejectDrop();
             }
             
-        } catch( IOException exception ) {
+        } catch( IOException | UnsupportedFlavorException exception ) {
             exception.printStackTrace();
             System.err.println( "Exception" + exception.getMessage());
-            dtde.rejectDrop();
-        } catch( UnsupportedFlavorException ufException ) {
-            ufException.printStackTrace();
-            System.err.println( "Exception" + ufException.getMessage());
             dtde.rejectDrop();
         }
     }
     
+    @Override
     public void dragEnter(DragSourceDragEvent dsde) {
     }
     
+    @Override
     public void dragOver(DragSourceDragEvent dsde) {
     }
     
+    @Override
     public void dropActionChanged(DragSourceDragEvent dsde) {
     }
     
+    @Override
     public void dragExit(DragSourceEvent dse) {
     }
     
+    @Override
     public void dropActionChanged(DropTargetDragEvent dtde) {
     }
     
@@ -280,14 +286,17 @@ public class DraggableList extends JList implements DragSourceListener,
             this.data = data;
         }
         
+        @Override
         public DataFlavor[] getTransferDataFlavors() {
             return new DataFlavor[]{getDefaultTransferDataFlavor()};
         }
         
+        @Override
         public boolean isDataFlavorSupported(DataFlavor flavor) {
             return java.lang.Object.class.equals(flavor.getRepresentationClass());
         }
         
+        @Override
         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
             return data;
         }
