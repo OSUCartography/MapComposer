@@ -367,6 +367,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         moveUpLayerButton = new javax.swing.JButton();
         moveDownLayerButton = new javax.swing.JButton();
         visibleCheckBox = new javax.swing.JCheckBox();
+        javax.swing.JPanel bottomPanel = new TransparentMacPanel();
         javax.swing.JTabbedPane settingsTabbedPane = new javax.swing.JTabbedPane();
         colorPanel = new TransparentMacPanel();
         javax.swing.JLabel blendingModeLabel = new javax.swing.JLabel();
@@ -397,6 +398,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         maskLoadDirectoryPathButton = new javax.swing.JButton();
         maskTMSCheckBox = new javax.swing.JCheckBox();
         javax.swing.JLabel urlLabel1 = new javax.swing.JLabel();
+        effectsTabbedPane = new javax.swing.JTabbedPane();
         effectsPanel = new TransparentMacPanel();
         shadowCheckBox = new javax.swing.JCheckBox();
         shadowOffsetLabel = new javax.swing.JLabel();
@@ -404,7 +406,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         shadowColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
         javax.swing.JLabel DropShadowFuzinessLabel = new javax.swing.JLabel();
         shadowFuziSlider = new javax.swing.JSlider();
-        javax.swing.JSeparator jSeparator1 = new javax.swing.JSeparator();
+        embossPanel = new TransparentMacPanel();
         embossCheckBox = new javax.swing.JCheckBox();
         javax.swing.JLabel embossAzimuthLabel = new javax.swing.JLabel();
         javax.swing.JLabel embossElevationLabel = new javax.swing.JLabel();
@@ -418,10 +420,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         embossElevationFormattedTextField = new javax.swing.JFormattedTextField();
         embossHeightFormattedTextField = new javax.swing.JFormattedTextField();
         embossSoftnessFormattedTextField = new javax.swing.JFormattedTextField();
-        javax.swing.JSeparator jSeparator3 = new javax.swing.JSeparator();
+        blurPanel = new TransparentMacPanel();
         gaussBlurLabel = new javax.swing.JLabel();
         gaussBlurSlider = new javax.swing.JSlider();
-        javax.swing.JSeparator jSeparator2 = new javax.swing.JSeparator();
         javax.swing.JPanel texturePanel = new TransparentMacPanel();
         textureSelectionButton = new javax.swing.JButton();
         javax.swing.JLabel textureScaleLabel = new javax.swing.JLabel();
@@ -430,7 +431,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         textureClearButton = new javax.swing.JButton();
         texturePreviewLabel = new javax.swing.JLabel();
         textureScaleFormattedTextField = new javax.swing.JFormattedTextField();
-        jLabel7 = new javax.swing.JLabel();
         centralPanel = new javax.swing.JPanel();
 
         extentPanel.setLayout(new java.awt.GridBagLayout());
@@ -622,6 +622,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         layersPanel.add(layerListToolBar, java.awt.BorderLayout.NORTH);
 
+        bottomPanel.setLayout(new java.awt.GridBagLayout());
+
         colorPanel.setLayout(new java.awt.GridBagLayout());
 
         blendingModeLabel.setText("Blending:");
@@ -771,7 +773,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 9;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 15, 0);
         colorPanel.add(curveTextArea, gridBagConstraints);
@@ -782,7 +784,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         urlLabel.setText("URL");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         tilesPanel.add(urlLabel, gridBagConstraints);
@@ -791,7 +793,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         urlTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
         urlTextField.setPreferredSize(new java.awt.Dimension(200, 28));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -804,7 +806,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         tilesPanel.add(tmsCheckBox, gridBagConstraints);
@@ -817,7 +819,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         urlHintTextArea.setText("Examples:\nhttp://tile.openstreetmap.org/{z}/{x}/{y}.png\nhttp://tile.stamen.com/watercolor/{z}/{x}/{y}.png\nhttp://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}.png");
         urlHintTextArea.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
@@ -835,7 +837,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         tilesPanel.add(loadDirectoryPathButton, gridBagConstraints);
@@ -941,6 +943,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         settingsTabbedPane.addTab("Mask", maskPanel);
 
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        bottomPanel.add(settingsTabbedPane, gridBagConstraints);
+
         effectsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
         effectsPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -1009,13 +1017,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         effectsPanel.add(shadowFuziSlider, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 13;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
-        effectsPanel.add(jSeparator1, gridBagConstraints);
+
+        effectsTabbedPane.addTab("Shadow", effectsPanel);
+
+        embossPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        embossPanel.setLayout(new java.awt.GridBagLayout());
 
         embossCheckBox.setText("Emboss");
         embossCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -1035,35 +1041,35 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        effectsPanel.add(embossCheckBox, gridBagConstraints);
+        embossPanel.add(embossCheckBox, gridBagConstraints);
 
         embossAzimuthLabel.setText("Azimuth:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        effectsPanel.add(embossAzimuthLabel, gridBagConstraints);
+        embossPanel.add(embossAzimuthLabel, gridBagConstraints);
 
         embossElevationLabel.setText("Elevation:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        effectsPanel.add(embossElevationLabel, gridBagConstraints);
+        embossPanel.add(embossElevationLabel, gridBagConstraints);
 
         embossHeightLabel.setText("Height:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 9;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        effectsPanel.add(embossHeightLabel, gridBagConstraints);
+        embossPanel.add(embossHeightLabel, gridBagConstraints);
 
         embossSoftnessLabel.setText("Softness:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        effectsPanel.add(embossSoftnessLabel, gridBagConstraints);
+        embossPanel.add(embossSoftnessLabel, gridBagConstraints);
 
         embossSoftnessSlider.setMaximum(50);
         embossSoftnessSlider.setValue(10);
@@ -1077,7 +1083,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        effectsPanel.add(embossSoftnessSlider, gridBagConstraints);
+        embossPanel.add(embossSoftnessSlider, gridBagConstraints);
 
         embossHeightSlider.setPreferredSize(new java.awt.Dimension(120, 29));
         embossHeightSlider.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -1089,7 +1095,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        effectsPanel.add(embossHeightSlider, gridBagConstraints);
+        embossPanel.add(embossHeightSlider, gridBagConstraints);
 
         embossElevationSlider.setMaximum(90);
         embossElevationSlider.setValue(45);
@@ -1103,7 +1109,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        effectsPanel.add(embossElevationSlider, gridBagConstraints);
+        embossPanel.add(embossElevationSlider, gridBagConstraints);
 
         embossAzimuthSlider.setMaximum(360);
         embossAzimuthSlider.setValue(315);
@@ -1117,7 +1123,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        effectsPanel.add(embossAzimuthSlider, gridBagConstraints);
+        embossPanel.add(embossAzimuthSlider, gridBagConstraints);
 
         javax.swing.text.NumberFormatter nfEmbossAziuth = new javax.swing.text.NumberFormatter();
         nfEmbossAziuth.setMinimum(0);
@@ -1135,7 +1141,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        effectsPanel.add(embossAzimuthFormattedTextField, gridBagConstraints);
+        embossPanel.add(embossAzimuthFormattedTextField, gridBagConstraints);
 
         embossElevationFormattedTextField.setText("0");
         embossElevationFormattedTextField.setPreferredSize(new java.awt.Dimension(40, 28));
@@ -1153,7 +1159,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        effectsPanel.add(embossElevationFormattedTextField, gridBagConstraints);
+        embossPanel.add(embossElevationFormattedTextField, gridBagConstraints);
 
         embossHeightFormattedTextField.setText("0");
         embossHeightFormattedTextField.setPreferredSize(new java.awt.Dimension(40, 28));
@@ -1171,7 +1177,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        effectsPanel.add(embossHeightFormattedTextField, gridBagConstraints);
+        embossPanel.add(embossHeightFormattedTextField, gridBagConstraints);
 
         embossSoftnessFormattedTextField.setText("0");
         embossSoftnessFormattedTextField.setPreferredSize(new java.awt.Dimension(40, 28));
@@ -1189,21 +1195,19 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        effectsPanel.add(embossSoftnessFormattedTextField, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
-        effectsPanel.add(jSeparator3, gridBagConstraints);
+        embossPanel.add(embossSoftnessFormattedTextField, gridBagConstraints);
+
+        effectsTabbedPane.addTab("Emboss", embossPanel);
+
+        blurPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        blurPanel.setLayout(new java.awt.GridBagLayout());
 
         gaussBlurLabel.setText("Blur");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        effectsPanel.add(gaussBlurLabel, gridBagConstraints);
+        blurPanel.add(gaussBlurLabel, gridBagConstraints);
 
         gaussBlurSlider.setMajorTickSpacing(25);
         gaussBlurSlider.setMinorTickSpacing(5);
@@ -1218,15 +1222,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        effectsPanel.add(gaussBlurSlider, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
-        effectsPanel.add(jSeparator2, gridBagConstraints);
+        blurPanel.add(gaussBlurSlider, gridBagConstraints);
 
+        effectsTabbedPane.addTab("Blur", blurPanel);
+
+        texturePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
         texturePanel.setLayout(new java.awt.GridBagLayout());
 
         textureSelectionButton.setText("Select");
@@ -1237,7 +1237,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
         texturePanel.add(textureSelectionButton, gridBagConstraints);
 
@@ -1281,7 +1281,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         texturePanel.add(textureClearButton, gridBagConstraints);
 
@@ -1292,7 +1292,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.gridheight = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         texturePanel.add(texturePreviewLabel, gridBagConstraints);
 
@@ -1310,21 +1309,15 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         texturePanel.add(textureScaleFormattedTextField, gridBagConstraints);
 
-        jLabel7.setText("Texture");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        texturePanel.add(jLabel7, gridBagConstraints);
+        effectsTabbedPane.addTab("Texture", texturePanel);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 15;
-        gridBagConstraints.gridwidth = 3;
-        effectsPanel.add(texturePanel, gridBagConstraints);
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        bottomPanel.add(effectsTabbedPane, gridBagConstraints);
 
-        settingsTabbedPane.addTab("Effects", effectsPanel);
-
-        layersPanel.add(settingsTabbedPane, java.awt.BorderLayout.SOUTH);
+        layersPanel.add(bottomPanel, java.awt.BorderLayout.SOUTH);
 
         add(layersPanel, java.awt.BorderLayout.WEST);
 
@@ -2039,11 +2032,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addLayerButton;
     private javax.swing.ButtonGroup blendingButtonGroup;
+    private javax.swing.JPanel blurPanel;
     private javax.swing.JPanel centralPanel;
     private javax.swing.JPanel colorPanel;
     private javax.swing.JTextArea curveTextArea;
     private javax.swing.JFormattedTextField eastField;
     private javax.swing.JPanel effectsPanel;
+    private javax.swing.JTabbedPane effectsTabbedPane;
     private javax.swing.JFormattedTextField embossAzimuthFormattedTextField;
     private javax.swing.JSlider embossAzimuthSlider;
     private javax.swing.JCheckBox embossCheckBox;
@@ -2051,13 +2046,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JSlider embossElevationSlider;
     private javax.swing.JFormattedTextField embossHeightFormattedTextField;
     private javax.swing.JSlider embossHeightSlider;
+    private javax.swing.JPanel embossPanel;
     private javax.swing.JFormattedTextField embossSoftnessFormattedTextField;
     private javax.swing.JSlider embossSoftnessSlider;
     private javax.swing.JPanel extentPanel;
     private javax.swing.JLabel gaussBlurLabel;
     private javax.swing.JSlider gaussBlurSlider;
     private javax.swing.JFormattedTextField jFormattedTextField3;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private edu.oregonstate.carto.mapcomposer.gui.DraggableList layerList;
     private javax.swing.JScrollPane layerListScrollPane;
