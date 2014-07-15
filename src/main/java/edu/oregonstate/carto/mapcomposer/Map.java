@@ -5,10 +5,14 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,20 +44,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Map {
 
     /**
-     * A static reference to the map, required for the "map" URL protocol.
-     * This can be extended to an array if multiple maps are to be supported.
+     * A static reference to the map, required for the "map" URL protocol. This
+     * can be extended to an array if multiple maps are to be supported.
      */
     private static Map map;
-    
+
     /**
      * Access to the static map reference.
-     * @return 
+     *
+     * @return
      */
     public static Map getMap() {
         return map;
     }
 
-    //@XmlElement defines an element in the XML file. name = "" sets the name 
+    //@XmlElement defines an element is the XML file. name = "" sets the name 
     //in the XML file.
     @XmlElement(name = "layer")
     private final ArrayList<Layer> layers = new ArrayList<>();
@@ -121,17 +126,26 @@ public class Map {
         return layers.toArray(new Layer[layers.size()]);
     }
 
+    public static Map unmarshal(InputStream is) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(Map.class);
+        Unmarshaller m = context.createUnmarshaller();
+        return (Map) m.unmarshal(is);
+    }
+    
+    public static Map unmarshal(byte[] buf) throws JAXBException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(buf);
+        return unmarshal(bais);
+    }
+    
     public static Map unmarshal(String fileName) throws JAXBException, FileNotFoundException {
-        FileInputStream in = null;
+        FileInputStream is = null;
         try {
-            JAXBContext context = JAXBContext.newInstance(Map.class);
-            Unmarshaller m = context.createUnmarshaller();
-            in = new FileInputStream(fileName);
-            return (Map) m.unmarshal(in);
+            is = new FileInputStream(fileName);
+            return unmarshal(is);
         } finally {
             try {
-                if (in != null) {
-                    in.close();
+                if (is != null) {
+                    is.close();
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
@@ -139,10 +153,32 @@ public class Map {
         }
     }
 
-    public void marshal(String fileName) throws JAXBException, FileNotFoundException {
+    public void marshal(OutputStream os) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(Map.class);
         Marshaller m = context.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        m.marshal(this, new FileOutputStream(fileName));
+        m.marshal(this, os);
+    }
+    
+    public byte[] marshal() throws JAXBException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        marshal(baos);
+        return baos.toByteArray();
+    }
+    
+    public void marshal(String fileName) throws JAXBException, FileNotFoundException {
+        FileOutputStream os = null;
+        try {
+            os = new FileOutputStream(fileName);
+            marshal(os);
+        } finally {
+            try {
+                if (os != null) {
+                    os.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

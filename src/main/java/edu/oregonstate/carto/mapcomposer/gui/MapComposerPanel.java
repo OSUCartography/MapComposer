@@ -23,6 +23,8 @@ import java.awt.Frame;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.Rectangle2D;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -49,6 +51,7 @@ import javax.swing.ListModel;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.xml.bind.JAXBException;
 
 public class MapComposerPanel extends javax.swing.JPanel {
 
@@ -97,6 +100,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
      */
     private WebView webView;
 
+    /**
+     * Undo/redo manager.
+     */
+    private final Undo undo;
+
     private abstract class DocumentListenerAdaptor implements DocumentListener {
 
         protected abstract void textChanged(Layer layer, DocumentEvent e);
@@ -138,7 +146,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         @Override
         protected void applyValueToModel(String value, ListModel model, int row) {
             DnDListModel m = (DnDListModel) model;
-            Layer layer = (Layer)m.get(row);
+            Layer layer = (Layer) m.get(row);
             layer.setName(value);
         }
     }
@@ -147,6 +155,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * Creates new form MapComposerPanel
      */
     public MapComposerPanel() {
+        try {
+            this.undo = new Undo(map.marshal());
+        } catch (JAXBException ex) {
+            throw new IllegalStateException(ex);
+        }
+        
         readExtentPreferences();
         initComponents();
         LayerEditListAction edit = new LayerEditListAction();
@@ -166,7 +180,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
                 layer.setImageTileSetURLTemplate(tileSetURL);
                 // re-render map preview
-                reloadMap();
+                reloadHTMLPreviewMap();
             }
         });
 
@@ -182,7 +196,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
                 layer.setMaskTileSetURLTemplate(tileSetURL);
                 // re-render map preview
-                reloadMap();
+                reloadHTMLPreviewMap();
             }
         });
 
@@ -276,7 +290,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * Reloads the tiles of the preview map. Call this method after changing map
      * settings. To be called from the Swing thread.
      */
-    public void reloadMap() {
+    public void reloadHTMLPreviewMap() {
         // run in JavaFX thread
         Platform.runLater(new Runnable() {
             @Override
@@ -302,6 +316,44 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private Layer getSelectedMapLayer() {
         int index = layerList.getSelectedIndex();
         return index == -1 ? null : map.getLayer(index);
+    }
+
+    protected Undo getUndoManager() {
+        return undo;
+    }
+
+    private void byteArrayToMap(byte[] buf) {
+        if (buf == null) {
+            return;
+        }
+        try {
+            setMap(Map.unmarshal(buf));
+            reloadHTMLPreviewMap();
+        } catch (JAXBException ex) {
+            Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    protected void undo() {
+        Object undoData = undo.getUndo();
+        if (undoData != null) {
+            byteArrayToMap((byte[]) undoData);
+        }
+    }
+
+    protected void redo() {
+        Object undoData = undo.getRedo();
+        if (undoData != null) {
+            byteArrayToMap((byte[]) undoData);
+        }
+    }
+
+    private void addUndo(String message) {
+        try {
+            undo.add(message, map.marshal());
+        } catch (JAXBException ex) {
+            Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -1376,9 +1428,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         Layer layer = map.removeLayer(selectedLayerID);
         map.addLayer(++selectedLayerID, layer);
         updateLayerList();
-        reloadMap();
+        reloadHTMLPreviewMap();
         layerList.setSelectedIndex(selectedLayerID);
         writeGUI();
+        addUndo("Move Layer Down");
     }//GEN-LAST:event_moveDownLayerButtonActionPerformed
 
     /**
@@ -1394,9 +1447,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         Layer layer = map.removeLayer(selectedLayerID);
         map.addLayer(--selectedLayerID, layer);
         updateLayerList();
-        reloadMap();
+        reloadHTMLPreviewMap();
         this.layerList.setSelectedIndex(selectedLayerID);
         this.writeGUI();
+        addUndo("Move Layer Up");
     }//GEN-LAST:event_moveUpLayerButtonActionPerformed
 
     /**
@@ -1524,6 +1578,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         if (((JSlider) evt.getSource()).getValueIsAdjusting() == false) {
             readGUI();
+            addUndo("Slider Change");
         }
     }//GEN-LAST:event_sliderStateChanged
 
@@ -1535,6 +1590,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      */
     private void actionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionPerformed
         readGUI();
+        addUndo("Action");
     }//GEN-LAST:event_actionPerformed
 
     /**
@@ -1991,8 +2047,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layer.setGaussBlur(this.gaussBlurSlider.getValue());
 
         // re-render map preview
-        reloadMap();
+        reloadHTMLPreviewMap();
     }
+
 
     public Map getMap() {
         return map;
@@ -2015,6 +2072,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         if (focusList) {
             layerList.requestFocus();
         }
+        addUndo("Add Layer");
     }
 
     void removeLayer() {
@@ -2024,9 +2082,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
         map.removeLayer(selectedLayerID);
         updateLayerList();
-        reloadMap();
+        reloadHTMLPreviewMap();
         writeGUI();
         layerList.setSelectedIndex(--selectedLayerID);
+        addUndo("Remove Layer");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

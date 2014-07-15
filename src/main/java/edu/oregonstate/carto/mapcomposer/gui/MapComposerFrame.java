@@ -28,6 +28,8 @@ public class MapComposerFrame extends javax.swing.JFrame {
      */
     public MapComposerFrame() {
         initComponents();
+        Undo undo = mapComposerPanel.getUndoManager();
+        undo.registerUndoMenuItems(undoMenuItem, redoMenuItem);
     }
 
     /**
@@ -45,6 +47,9 @@ public class MapComposerFrame extends javax.swing.JFrame {
         javax.swing.JPopupMenu.Separator jSeparator2 = new javax.swing.JPopupMenu.Separator();
         loadStyleMenuItem = new javax.swing.JMenuItem();
         saveStyleMenuItem = new javax.swing.JMenuItem();
+        editMenu = new javax.swing.JMenu();
+        undoMenuItem = new javax.swing.JMenuItem();
+        redoMenuItem = new javax.swing.JMenuItem();
         mapMenu = new javax.swing.JMenu();
         addLayerMenuItem = new javax.swing.JMenuItem();
         removeLayerMenuItem = new javax.swing.JMenuItem();
@@ -86,6 +91,28 @@ public class MapComposerFrame extends javax.swing.JFrame {
         fileMenu.add(saveStyleMenuItem);
 
         menuBar.add(fileMenu);
+
+        editMenu.setText("Edit");
+
+        undoMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        undoMenuItem.setText("Undo");
+        undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(undoMenuItem);
+
+        redoMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y, java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        redoMenuItem.setText("Redo");
+        redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                redoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(redoMenuItem);
+
+        menuBar.add(editMenu);
 
         mapMenu.setText("Map");
 
@@ -187,15 +214,24 @@ public class MapComposerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_removeLayerMenuItemActionPerformed
 
     private void reloadMapPreviewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadMapPreviewMenuItemActionPerformed
-        mapComposerPanel.reloadMap();
+        mapComposerPanel.reloadHTMLPreviewMap();
     }//GEN-LAST:event_reloadMapPreviewMenuItemActionPerformed
 
     private void mapExtentMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mapExtentMenuItemActionPerformed
         mapComposerPanel.askMapExtent();
     }//GEN-LAST:event_mapExtentMenuItemActionPerformed
 
+    private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoMenuItemActionPerformed
+        mapComposerPanel.undo();
+    }//GEN-LAST:event_undoMenuItemActionPerformed
+
+    private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoMenuItemActionPerformed
+        mapComposerPanel.redo();
+    }//GEN-LAST:event_redoMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addLayerMenuItem;
+    private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JMenuItem loadStyleMenuItem;
@@ -203,9 +239,11 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem mapExtentMenuItem;
     private javax.swing.JMenu mapMenu;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JMenuItem reloadMapPreviewMenuItem;
     private javax.swing.JMenuItem removeLayerMenuItem;
     private javax.swing.JMenuItem saveMapMenuItem;
     private javax.swing.JMenuItem saveStyleMenuItem;
+    private javax.swing.JMenuItem undoMenuItem;
     // End of variables declaration//GEN-END:variables
 }
