@@ -52,6 +52,8 @@ public class MapComposerFrame extends javax.swing.JFrame {
         mapMenu = new javax.swing.JMenu();
         addLayerMenuItem = new javax.swing.JMenuItem();
         removeLayerMenuItem = new javax.swing.JMenuItem();
+        javax.swing.JPopupMenu.Separator jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        removeAllLayersMenuItem = new javax.swing.JMenuItem();
         javax.swing.JPopupMenu.Separator jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mapExtentMenuItem = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
@@ -134,6 +136,15 @@ public class MapComposerFrame extends javax.swing.JFrame {
             }
         });
         mapMenu.add(removeLayerMenuItem);
+        mapMenu.add(jSeparator4);
+
+        removeAllLayersMenuItem.setText("Remove All Layers");
+        removeAllLayersMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeAllLayersMenuItemActionPerformed(evt);
+            }
+        });
+        mapMenu.add(removeAllLayersMenuItem);
         mapMenu.add(jSeparator1);
 
         mapExtentMenuItem.setText("Set Map Extent");
@@ -230,6 +241,10 @@ public class MapComposerFrame extends javax.swing.JFrame {
         mapComposerPanel.redo();
     }//GEN-LAST:event_redoMenuItemActionPerformed
 
+    private void removeAllLayersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAllLayersMenuItemActionPerformed
+        mapComposerPanel.removeAllLayers();
+    }//GEN-LAST:event_removeAllLayersMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addLayerMenuItem;
     private javax.swing.JMenu editMenu;
@@ -242,6 +257,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem openStyleMenuItem;
     private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JMenuItem reloadMapPreviewMenuItem;
+    private javax.swing.JMenuItem removeAllLayersMenuItem;
     private javax.swing.JMenuItem removeLayerMenuItem;
     private javax.swing.JMenuItem saveMapMenuItem;
     private javax.swing.JMenuItem saveStyleMenuItem;

@@ -126,6 +126,10 @@ public class Map {
         return layers.toArray(new Layer[layers.size()]);
     }
 
+    public void removeAllLayers() {
+        layers.clear();
+    }
+    
     private static JAXBContext getJAXBContext() throws JAXBException {
         String packageName = Map.class.getPackage().getName();
         return JAXBContext.newInstance(packageName, Map.class.getClassLoader());
@@ -182,4 +186,5 @@ public class Map {
             }
         }
     }
+
 }

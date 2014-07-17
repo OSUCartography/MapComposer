@@ -103,6 +103,20 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeLayerMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator4">
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+              </AuxValues>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="removeAllLayersMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Remove All Layers"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeAllLayersMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator1">
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>

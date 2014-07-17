@@ -2087,6 +2087,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
         addUndo("Remove Layer");
     }
 
+    void removeAllLayers() {
+        map.removeAllLayers();
+        updateLayerList();
+        reloadHTMLPreviewMap();
+        writeGUI();
+        addUndo("Remove All Layer");
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addLayerButton;
     private javax.swing.ButtonGroup blendingButtonGroup;
