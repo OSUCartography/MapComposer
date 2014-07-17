@@ -111,6 +111,7 @@ public class Undo {
     public void registerUndoMenuItems(JMenuItem undoMenuItem, JMenuItem redoMenuItem) {
         this.undoMenuItem = undoMenuItem;
         this.redoMenuItem = redoMenuItem;
+        updateMenuItems();
     }
     
     /**

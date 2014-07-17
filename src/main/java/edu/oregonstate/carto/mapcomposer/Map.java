@@ -126,17 +126,19 @@ public class Map {
         return layers.toArray(new Layer[layers.size()]);
     }
 
+    private static JAXBContext getJAXBContext() throws JAXBException {
+        String packageName = Map.class.getPackage().getName();
+        return JAXBContext.newInstance(packageName, Map.class.getClassLoader());
+    }
+
     public static Map unmarshal(InputStream is) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(Map.class);
-        Unmarshaller m = context.createUnmarshaller();
-        return (Map) m.unmarshal(is);
+        return (Map) getJAXBContext().createUnmarshaller().unmarshal(is);
     }
-    
+
     public static Map unmarshal(byte[] buf) throws JAXBException {
-        ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-        return unmarshal(bais);
+        return unmarshal(new ByteArrayInputStream(buf));
     }
-    
+
     public static Map unmarshal(String fileName) throws JAXBException, FileNotFoundException {
         FileInputStream is = null;
         try {
@@ -154,19 +156,17 @@ public class Map {
     }
 
     public void marshal(OutputStream os) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(Map.class.getPackage().getName(), Map.class.getClassLoader());
-        //JAXBContext context = JAXBContext.newInstance(map.getClass());
-        Marshaller m = context.createMarshaller();
+        Marshaller m = getJAXBContext().createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         m.marshal(this, os);
     }
-    
+
     public byte[] marshal() throws JAXBException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         marshal(baos);
         return baos.toByteArray();
     }
-    
+
     public void marshal(String fileName) throws JAXBException, FileNotFoundException {
         FileOutputStream os = null;
         try {

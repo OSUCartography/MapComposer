@@ -9,12 +9,26 @@
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="saveMapMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="openStyleMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Save Tiles"/>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())" type="code"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Open Map Settings"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveMapMenuItemActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openStyleMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="saveStyleMenuItem">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())" type="code"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Save Map Settings"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveStyleMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator2">
@@ -23,20 +37,12 @@
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
               </AuxValues>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="loadStyleMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="saveMapMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Load Map Settings"/>
+                <Property name="text" type="java.lang.String" value="Export Tiles"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadStyleMenuItemActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="saveStyleMenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Save Map Settings"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveStyleMenuItemActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveMapMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

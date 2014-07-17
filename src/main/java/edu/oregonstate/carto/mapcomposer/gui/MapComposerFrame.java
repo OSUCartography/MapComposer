@@ -42,10 +42,10 @@ public class MapComposerFrame extends javax.swing.JFrame {
         mapComposerPanel = new edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        saveMapMenuItem = new javax.swing.JMenuItem();
-        javax.swing.JPopupMenu.Separator jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        loadStyleMenuItem = new javax.swing.JMenuItem();
+        openStyleMenuItem = new javax.swing.JMenuItem();
         saveStyleMenuItem = new javax.swing.JMenuItem();
+        javax.swing.JPopupMenu.Separator jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        saveMapMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         undoMenuItem = new javax.swing.JMenuItem();
         redoMenuItem = new javax.swing.JMenuItem();
@@ -64,23 +64,16 @@ public class MapComposerFrame extends javax.swing.JFrame {
 
         fileMenu.setText("File");
 
-        saveMapMenuItem.setText("Save Tiles");
-        saveMapMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        openStyleMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        openStyleMenuItem.setText("Open Map Settings");
+        openStyleMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveMapMenuItemActionPerformed(evt);
+                openStyleMenuItemActionPerformed(evt);
             }
         });
-        fileMenu.add(saveMapMenuItem);
-        fileMenu.add(jSeparator2);
+        fileMenu.add(openStyleMenuItem);
 
-        loadStyleMenuItem.setText("Load Map Settings");
-        loadStyleMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadStyleMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(loadStyleMenuItem);
-
+        saveStyleMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         saveStyleMenuItem.setText("Save Map Settings");
         saveStyleMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,6 +81,15 @@ public class MapComposerFrame extends javax.swing.JFrame {
             }
         });
         fileMenu.add(saveStyleMenuItem);
+        fileMenu.add(jSeparator2);
+
+        saveMapMenuItem.setText("Export Tiles");
+        saveMapMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMapMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(saveMapMenuItem);
 
         menuBar.add(fileMenu);
 
@@ -159,7 +161,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loadStyleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadStyleMenuItemActionPerformed
+    private void openStyleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openStyleMenuItemActionPerformed
         String filePath = FileUtils.askFile(null, "Load Style.xml file", null, true, "xml");
         if (filePath != null) {
             try {
@@ -171,7 +173,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
                 ErrorDialog.showErrorDialog(msg, title, ex, rootPane);
             }
         }
-    }//GEN-LAST:event_loadStyleMenuItemActionPerformed
+    }//GEN-LAST:event_openStyleMenuItemActionPerformed
 
     private void saveMapMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMapMenuItemActionPerformed
         try {
@@ -233,11 +235,11 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JPopupMenu.Separator jSeparator3;
-    private javax.swing.JMenuItem loadStyleMenuItem;
     private edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel mapComposerPanel;
     private javax.swing.JMenuItem mapExtentMenuItem;
     private javax.swing.JMenu mapMenu;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem openStyleMenuItem;
     private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JMenuItem reloadMapPreviewMenuItem;
     private javax.swing.JMenuItem removeLayerMenuItem;
