@@ -718,6 +718,7 @@
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="tmsCheckBox">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="TMS"/>
                         <Property name="name" type="java.lang.String" value="Tiles TMS" noResource="true"/>
                       </Properties>
                       <Events>

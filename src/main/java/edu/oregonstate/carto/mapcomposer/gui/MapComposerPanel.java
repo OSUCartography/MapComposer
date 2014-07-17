@@ -883,6 +883,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         tilesPanel.add(urlTextField, gridBagConstraints);
 
+        tmsCheckBox.setText("TMS");
         tmsCheckBox.setName("Tiles TMS"); // NOI18N
         tmsCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
