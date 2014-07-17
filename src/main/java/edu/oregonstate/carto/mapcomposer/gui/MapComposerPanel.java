@@ -42,6 +42,7 @@ import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javax.swing.Icon;
+import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
@@ -161,7 +162,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         } catch (JAXBException ex) {
             throw new IllegalStateException(ex);
         }
-        
+
         LayerEditListAction edit = new LayerEditListAction();
         ListAction listAction = new ListAction(layerList, edit);
 
@@ -328,7 +329,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     protected void registerUndoMenuItems(JMenuItem undoMenuItem, JMenuItem redoMenuItem) {
         undo.registerUndoMenuItems(undoMenuItem, redoMenuItem);
     }
@@ -352,6 +353,20 @@ public class MapComposerPanel extends javax.swing.JPanel {
             undo.add(message, map.marshal());
         } catch (JAXBException ex) {
             Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Uses the optional component name to construct an undo string to display in
+     * the Undo menu and adds an undo state.
+     * @param component 
+     */
+    private void addUndoFromNamedComponent(JComponent component) {
+        String name = component.getName();
+        if (name != null && name.length() > 0) {
+            addUndo(name);
+        } else {
+            addUndo("");
         }
     }
 
@@ -664,6 +679,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         visibleCheckBox.setText("Visible");
         visibleCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 0));
         visibleCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        visibleCheckBox.setName("Visibility"); // NOI18N
         visibleCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MapComposerPanel.this.actionPerformed(evt);
@@ -688,6 +704,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         normalBlendingRadioButton.setText("Normal");
         normalBlendingRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         normalBlendingRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        normalBlendingRadioButton.setName("Blending Normal"); // NOI18N
         normalBlendingRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MapComposerPanel.this.actionPerformed(evt);
@@ -704,6 +721,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         multiplyBlendingRadioButton.setText("Multiply");
         multiplyBlendingRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         multiplyBlendingRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        multiplyBlendingRadioButton.setName("Blending Multiply"); // NOI18N
         multiplyBlendingRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MapComposerPanel.this.actionPerformed(evt);
@@ -727,6 +745,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         opacitySlider.setPaintLabels(true);
         opacitySlider.setPaintTicks(true);
         opacitySlider.setValue(100);
+        opacitySlider.setName("Opacity"); // NOI18N
         opacitySlider.setPreferredSize(new java.awt.Dimension(150, 52));
         opacitySlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -793,6 +812,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         tintCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         tintCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        tintCheckBox.setName("Apply Tint"); // NOI18N
         tintCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MapComposerPanel.this.actionPerformed(evt);
@@ -804,6 +824,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         colorPanel.add(tintCheckBox, gridBagConstraints);
 
+        tintColorButton.setName("Tint"); // NOI18N
         tintColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MapComposerPanel.this.actionPerformed(evt);
@@ -850,7 +871,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         tilesPanel.add(urlTextField, gridBagConstraints);
 
-        tmsCheckBox.setText("TMS");
+        tmsCheckBox.setName("Tiles TMS"); // NOI18N
         tmsCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MapComposerPanel.this.actionPerformed(evt);
@@ -900,6 +921,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         maskInvertCheckBox.setText("Invert Mask");
         maskInvertCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         maskInvertCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        maskInvertCheckBox.setName("Invert Mask"); // NOI18N
         maskInvertCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MapComposerPanel.this.actionPerformed(evt);
@@ -922,6 +944,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         maskBlurSlider.setMinorTickSpacing(10);
         maskBlurSlider.setPaintTicks(true);
         maskBlurSlider.setValue(0);
+        maskBlurSlider.setName("Blur Mask"); // NOI18N
         maskBlurSlider.setPreferredSize(new java.awt.Dimension(120, 38));
         maskBlurSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -974,6 +997,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         maskPanel.add(maskLoadDirectoryPathButton, gridBagConstraints);
 
         maskTMSCheckBox.setText("TMS");
+        maskTMSCheckBox.setName("Mask TMS"); // NOI18N
         maskTMSCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MapComposerPanel.this.actionPerformed(evt);
@@ -1006,6 +1030,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         shadowCheckBox.setText("Drop Shadow");
         shadowCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         shadowCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        shadowCheckBox.setName("Apply Drop Shadow"); // NOI18N
         shadowCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MapComposerPanel.this.actionPerformed(evt);
@@ -1026,6 +1051,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         shadowOffsetSlider.setMaximum(20);
         shadowOffsetSlider.setValue(1);
+        shadowOffsetSlider.setName("Shadow Offset"); // NOI18N
         shadowOffsetSlider.setPreferredSize(new java.awt.Dimension(120, 29));
         shadowOffsetSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1038,6 +1064,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         effectsPanel.add(shadowOffsetSlider, gridBagConstraints);
 
+        shadowColorButton.setName("Shadow Color"); // NOI18N
         shadowColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MapComposerPanel.this.actionPerformed(evt);
@@ -1057,6 +1084,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         shadowFuziSlider.setMaximum(20);
         shadowFuziSlider.setValue(10);
+        shadowFuziSlider.setName("Shadow Fuzziness"); // NOI18N
         shadowFuziSlider.setPreferredSize(new java.awt.Dimension(120, 29));
         shadowFuziSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1077,6 +1105,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         embossCheckBox.setText("Emboss");
         embossCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         embossCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        embossCheckBox.setName("Apply Emboss"); // NOI18N
         embossCheckBox.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 embossCheckBoxStateChanged(evt);
@@ -1124,6 +1153,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         embossSoftnessSlider.setMaximum(50);
         embossSoftnessSlider.setValue(10);
+        embossSoftnessSlider.setName("Emboss Softness"); // NOI18N
         embossSoftnessSlider.setPreferredSize(new java.awt.Dimension(120, 29));
         embossSoftnessSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1136,6 +1166,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         embossPanel.add(embossSoftnessSlider, gridBagConstraints);
 
+        embossHeightSlider.setName("Emboss Height"); // NOI18N
         embossHeightSlider.setPreferredSize(new java.awt.Dimension(120, 29));
         embossHeightSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1150,6 +1181,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         embossElevationSlider.setMaximum(90);
         embossElevationSlider.setValue(45);
+        embossElevationSlider.setName("Emboss Elevation"); // NOI18N
         embossElevationSlider.setPreferredSize(new java.awt.Dimension(120, 29));
         embossElevationSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1164,6 +1196,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         embossAzimuthSlider.setMaximum(360);
         embossAzimuthSlider.setValue(315);
+        embossAzimuthSlider.setName("Emboss Azimuth"); // NOI18N
         embossAzimuthSlider.setPreferredSize(new java.awt.Dimension(120, 29));
         embossAzimuthSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1181,6 +1214,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         nfEmbossAziuth.setMaximum(360);
         embossAzimuthFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(nfEmbossAziuth));
         embossAzimuthFormattedTextField.setText("0");
+        embossAzimuthFormattedTextField.setName("Emboss Azimuth"); // NOI18N
         embossAzimuthFormattedTextField.setPreferredSize(new java.awt.Dimension(40, 28));
         embossAzimuthFormattedTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
@@ -1195,6 +1229,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         embossPanel.add(embossAzimuthFormattedTextField, gridBagConstraints);
 
         embossElevationFormattedTextField.setText("0");
+        embossElevationFormattedTextField.setName("Emboss Elevation"); // NOI18N
         embossElevationFormattedTextField.setPreferredSize(new java.awt.Dimension(40, 28));
         javax.swing.text.NumberFormatter nfEmbossElevation = new javax.swing.text.NumberFormatter();
         nfEmbossElevation.setMinimum(0);
@@ -1213,6 +1248,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         embossPanel.add(embossElevationFormattedTextField, gridBagConstraints);
 
         embossHeightFormattedTextField.setText("0");
+        embossHeightFormattedTextField.setName("Emboss Height"); // NOI18N
         embossHeightFormattedTextField.setPreferredSize(new java.awt.Dimension(40, 28));
         javax.swing.text.NumberFormatter nfEmbossHeight = new javax.swing.text.NumberFormatter();
         nfEmbossHeight.setMinimum(0);
@@ -1231,6 +1267,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         embossPanel.add(embossHeightFormattedTextField, gridBagConstraints);
 
         embossSoftnessFormattedTextField.setText("0");
+        embossSoftnessFormattedTextField.setName("Emboss Softness"); // NOI18N
         embossSoftnessFormattedTextField.setPreferredSize(new java.awt.Dimension(40, 28));
         javax.swing.text.NumberFormatter nfEmbossSoftness = new javax.swing.text.NumberFormatter();
         nfEmbossSoftness.setMinimum(0);
@@ -1263,6 +1300,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gaussBlurSlider.setMajorTickSpacing(25);
         gaussBlurSlider.setMinorTickSpacing(5);
         gaussBlurSlider.setValue(0);
+        gaussBlurSlider.setName("Blur"); // NOI18N
         gaussBlurSlider.setPreferredSize(new java.awt.Dimension(120, 29));
         gaussBlurSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1303,6 +1341,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         textureScaleSlider.setMinorTickSpacing(10);
         textureScaleSlider.setPaintTicks(true);
         textureScaleSlider.setValue(0);
+        textureScaleSlider.setName("Texture Scale"); // NOI18N
         textureScaleSlider.setPreferredSize(new java.awt.Dimension(120, 38));
         textureScaleSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1347,6 +1386,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         texturePanel.add(texturePreviewLabel, gridBagConstraints);
 
         textureScaleFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.#"))));
+        textureScaleFormattedTextField.setName("Texture Scale"); // NOI18N
         textureScaleFormattedTextField.setPreferredSize(new java.awt.Dimension(50, 28));
         textureScaleFormattedTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
@@ -1577,7 +1617,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         if (((JSlider) evt.getSource()).getValueIsAdjusting() == false) {
             readGUI();
-            addUndo("Slider Change");
+            addUndoFromNamedComponent((JComponent) (evt.getSource()));
         }
     }//GEN-LAST:event_sliderStateChanged
 
@@ -1589,7 +1629,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      */
     private void actionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionPerformed
         readGUI();
-        addUndo("Action");
+        addUndoFromNamedComponent((JComponent) (evt.getSource()));
     }//GEN-LAST:event_actionPerformed
 
     /**
@@ -1653,6 +1693,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                     layer.setTextureTileFilePath(path);
                 }
                 writeGUI();
+                addUndo("Select Texture");
             }
         } catch (Exception ex) {
             String msg = "Error";
@@ -1672,6 +1713,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             layer.setTextureTileFilePath(null);
         }
         writeGUI();
+        addUndo("Clear Texture");
     }//GEN-LAST:event_textureClearButtonActionPerformed
 
     private void numberFieldChanged(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_numberFieldChanged
@@ -1702,6 +1744,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 int embossSoftness = ((Number) embossSoftnessFormattedTextField.getValue()).intValue();
                 this.embossSoftnessSlider.setValue(embossSoftness);
             }
+            addUndoFromNamedComponent((JComponent)(evt.getSource()));
         } finally {
             this.updating = false;
         }
@@ -1724,6 +1767,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         // update enable state of remove button
         writeGUI();
+        addUndo("Load Curve");
     }//GEN-LAST:event_loadCurveFileButtonActionPerformed
 
     protected void askMapExtent() {
@@ -1759,6 +1803,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         getSelectedMapLayer().setCurveURL(null);
         // update enable state of remove button and curve text area
         writeGUI();
+        addUndo("Remove Curve");
     }//GEN-LAST:event_removeCurveFileButtonActionPerformed
 
     private String askTilesDirectory(String msg) {
@@ -1775,7 +1820,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         String directoryPath = askTilesDirectory("Select Tiles Directory");
         if (directoryPath != null) {
             urlTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}.png");
-            this.readGUI();
+            readGUI();
+            addUndo("Load Tiles Directory");
         }
     }//GEN-LAST:event_loadDirectoryPathButtonActionPerformed
 
@@ -1784,6 +1830,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         if (directoryPath != null) {
             maskUrlTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}.png");
             this.readGUI();
+            addUndo("Load Mask Tiles Directory");
         }
     }//GEN-LAST:event_maskLoadDirectoryPathButtonActionPerformed
 
@@ -2049,7 +2096,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         reloadHTMLPreviewMap();
     }
 
-
     public Map getMap() {
         return map;
     }
@@ -2094,7 +2140,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         writeGUI();
         addUndo("Remove All Layer");
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addLayerButton;
     private javax.swing.ButtonGroup blendingButtonGroup;
