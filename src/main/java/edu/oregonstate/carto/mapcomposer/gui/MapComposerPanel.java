@@ -357,9 +357,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Uses the optional component name to construct an undo string to display in
-     * the Undo menu and adds an undo state.
-     * @param component 
+     * Uses the optional component name to construct an undo string to display
+     * in the Undo menu and adds an undo state.
+     *
+     * @param component
      */
     private void addUndoFromNamedComponent(JComponent component) {
         String name = component.getName();
@@ -433,6 +434,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         moveUpLayerButton = new javax.swing.JButton();
         moveDownLayerButton = new javax.swing.JButton();
         visibleCheckBox = new javax.swing.JCheckBox();
+        lockedCheckBox = new javax.swing.JCheckBox();
         javax.swing.JPanel bottomPanel = new TransparentMacPanel();
         javax.swing.JTabbedPane settingsTabbedPane = new javax.swing.JTabbedPane();
         colorPanel = new TransparentMacPanel();
@@ -686,6 +688,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
         });
         layerListToolBar.add(visibleCheckBox);
+
+        lockedCheckBox.setText("Locked");
+        lockedCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        lockedCheckBox.setName("Locked"); // NOI18N
+        lockedCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lockedCheckBoxActionPerformed(evt);
+            }
+        });
+        layerListToolBar.add(lockedCheckBox);
 
         layersPanel.add(layerListToolBar, java.awt.BorderLayout.NORTH);
 
@@ -1744,7 +1756,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 int embossSoftness = ((Number) embossSoftnessFormattedTextField.getValue()).intValue();
                 this.embossSoftnessSlider.setValue(embossSoftness);
             }
-            addUndoFromNamedComponent((JComponent)(evt.getSource()));
+            addUndoFromNamedComponent((JComponent) (evt.getSource()));
         } finally {
             this.updating = false;
         }
@@ -1834,6 +1846,21 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_maskLoadDirectoryPathButtonActionPerformed
 
+    private void lockedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockedCheckBoxActionPerformed
+        boolean locked = lockedCheckBox.isSelected();
+        Layer layer = getSelectedMapLayer();
+        if (layer != null) {
+            this.updating = true;
+            try {
+                layer.setLocked(locked);
+                writeGUI();
+                addUndoFromNamedComponent((JComponent) (evt.getSource()));
+            } finally {
+                this.updating = false;
+            }
+        }
+    }//GEN-LAST:event_lockedCheckBoxActionPerformed
+
     /**
      * Updates the value of the texture scale slider
      *
@@ -1874,66 +1901,69 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * Writes settings of the currently selected layer to the GUI.
      */
     private void writeGUI() {
+        int selectedLayerID = layerList.getSelectedIndex();
+        Layer selectedLayer = getSelectedMapLayer();
+
+        // enable or disable user interface elements depending on whether
+        // a layer is currently selected
+        final boolean on = selectedLayer != null && !selectedLayer.isLocked();
+        boolean hasCurveURL = selectedLayer != null && selectedLayer.getCurveURL() != null;
+        this.visibleCheckBox.setEnabled(on);
+        this.urlTextField.setEnabled(on);
+        this.loadDirectoryPathButton.setEnabled(on);
+        this.tmsCheckBox.setEnabled(on);
+        this.normalBlendingRadioButton.setEnabled(on);
+        this.multiplyBlendingRadioButton.setEnabled(on);
+        this.opacitySlider.setEnabled(on);
+        this.curveTextArea.setEnabled(on);
+        this.loadCurveFileButton.setEnabled(on);
+        this.removeCurveFileButton.setEnabled(on && hasCurveURL);
+        this.tintCheckBox.setEnabled(on);
+        this.tintColorButton.setEnabled(on);
+        this.textureSelectionButton.setEnabled(on);
+        this.textureClearButton.setEnabled(on);
+        this.textureURLLabel.setEnabled(on);
+        this.textureScaleSlider.setEnabled(on);
+        this.maskUrlTextField.setEnabled(on);
+        this.maskTMSCheckBox.setEnabled(on);
+        this.maskBlurSlider.setEnabled(on);
+        this.maskLoadDirectoryPathButton.setEnabled(on);
+        this.maskInvertCheckBox.setEnabled(on);
+        this.shadowCheckBox.setEnabled(on);
+        this.shadowOffsetSlider.setEnabled(on);
+        this.shadowColorButton.setEnabled(on);
+        this.shadowFuziSlider.setEnabled(on);
+        this.embossCheckBox.setEnabled(on);
+        this.embossHeightSlider.setEnabled(on);
+        this.embossHeightFormattedTextField.setEnabled(on);
+        this.embossSoftnessSlider.setEnabled(on);
+        this.embossSoftnessFormattedTextField.setEnabled(on);
+        this.embossAzimuthSlider.setEnabled(on);
+        this.embossAzimuthFormattedTextField.setEnabled(on);
+        this.embossElevationSlider.setEnabled(on);
+        this.embossElevationFormattedTextField.setEnabled(on);
+        this.gaussBlurSlider.setEnabled(on);
+        this.removeLayerButton.setEnabled(on);
+        this.moveUpLayerButton.setEnabled(on && selectedLayerID != 0);
+        this.moveDownLayerButton.setEnabled(on && selectedLayerID != map.getLayerCount() - 1);
+
+        if (selectedLayer == null) {
+            this.urlTextField.setText(null);
+            this.curveTextArea.setText(null);
+            this.maskUrlTextField.setText(null);
+            return;
+        }
+        
         if (this.updating) {
             return;
         }
 
         try {
             this.updating = true;
-            int selectedLayerID = layerList.getSelectedIndex();
-            Layer selectedLayer = getSelectedMapLayer();
-
-            // enable or disable user interface elements depending on whether
-            // a layer is currently selected
-            final boolean on = selectedLayer != null;
-            boolean hasCurveURL = selectedLayer != null && selectedLayer.getCurveURL() != null;
-            this.visibleCheckBox.setEnabled(on);
-            this.urlTextField.setEnabled(on);
-            this.loadDirectoryPathButton.setEnabled(on);
-            this.tmsCheckBox.setEnabled(on);
-            this.normalBlendingRadioButton.setEnabled(on);
-            this.multiplyBlendingRadioButton.setEnabled(on);
-            this.opacitySlider.setEnabled(on);
-            this.curveTextArea.setEnabled(on);
-            this.loadCurveFileButton.setEnabled(on);
-            this.removeCurveFileButton.setEnabled(on && hasCurveURL);
-            this.tintCheckBox.setEnabled(on);
-            this.tintColorButton.setEnabled(on);
-            this.textureSelectionButton.setEnabled(on);
-            this.textureClearButton.setEnabled(on);
-            this.textureURLLabel.setEnabled(on);
-            this.textureScaleSlider.setEnabled(on);
-            this.maskUrlTextField.setEnabled(on);
-            this.maskTMSCheckBox.setEnabled(on);
-            this.maskBlurSlider.setEnabled(on);
-            this.maskLoadDirectoryPathButton.setEnabled(on);
-            this.maskInvertCheckBox.setEnabled(on);
-            this.shadowCheckBox.setEnabled(on);
-            this.shadowOffsetSlider.setEnabled(on);
-            this.shadowColorButton.setEnabled(on);
-            this.shadowFuziSlider.setEnabled(on);
-            this.embossCheckBox.setEnabled(on);
-            this.embossHeightSlider.setEnabled(on);
-            this.embossHeightFormattedTextField.setEnabled(on);
-            this.embossSoftnessSlider.setEnabled(on);
-            this.embossSoftnessFormattedTextField.setEnabled(on);
-            this.embossAzimuthSlider.setEnabled(on);
-            this.embossAzimuthFormattedTextField.setEnabled(on);
-            this.embossElevationSlider.setEnabled(on);
-            this.embossElevationFormattedTextField.setEnabled(on);
-            this.gaussBlurSlider.setEnabled(on);
-            this.removeLayerButton.setEnabled(on);
-            this.moveUpLayerButton.setEnabled(on && selectedLayerID != 0);
-            this.moveDownLayerButton.setEnabled(on && selectedLayerID != map.getLayerCount() - 1);
-
-            if (selectedLayer == null) {
-                this.urlTextField.setText(null);
-                this.curveTextArea.setText(null);
-                this.maskUrlTextField.setText(null);
-                return;
-            }
 
             this.visibleCheckBox.setSelected(selectedLayer.isVisible());
+            this.lockedCheckBox.setSelected(selectedLayer.isLocked());
+
             TileSet tileSet = selectedLayer.getImageTileSet();
             if (tileSet == null) {
                 this.urlTextField.setText(null);
@@ -2035,6 +2065,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
 
         layer.setVisible(visibleCheckBox.isSelected());
+        layer.setLocked(lockedCheckBox.isSelected());
         layer.setBlending(normalBlendingRadioButton.isSelected()
                 ? Layer.BlendType.NORMAL : Layer.BlendType.MULTIPLY);
         layer.setOpacity(opacitySlider.getValue() / 100.f);
@@ -2172,6 +2203,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel layersPanel;
     private javax.swing.JButton loadCurveFileButton;
     private javax.swing.JButton loadDirectoryPathButton;
+    private javax.swing.JCheckBox lockedCheckBox;
     private javax.swing.JSlider maskBlurSlider;
     private javax.swing.JCheckBox maskInvertCheckBox;
     private javax.swing.JButton maskLoadDirectoryPathButton;

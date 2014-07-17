@@ -58,6 +58,8 @@ public class Layer {
     private final TileSet maskTileSet = new TileSet(null);;
 
     private boolean visible = true;
+    
+    private boolean locked = false;
 
     private String name;
 
@@ -331,6 +333,20 @@ public class Layer {
         this.visible = visible;
     }
 
+    /**
+     * @return the locked
+     */
+    public boolean isLocked() {
+        return locked;
+    }
+
+    /**
+     * @param locked the locked to set
+     */
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+    
     /**
      * @return the name
      */
