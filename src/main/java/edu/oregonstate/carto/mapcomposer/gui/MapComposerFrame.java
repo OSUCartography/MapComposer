@@ -28,8 +28,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
      */
     public MapComposerFrame() {
         initComponents();
-        Undo undo = mapComposerPanel.getUndoManager();
-        undo.registerUndoMenuItems(undoMenuItem, redoMenuItem);
+        mapComposerPanel.registerUndoMenuItems(undoMenuItem, redoMenuItem);
     }
 
     /**

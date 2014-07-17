@@ -7,7 +7,7 @@
 
 package edu.oregonstate.carto.importer;
 
-import edu.oregonstate.carto.mapcomposer.imageFilters.CurvesFilter;
+import edu.oregonstate.carto.mapcomposer.CurvesFilter;
 import java.io.*;
 import java.net.URL;
 

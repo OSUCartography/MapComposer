@@ -154,7 +154,8 @@ public class Map {
     }
 
     public void marshal(OutputStream os) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(Map.class);
+        JAXBContext context = JAXBContext.newInstance(Map.class.getPackage().getName(), Map.class.getClassLoader());
+        //JAXBContext context = JAXBContext.newInstance(map.getClass());
         Marshaller m = context.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         m.marshal(this, os);

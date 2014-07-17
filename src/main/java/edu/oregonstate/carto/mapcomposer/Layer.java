@@ -9,7 +9,6 @@ import com.jhlabs.image.LightFilter;
 import com.jhlabs.image.ShadowFilter;
 import com.jhlabs.image.TileImageFilter;
 import edu.oregonstate.carto.importer.AdobeCurveReader;
-import edu.oregonstate.carto.mapcomposer.imageFilters.CurvesFilter;
 import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
 import edu.oregonstate.carto.tilemanager.ImageTileMerger;
 import edu.oregonstate.carto.tilemanager.Tile;
@@ -55,7 +54,7 @@ public class Layer {
     private static BufferedImage whiteMegaTile;
 
     private final TileSet imageTileSet;
-    
+
     private final TileSet maskTileSet = new TileSet(null);;
 
     private boolean visible = true;
@@ -69,7 +68,7 @@ public class Layer {
     private float opacity = 1;
 
     private String curveURL;
-    
+
     private CurvesFilter.Curve[] curves = null;
 
     private Tint tint = null;

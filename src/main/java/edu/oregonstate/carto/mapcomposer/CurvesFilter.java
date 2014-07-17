@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package edu.oregonstate.carto.mapcomposer.imageFilters;
+package edu.oregonstate.carto.mapcomposer;
 
 import com.jhlabs.image.*;
 

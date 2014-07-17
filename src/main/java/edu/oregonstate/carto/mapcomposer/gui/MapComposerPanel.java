@@ -23,8 +23,6 @@ import java.awt.Frame;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.Rectangle2D;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -44,6 +42,7 @@ import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javax.swing.Icon;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -155,18 +154,18 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * Creates new form MapComposerPanel
      */
     public MapComposerPanel() {
+        readExtentPreferences();
+        initComponents();
         try {
             this.undo = new Undo(map.marshal());
         } catch (JAXBException ex) {
             throw new IllegalStateException(ex);
         }
         
-        readExtentPreferences();
-        initComponents();
         LayerEditListAction edit = new LayerEditListAction();
         ListAction listAction = new ListAction(layerList, edit);
 
-        initMap();
+        initMapPreview();
 
         // add document listener to URL text field
         urlTextField.getDocument().addDocumentListener(new DocumentListenerAdaptor() {
@@ -206,7 +205,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     /**
      * Creates the preview map.
      */
-    private void initMap() {
+    private void initMapPreview() {
         final JFXPanel fxPanel = new JFXPanel();
         centralPanel.add(fxPanel, BorderLayout.CENTER);
         final String html = loadHTMLPreviewMap(0, 0, 0);
@@ -318,10 +317,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         return index == -1 ? null : map.getLayer(index);
     }
 
-    protected Undo getUndoManager() {
-        return undo;
-    }
-
     private void byteArrayToMap(byte[] buf) {
         if (buf == null) {
             return;
@@ -332,6 +327,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         } catch (JAXBException ex) {
             Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    protected void registerUndoMenuItems(JMenuItem undoMenuItem, JMenuItem redoMenuItem) {
+        undo.registerUndoMenuItems(undoMenuItem, redoMenuItem);
     }
 
     protected void undo() {
