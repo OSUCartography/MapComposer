@@ -49,10 +49,6 @@ public class Layer {
         NORMAL, MULTIPLY
     }
 
-    //
-    @XmlTransient
-    private static BufferedImage whiteMegaTile;
-
     private final TileSet imageTileSet;
 
     private final TileSet maskTileSet = new TileSet(null);;
@@ -71,7 +67,7 @@ public class Layer {
 
     private String curveURL;
 
-    private CurvesFilter.Curve[] curves = null;
+    private Curve[] curves = null;
 
     private Tint tint = null;
 
@@ -184,9 +180,9 @@ public class Layer {
         // masking
         if (isMaskTileSetValid()) {
             BufferedImage maskImage;
-            Tile tile = maskTileSet.getTile(z, x, y);
+            Tile maskTile = maskTileSet.getTile(z, x, y);
             try {
-                maskImage = ImageTileMerger.createMegaTile(tile);
+                maskImage = ImageTileMerger.createMegaTile(maskTile);
                 // convert to ARGB. All following manipulations are optimized for 
                 // this modus.
                 maskImage = ImageUtils.convertImageToARGB(maskImage);
@@ -308,10 +304,7 @@ public class Layer {
     }
 
     private static BufferedImage createWhiteMegaTile() {
-        if (whiteMegaTile != null) {
-            return whiteMegaTile;
-        }
-        whiteMegaTile = new BufferedImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage whiteMegaTile = new BufferedImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = whiteMegaTile.createGraphics();
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3);
@@ -466,7 +459,7 @@ public class Layer {
                 AdobeCurveReader acr = new AdobeCurveReader();
                 acr.readACV(new URL(curveURL));
                 curves = acr.getCurves();
-                for (CurvesFilter.Curve c : curves) {
+                for (Curve c : curves) {
                     c.normalize();
                 }
             }

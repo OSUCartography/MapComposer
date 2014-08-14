@@ -7,6 +7,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
+
+//Every non static, non transient field in a JAXB-bound class will be 
+//automatically bound to XML, unless annotated by @XmlTransient
+@XmlAccessorType(XmlAccessType.FIELD)
 
 /**
  *
@@ -40,12 +47,14 @@ public class TileSet {
      * The constructor sets the type of tiles we will have in the set. This
      * helps us decide what type of tile to construct.
      */
+    @XmlTransient
     private final TileType type;
 
     /**
      * The cache is a content addressable object that will return a given tile
      * if it already has been created.
      */
+    @XmlTransient
     private final Cache cache;
     /**
      * If the source tiles adhere to the TMS tile schema instead of the standard
@@ -98,7 +107,7 @@ public class TileSet {
     }
 
     public TileSet(String urlTemplate) {
-        this(urlTemplate, MemCache.getInstance(), TileType.IMAGE, false);
+        this(urlTemplate, new DumbCache() /*MemCache.getInstance()*/, TileType.IMAGE, false);
     }
     
     public TileSet(){

@@ -30,11 +30,14 @@ public class ImageTileMerger {
      * @throws java.io.IOException
      */
     public static BufferedImage createMegaTile(Tile centerTile) throws IOException {
+        Color BACKGROUND_COLOR = Color.YELLOW;
         int megaTileSize = Tile.TILE_SIZE * 3;
-
+        
         BufferedImage megaTile = new BufferedImage(megaTileSize, megaTileSize, BufferedImage.TYPE_INT_ARGB);
-
+        
         Graphics2D g2d = megaTile.createGraphics();
+        g2d.setColor(BACKGROUND_COLOR);
+        g2d.fillRect(0, 0, megaTile.getWidth(), megaTile.getHeight());
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
@@ -42,32 +45,24 @@ public class ImageTileMerger {
             BufferedImage topLeftTile = (BufferedImage) centerTile.getTopLeftTile().fetch();
             g2d.drawImage(topLeftTile, 0, 0, null);
         } catch (IOException ex) {
-            g2d.setColor(Color.WHITE);
-            g2d.fillRect(0, 0, Tile.TILE_SIZE, Tile.TILE_SIZE);
         }
 
         try {
             BufferedImage topTile = (BufferedImage) centerTile.getTopTile().fetch();
             g2d.drawImage(topTile, Tile.TILE_SIZE, 0, null);
         } catch (IOException ex) {
-            g2d.setColor(Color.WHITE);
-            g2d.fillRect(Tile.TILE_SIZE, 0, Tile.TILE_SIZE, Tile.TILE_SIZE);
         }
 
         try {
             BufferedImage topRightTile = (BufferedImage) centerTile.getTopRightTile().fetch();
             g2d.drawImage(topRightTile, Tile.TILE_SIZE * 2, 0, null);
         } catch (IOException ex) {
-            g2d.setColor(Color.WHITE);
-            g2d.fillRect(Tile.TILE_SIZE * 2, 0, Tile.TILE_SIZE, Tile.TILE_SIZE);
         }
 
         try {
             BufferedImage leftTile = (BufferedImage) centerTile.getLeftTile().fetch();
             g2d.drawImage(leftTile, 0, Tile.TILE_SIZE, null);
         } catch (IOException ex) {
-            g2d.setColor(Color.WHITE);
-            g2d.fillRect(0, Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
         }
 
         // The tile in the center is this tile.
@@ -77,32 +72,24 @@ public class ImageTileMerger {
             BufferedImage rightTile = (BufferedImage) centerTile.getRightTile().fetch();
             g2d.drawImage(rightTile, Tile.TILE_SIZE * 2, Tile.TILE_SIZE, null);
         } catch (IOException ex) {
-            g2d.setColor(Color.WHITE);
-            g2d.fillRect(Tile.TILE_SIZE * 2, Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
         }
 
         try {
             BufferedImage bottomLeftTile = (BufferedImage) centerTile.getBottomLeftTile().fetch();
             g2d.drawImage(bottomLeftTile, 0, Tile.TILE_SIZE * 2, null);
         } catch (IOException ex) {
-            g2d.setColor(Color.WHITE);
-            g2d.fillRect(0, Tile.TILE_SIZE * 2, Tile.TILE_SIZE, Tile.TILE_SIZE);
         }
 
         try {
             BufferedImage bottomTile = (BufferedImage) centerTile.getBottomTile().fetch();
             g2d.drawImage(bottomTile, Tile.TILE_SIZE, Tile.TILE_SIZE * 2, null);
         } catch (IOException ex) {
-            g2d.setColor(Color.WHITE);
-            g2d.fillRect(Tile.TILE_SIZE, Tile.TILE_SIZE * 2, Tile.TILE_SIZE, Tile.TILE_SIZE);
         }
 
         try {
             BufferedImage bottomRightTile = (BufferedImage) centerTile.getBottomRightTile().fetch();
             g2d.drawImage(bottomRightTile, Tile.TILE_SIZE * 2, Tile.TILE_SIZE * 2, null);
         } catch (IOException ex) {
-            g2d.setColor(Color.WHITE);
-            g2d.fillRect(Tile.TILE_SIZE * 2, Tile.TILE_SIZE * 2, Tile.TILE_SIZE, Tile.TILE_SIZE);
         }
 
         return megaTile;

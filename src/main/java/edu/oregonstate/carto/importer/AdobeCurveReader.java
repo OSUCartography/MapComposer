@@ -7,6 +7,7 @@
 
 package edu.oregonstate.carto.importer;
 
+import edu.oregonstate.carto.mapcomposer.Curve;
 import edu.oregonstate.carto.mapcomposer.CurvesFilter;
 import java.io.*;
 import java.net.URL;
@@ -18,7 +19,7 @@ import java.net.URL;
  */
 public class AdobeCurveReader {
     
-    private CurvesFilter.Curve curves[];
+    private Curve curves[];
     
     /** Creates a new instance of AdobeCurveReader */
     public AdobeCurveReader() {
@@ -43,7 +44,7 @@ public class AdobeCurveReader {
                 throw new IOException("File does not contain any curve");
             if (curvesCount > MAX_CURVES_COUNT)
                 throw new IOException("File contains too many curves");
-            this.curves = new CurvesFilter.Curve[curvesCount];
+            this.curves = new Curve[curvesCount];
             
             for (int curveID = 0; curveID < curvesCount; curveID++) {
                 int pointsCount = din.readShort();
@@ -56,7 +57,7 @@ public class AdobeCurveReader {
                     x[ptID] = din.readShort();
                 }
                 
-                this.curves[curveID] = new CurvesFilter.Curve();
+                this.curves[curveID] = new Curve();
                 this.curves[curveID].setKnots(x, y);
             }
         } finally {
@@ -69,11 +70,11 @@ public class AdobeCurveReader {
         return this.curves == null ? 0 : this.curves.length;
     }
     
-    public CurvesFilter.Curve getCurve(int id) {
+    public Curve getCurve(int id) {
         return this.curves == null ? null : this.curves[id];
     }
     
-    public CurvesFilter.Curve[] getCurves() {
+    public Curve[] getCurves() {
         return this.curves;
     }
      
