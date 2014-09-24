@@ -148,23 +148,8 @@ public abstract class Tile<TileData> {
         return tileSet.getBottomRightTile(this);
     }
     
-    public BufferedImage createMegaTile() throws IOException {
-        Color BACKGROUND_COLOR = Color.YELLOW;
-        int megaTileSize = Tile.TILE_SIZE * 3;
-        
-        BufferedImage megaTile = new BufferedImage(megaTileSize, megaTileSize, BufferedImage.TYPE_INT_ARGB);
-        
-        Graphics2D g2d = megaTile.createGraphics();
-        g2d.setColor(BACKGROUND_COLOR);
-        g2d.fillRect(0, 0, megaTile.getWidth(), megaTile.getHeight());
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        renderMegaTile(g2d);
-        return megaTile;
-    }
+    abstract public BufferedImage createMegaTile() throws IOException;
     
-    abstract protected void renderMegaTile(Graphics2D g2d) throws IOException;
-
     /**
      * Return the zoom level of this tile
      *

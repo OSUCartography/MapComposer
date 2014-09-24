@@ -21,7 +21,7 @@ public class BinaryGridReader {
     }
 
     /**
-     * Read a Grid from a file in ESRI ASCII format.
+     * Read a Grid from a file in BIL format.
      *
      * @param filePath The path to the file to be read.
      * @return The read grid.
