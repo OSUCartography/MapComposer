@@ -1832,7 +1832,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private void loadDirectoryPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDirectoryPathButtonActionPerformed
         String directoryPath = askTilesDirectory("Select Tiles Directory");
         if (directoryPath != null) {
-            urlTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}.png");
+            String msg = "Is this an image or grid tile set?";
+            String title = "Tile Set Type";
+            Object[] selectionValues = {"Image", "Grid"};
+            String typeStr = (String)JOptionPane.showInputDialog(this, msg, title, 
+                    JOptionPane.QUESTION_MESSAGE, null, selectionValues, selectionValues[0]);
+            String extension = "bil";
+            if (typeStr.equals(selectionValues[0])) {
+                extension = "png";
+            }
+            urlTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}." + extension);
             readGUI();
             addUndo("Load Tiles Directory");
         }

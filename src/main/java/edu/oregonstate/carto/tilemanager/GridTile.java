@@ -2,6 +2,7 @@ package edu.oregonstate.carto.tilemanager;
 
 import edu.oregonstate.carto.importer.BinaryGridReader;
 import edu.oregonstate.carto.tilemanager.util.Grid;
+import java.awt.Graphics2D;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -109,5 +110,10 @@ public class GridTile extends Tile<Grid> {
         }
         
         out.flush();
+    }
+
+    @Override
+    protected void renderMegaTile(Graphics2D g2d) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

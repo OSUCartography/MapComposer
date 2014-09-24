@@ -309,8 +309,7 @@ public class TileSet {
                 && template.contains("{y}")
                 && template.contains("{z}")
                 && template.contains("//")
-                && template.contains(".")
-                && !template.contains(" ");
+                && template.contains(".");
     }
     
     /**

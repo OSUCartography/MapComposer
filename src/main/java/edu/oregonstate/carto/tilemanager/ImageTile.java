@@ -1,5 +1,6 @@
 package edu.oregonstate.carto.tilemanager;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -92,5 +93,59 @@ public class ImageTile extends Tile<BufferedImage> {
             ImageIO.write(img, IMAGE_FORMAT, out);
         }
         out.flush();
+    }
+
+    @Override
+    protected void renderMegaTile(Graphics2D g2d)throws IOException {
+        try {
+            BufferedImage topLeftTile = (BufferedImage) getTopLeftTile().fetch();
+            g2d.drawImage(topLeftTile, 0, 0, null);
+        } catch (IOException ex) {
+        }
+
+        try {
+            BufferedImage topTile = (BufferedImage) getTopTile().fetch();
+            g2d.drawImage(topTile, Tile.TILE_SIZE, 0, null);
+        } catch (IOException ex) {
+        }
+
+        try {
+            BufferedImage topRightTile = (BufferedImage) getTopRightTile().fetch();
+            g2d.drawImage(topRightTile, Tile.TILE_SIZE * 2, 0, null);
+        } catch (IOException ex) {
+        }
+
+        try {
+            BufferedImage leftTile = (BufferedImage) getLeftTile().fetch();
+            g2d.drawImage(leftTile, 0, Tile.TILE_SIZE, null);
+        } catch (IOException ex) {
+        }
+
+        // The tile in the center is this tile.
+        g2d.drawImage((BufferedImage) this.fetch(), Tile.TILE_SIZE, Tile.TILE_SIZE, null);
+
+        try {
+            BufferedImage rightTile = (BufferedImage) getRightTile().fetch();
+            g2d.drawImage(rightTile, Tile.TILE_SIZE * 2, Tile.TILE_SIZE, null);
+        } catch (IOException ex) {
+        }
+
+        try {
+            BufferedImage bottomLeftTile = (BufferedImage) getBottomLeftTile().fetch();
+            g2d.drawImage(bottomLeftTile, 0, Tile.TILE_SIZE * 2, null);
+        } catch (IOException ex) {
+        }
+
+        try {
+            BufferedImage bottomTile = (BufferedImage) getBottomTile().fetch();
+            g2d.drawImage(bottomTile, Tile.TILE_SIZE, Tile.TILE_SIZE * 2, null);
+        } catch (IOException ex) {
+        }
+
+        try {
+            BufferedImage bottomRightTile = (BufferedImage) getBottomRightTile().fetch();
+            g2d.drawImage(bottomRightTile, Tile.TILE_SIZE * 2, Tile.TILE_SIZE * 2, null);
+        } catch (IOException ex) {
+        }
     }
 }

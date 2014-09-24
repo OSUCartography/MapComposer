@@ -10,7 +10,6 @@ import com.jhlabs.image.ShadowFilter;
 import com.jhlabs.image.TileImageFilter;
 import edu.oregonstate.carto.importer.AdobeCurveReader;
 import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
-import edu.oregonstate.carto.tilemanager.ImageTileMerger;
 import edu.oregonstate.carto.tilemanager.Tile;
 import edu.oregonstate.carto.tilemanager.TileSet;
 import java.awt.AlphaComposite;
@@ -28,7 +27,6 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * A map layer.
@@ -143,7 +141,7 @@ public class Layer {
         if (isTileSetValid()) {
             Tile tile = tileSet.getTile(z, x, y);
             try {
-                image = ImageTileMerger.createMegaTile(tile);
+                image = tile.createMegaTile();
                 // convert to ARGB. All following manipulations are optimized for 
                 // this modus.
                 image = ImageUtils.convertImageToARGB(image);
@@ -182,7 +180,7 @@ public class Layer {
             BufferedImage maskImage;
             Tile maskTile = maskTileSet.getTile(z, x, y);
             try {
-                maskImage = ImageTileMerger.createMegaTile(maskTile);
+                maskImage = maskTile.createMegaTile();
                 // convert to ARGB. All following manipulations are optimized for 
                 // this modus.
                 maskImage = ImageUtils.convertImageToARGB(maskImage);
