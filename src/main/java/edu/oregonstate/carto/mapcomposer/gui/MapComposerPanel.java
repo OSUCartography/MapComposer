@@ -451,6 +451,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         tintCheckBox = new javax.swing.JCheckBox();
         tintColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
         curveTextArea = new javax.swing.JTextArea();
+        interpolColorCheckBox = new javax.swing.JCheckBox();
+        interpolColorLabel = new javax.swing.JLabel();
+        gridTextArea1 = new javax.swing.JTextArea();
+        gridTextArea2 = new javax.swing.JTextArea();
         tilesPanel = new TransparentMacPanel();
         javax.swing.JLabel urlLabel = new javax.swing.JLabel();
         urlTextField = new javax.swing.JTextField();
@@ -861,6 +865,49 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 15, 0);
         colorPanel.add(curveTextArea, gridBagConstraints);
+
+        interpolColorCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                interpolColorCheckBoxActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        colorPanel.add(interpolColorCheckBox, gridBagConstraints);
+
+        interpolColorLabel.setText("Interpolated Color:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 12;
+        colorPanel.add(interpolColorLabel, gridBagConstraints);
+
+        gridTextArea1.setEditable(false);
+        gridTextArea1.setColumns(20);
+        gridTextArea1.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        gridTextArea1.setRows(5);
+        gridTextArea1.setText("file:///.../grid1");
+        gridTextArea1.setOpaque(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 13;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        colorPanel.add(gridTextArea1, gridBagConstraints);
+
+        gridTextArea2.setEditable(false);
+        gridTextArea2.setColumns(20);
+        gridTextArea2.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        gridTextArea2.setRows(5);
+        gridTextArea2.setText("file:///.../grid2");
+        gridTextArea2.setToolTipText("");
+        gridTextArea2.setOpaque(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridwidth = 2;
+        colorPanel.add(gridTextArea2, gridBagConstraints);
 
         settingsTabbedPane.addTab("Color", colorPanel);
 
@@ -1871,6 +1918,30 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_lockedCheckBoxActionPerformed
 
+    private void interpolColorCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_interpolColorCheckBoxActionPerformed
+        // TODO add your handling code here:
+        // Set grids to use for interpolated color
+        
+        String directoryPath = askTilesDirectory("Select Grid Tile Set 1 of 2");
+        if (directoryPath != null) {
+            gridTextArea1.setText("file:///" + directoryPath + "/{z}/{x}/{y}.bil");
+            this.readGUI();
+            addUndo("Set Grid 1");
+        }
+        
+        String directoryPath2 = askTilesDirectory("Select Grid Tile Set 2 of 2");
+        if (directoryPath != null) {
+            gridTextArea2.setText("file:///" + directoryPath2 + "/{z}/{x}/{y}.bil");
+            this.readGUI();
+            addUndo("Set Grid 2");
+        }
+        
+        readGUI();
+
+        writeGUI();
+        addUndo("Interpolated Color");
+    }//GEN-LAST:event_interpolColorCheckBoxActionPerformed
+
     /**
      * Updates the value of the texture scale slider
      *
@@ -2205,6 +2276,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel extentPanel;
     private javax.swing.JLabel gaussBlurLabel;
     private javax.swing.JSlider gaussBlurSlider;
+    private javax.swing.JTextArea gridTextArea1;
+    private javax.swing.JTextArea gridTextArea2;
+    private javax.swing.JCheckBox interpolColorCheckBox;
+    private javax.swing.JLabel interpolColorLabel;
     private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JPanel jPanel1;
     private edu.oregonstate.carto.mapcomposer.gui.DraggableList layerList;
