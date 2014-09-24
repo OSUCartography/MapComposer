@@ -5,8 +5,6 @@ import edu.oregonstate.carto.tilemanager.util.Grid;
 import edu.oregonstate.carto.grid.operators.ColorizerOperator;
 import edu.oregonstate.carto.grid.operators.ColorizerOperator.ColorVisualization;
 import edu.oregonstate.carto.grid.operators.ShaderOperator;
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -86,6 +84,11 @@ public class GridTile extends Tile<Grid> {
             TileSet tileSet = getTileSet();
             URL url = tileSet.urlForTile(this);
             grid = BinaryGridReader.read(url);
+            
+            // cell size at equator for given zoom level
+            double cellSize = (2 * Math.PI * 6378137) / (TILE_SIZE * Math.pow(2, getZ()));
+            grid.setCellSize(cellSize);
+            
             tileSet.tileChanged(this);
         }
         return grid;
@@ -129,7 +132,7 @@ public class GridTile extends Tile<Grid> {
         Grid bottomLeftGrid = ((GridTile)getBottomLeftTile()).fetch();
         Grid leftGrid = ((GridTile)getLeftTile()).fetch();
         Grid centerGrid = fetch();
-
+        
         int tileRows = grid.getRows();
         int tileCols = grid.getCols();
         int megaTileSize = tileRows * 3;
