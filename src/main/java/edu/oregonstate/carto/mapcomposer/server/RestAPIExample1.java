@@ -2,7 +2,6 @@ package edu.oregonstate.carto.mapcomposer.server;
 
 import edu.oregonstate.carto.mapcomposer.Layer;
 import edu.oregonstate.carto.mapcomposer.Map;
-import edu.oregonstate.carto.tilemanager.TileSet;
 import java.awt.image.BufferedImage;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;

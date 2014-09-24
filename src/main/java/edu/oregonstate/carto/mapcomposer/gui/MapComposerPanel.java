@@ -178,7 +178,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 Color okColor = UIManager.getDefaults().getColor("TextField.foreground");
                 urlTextField.setForeground(urlTemplateIsValid ? okColor : Color.RED);
 
-                layer.setImageTileSetURLTemplate(tileSetURL);
+                layer.setTileSetURLTemplate(tileSetURL);
                 // re-render map preview
                 reloadHTMLPreviewMap();
             }
@@ -1965,7 +1965,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.visibleCheckBox.setSelected(selectedLayer.isVisible());
             this.lockedCheckBox.setSelected(selectedLayer.isLocked());
 
-            TileSet tileSet = selectedLayer.getImageTileSet();
+            TileSet tileSet = selectedLayer.getTileSet();
             if (tileSet == null) {
                 this.urlTextField.setText(null);
             } else {
@@ -2075,10 +2075,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layer.setCurveURL(curveTextArea.getText());
 
         // URL
-        layer.setImageTileSetURLTemplate(urlTextField.getText());
+        layer.setTileSetURLTemplate(urlTextField.getText());
 
         // TMS
-        layer.setImageTileSetTMSSchema(tmsCheckBox.isSelected());
+        layer.setTileSetTMSSchema(tmsCheckBox.isSelected());
 
         // mask
         layer.setMaskTileSetURLTemplate(maskUrlTextField.getText());

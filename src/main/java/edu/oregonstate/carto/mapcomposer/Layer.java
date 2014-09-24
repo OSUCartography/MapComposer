@@ -49,7 +49,7 @@ public class Layer {
         NORMAL, MULTIPLY
     }
 
-    private final TileSet imageTileSet;
+    private final TileSet tileSet;
 
     private final TileSet maskTileSet = new TileSet(null);;
 
@@ -85,17 +85,17 @@ public class Layer {
     private float gaussBlur = 0;
 
     public Layer() {
-        imageTileSet = new TileSet(null);
+        tileSet = new TileSet(null);
     }
 
     public Layer(String layerName) {
         this.name = layerName;
-        imageTileSet = new TileSet(null);
+        tileSet = new TileSet(null);
     }
     
     public Layer(String layerName, String urlTemplate) {
         this.name = layerName;
-        imageTileSet = new TileSet(urlTemplate);
+        tileSet = new TileSet(urlTemplate);
     }
 
     /**
@@ -140,8 +140,8 @@ public class Layer {
         }
 
         // load tile image
-        if (isImageTileSetValid()) {
-            Tile tile = imageTileSet.getTile(z, x, y);
+        if (isTileSetValid()) {
+            Tile tile = tileSet.getTile(z, x, y);
             try {
                 image = ImageTileMerger.createMegaTile(tile);
                 // convert to ARGB. All following manipulations are optimized for 
@@ -355,22 +355,22 @@ public class Layer {
     }
 
     /**
-     * @return the imageTileSet
+     * @return the tileSet
      */
-    public TileSet getImageTileSet() {
-        return imageTileSet;
+    public TileSet getTileSet() {
+        return tileSet;
     }
     
-    public void setImageTileSetURLTemplate(String urlTemplate) {
-        imageTileSet.setUrlTemplate(urlTemplate);
+    public void setTileSetURLTemplate(String urlTemplate) {
+        tileSet.setUrlTemplate(urlTemplate);
     }
 
-    public void setImageTileSetTMSSchema(boolean tmsSchema) {
-        imageTileSet.setTMSSchema(tmsSchema);
+    public void setTileSetTMSSchema(boolean tmsSchema) {
+        tileSet.setTMSSchema(tmsSchema);
     }
     
-    public boolean isImageTileSetValid() {
-        return imageTileSet.isURLTemplateValid();
+    public boolean isTileSetValid() {
+        return tileSet.isURLTemplateValid();
     }
     
     /**

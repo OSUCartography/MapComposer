@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.FIELD)
 
 /**
- *
+ * A set of web map tiles.
  * @author Nicholas Hallahan nick@theoutpost.io
  */
 public class TileSet {
@@ -34,21 +34,6 @@ public class TileSet {
      * http://tile.openstreetmap.org/{z}/{x}/{y}.png
      */
     private String urlTemplate;
-
-    /**
-     * Tiles in the tile set can only be one type of tile. When constructing
-     * tiles, we need to know which type of tile to construct.
-     */
-    public enum TileType {
-
-        IMAGE, GRID
-    }
-    /**
-     * The constructor sets the type of tiles we will have in the set. This
-     * helps us decide what type of tile to construct.
-     */
-    @XmlTransient
-    private final TileType type;
 
     /**
      * The cache is a content addressable object that will return a given tile
@@ -99,15 +84,14 @@ public class TileSet {
      * @param type
      * @param tmsSchema
      */
-    public TileSet(String urlTemplate, Cache cache, TileType type, boolean tmsSchema) {
+    public TileSet(String urlTemplate, Cache cache, boolean tmsSchema) {
         this.urlTemplate = urlTemplate;
-        this.type = type;
         this.cache = cache;
         this.tmsSchema = tmsSchema;
     }
 
     public TileSet(String urlTemplate) {
-        this(urlTemplate, new DumbCache() /*MemCache.getInstance()*/, TileType.IMAGE, false);
+        this(urlTemplate, new DumbCache(), false);
     }
     
     public TileSet(){
@@ -167,7 +151,7 @@ public class TileSet {
     }
 
     /**
-     * This creates a new tile and puts it in the cache.
+     * This creates a new tile and adds it to the cache.
      *
      * @param z coordinate
      * @param x coordinate
@@ -175,10 +159,10 @@ public class TileSet {
      * @return the new tile
      */
     private Tile createTile(int z, int x, int y) {
-        if (type == TileType.GRID) {
-            return new GridTile(this, z, x, y);
+        if (isImageURLTemplate()) {
+            return new ImageTile(this, z, x, y);
         }
-        return new ImageTile(this, z, x, y);
+        return new GridTile(this, z, x, y);
     }
 
     /**
@@ -225,7 +209,7 @@ public class TileSet {
     }
 
     /**
-     * The content of tile has changed, the cache has to be updated if if it
+     * The content of tile has changed, the cache has to be updated if it
      * uses serialized tiles. This method needs to be called when the tile data
      * has been fetched.
      *
@@ -337,6 +321,15 @@ public class TileSet {
         return isURLTemplateValid(urlTemplate);
     }
 
+    /**
+     * Returns true if the URL template is for an image tile set, that is,
+     * the URL ends with ".png" or ".jpg"
+     * @return 
+     */
+    public boolean isImageURLTemplate() {
+        return urlTemplate.endsWith(".png") || urlTemplate.endsWith(".jpg");
+    }
+    
     /**
      * @return the tmsSchema
      */
