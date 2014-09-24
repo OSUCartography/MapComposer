@@ -2,7 +2,6 @@ package edu.oregonstate.carto.tilemanager;
 
 import edu.oregonstate.carto.mapcomposer.Map;
 import edu.oregonstate.carto.mapcomposer.gui.ProgressIndicator;
-import edu.oregonstate.carto.utils.FileUtils;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

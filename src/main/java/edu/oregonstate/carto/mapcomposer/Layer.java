@@ -8,9 +8,14 @@ import com.jhlabs.image.ImageUtils;
 import com.jhlabs.image.LightFilter;
 import com.jhlabs.image.ShadowFilter;
 import com.jhlabs.image.TileImageFilter;
+import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWGridTileRenderer;
 import edu.oregonstate.carto.importer.AdobeCurveReader;
 import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
+import edu.oregonstate.carto.tilemanager.ImageTile;
+import edu.oregonstate.carto.mapcomposer.tilerenderer.ImageTileRenderer;
+import edu.oregonstate.carto.mapcomposer.tilerenderer.ShadingGridTileRenderer;
 import edu.oregonstate.carto.tilemanager.Tile;
+import edu.oregonstate.carto.tilemanager.TileRenderer;
 import edu.oregonstate.carto.tilemanager.TileSet;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -35,7 +40,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
  * @author Bernhard Jenny, Cartography and Geovisualization Group, Oregon State
  * University
  */
-
 //Every non static, non transient field in a JAXB-bound class will be 
 //automatically bound to XML, unless annotated by @XmlTransient
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -49,10 +53,11 @@ public class Layer {
 
     private final TileSet tileSet;
 
-    private final TileSet maskTileSet = new TileSet(null);;
+    private final TileSet maskTileSet = new TileSet(null);
+    ;
 
     private boolean visible = true;
-    
+
     private boolean locked = false;
 
     private String name;
@@ -78,7 +83,7 @@ public class Layer {
     private Shadow shadow = null;
 
     private Emboss emboss = null;
-    
+
     //gaussian blur
     private float gaussBlur = 0;
 
@@ -90,7 +95,7 @@ public class Layer {
         this.name = layerName;
         tileSet = new TileSet(null);
     }
-    
+
     public Layer(String layerName, String urlTemplate) {
         this.name = layerName;
         tileSet = new TileSet(urlTemplate);
@@ -98,6 +103,7 @@ public class Layer {
 
     /**
      * Render a tile of this layer.
+     *
      * @param g2d Graphics2D destination: render into this canvas
      * @param z Zoom level of tile
      * @param x Horizontal x coordinate of tile.
@@ -140,14 +146,16 @@ public class Layer {
         // load tile image
         if (isTileSetValid()) {
             Tile tile = tileSet.getTile(z, x, y);
-            try {
-                image = tile.createMegaTile();
-                // convert to ARGB. All following manipulations are optimized for 
-                // this modus.
-                image = ImageUtils.convertImageToARGB(image);
-            } catch (IOException exc) {
-                image = null;
+            if (tile instanceof ImageTile) {
+                image = new ImageTileRenderer().render(tile);
+            } else {
+                //image = new IDWGridTileRenderer().render(tile);
+                image = new ShadingGridTileRenderer().render(tile);
             }
+            // convert to ARGB. All following manipulations are optimized for 
+            // this modus.
+            // image = ImageUtils.convertImageToARGB(image);
+
         }
 
         // tinting
@@ -174,19 +182,17 @@ public class Layer {
         if (this.curves != null) {
             image = curve(image);
         }
-        
+
         // masking
         if (isMaskTileSetValid()) {
             BufferedImage maskImage;
             Tile maskTile = maskTileSet.getTile(z, x, y);
-            try {
-                maskImage = maskTile.createMegaTile();
-                // convert to ARGB. All following manipulations are optimized for 
-                // this modus.
-                maskImage = ImageUtils.convertImageToARGB(maskImage);
-            } catch (IOException exc) {
-                maskImage = createWhiteMegaTile();
-            }
+
+            maskImage = image = new ImageTileRenderer().render(maskTile);
+            // convert to ARGB. All following manipulations are optimized for 
+            // this modus.
+            //maskImage = ImageUtils.convertImageToARGB(maskImage);
+
             if (this.maskBlur > 0) {
                 BoxBlurFilter blurFilter = new BoxBlurFilter();
                 blurFilter.setHRadius(this.maskBlur);
@@ -228,14 +234,14 @@ public class Layer {
             shadowImage = shadowImage.getSubimage(Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
             g2d.drawImage(shadowImage, null, null);
         }
-        
+
         // Gaussian Blur
-            if (this.gaussBlur > 0) {
-                GaussianFilter gaussFilter = new GaussianFilter();
-                gaussFilter.setRadius(this.gaussBlur);
-                image = gaussFilter.filter(image, image);
-            }
-       
+        if (this.gaussBlur > 0) {
+            GaussianFilter gaussFilter = new GaussianFilter();
+            gaussFilter.setRadius(this.gaussBlur);
+            image = gaussFilter.filter(image, image);
+        }
+
         // draw this layer into the destination image
         BufferedImage tileImage = image.getSubimage(Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
         g2d.drawImage(tileImage, null, null);
@@ -243,8 +249,9 @@ public class Layer {
 
     /**
      * Applies curve to image.
+     *
      * @param image
-     * @return 
+     * @return
      */
     private BufferedImage curve(BufferedImage image) {
         // apply curve to image
@@ -337,7 +344,7 @@ public class Layer {
     public void setLocked(boolean locked) {
         this.locked = locked;
     }
-    
+
     /**
      * @return the name
      */
@@ -358,7 +365,7 @@ public class Layer {
     public TileSet getTileSet() {
         return tileSet;
     }
-    
+
     public void setTileSetURLTemplate(String urlTemplate) {
         tileSet.setUrlTemplate(urlTemplate);
     }
@@ -366,11 +373,11 @@ public class Layer {
     public void setTileSetTMSSchema(boolean tmsSchema) {
         tileSet.setTMSSchema(tmsSchema);
     }
-    
+
     public boolean isTileSetValid() {
         return tileSet.isURLTemplateValid();
     }
-    
+
     /**
      * @return the textureTileFilePath
      */
@@ -379,7 +386,7 @@ public class Layer {
     }
 
     /**
-     * @param textureTileFilePath File path for a single tile that is used to 
+     * @param textureTileFilePath File path for a single tile that is used to
      * texture the layer.
      */
     public void setTextureTileFilePath(String textureTileFilePath) {
@@ -400,7 +407,7 @@ public class Layer {
     public void setMaskTileSetTMSSchema(boolean tmsSchema) {
         maskTileSet.setTMSSchema(tmsSchema);
     }
-    
+
     /**
      *
      * @return true if the blend type is normal
@@ -447,10 +454,10 @@ public class Layer {
             curveURL = null;
         }
         this.curveURL = curveURL;
-        
+
         // reset curves (curveURL can be null)
         curves = null;
-        
+
         // load curve from URL
         try {
             if (curveURL != null && !curveURL.isEmpty()) {
@@ -464,7 +471,7 @@ public class Layer {
         } catch (IOException ex) {
             Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
             curves = null;
-        }        
+        }
     }
 
     /**
@@ -508,7 +515,7 @@ public class Layer {
     public void setMaskBlur(float maskBlur) {
         this.maskBlur = maskBlur;
     }
-    
+
     public boolean isMaskTileSetValid() {
         return maskTileSet.isURLTemplateValid();
     }
@@ -561,10 +568,10 @@ public class Layer {
     public void setEmboss(Emboss emboss) {
         this.emboss = emboss;
     }
-    
+
     //When I refactored/encapsulated "gaussBlur", it put these under the Layer
     //method, so I moved them down here with the others:
-        /**
+    /**
      * @return the gaussBlur
      */
     public float getGaussBlur() {

@@ -1,5 +1,6 @@
 package edu.oregonstate.carto.tilemanager;
 
+import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWGridTileRenderer;
 import edu.oregonstate.carto.importer.BinaryGridReader;
 import edu.oregonstate.carto.tilemanager.util.Grid;
 import edu.oregonstate.carto.grid.operators.ColorizerOperator;
@@ -14,6 +15,7 @@ import java.net.URL;
 /**
  *
  * @author Nicholas Hallahan nick@theoutpost.io
+ * @author Bernie Jenny, Oregon State University
  */
 public class GridTile extends Tile<Grid> {
 
@@ -119,37 +121,35 @@ public class GridTile extends Tile<Grid> {
         
         out.flush();
     }
+    
+    public Grid createMegaTile() throws IOException {
 
-    @Override
-    public BufferedImage createMegaTile() throws IOException {
-        
-        Grid topLeftGrid = ((GridTile)getTopLeftTile()).fetch();
-        Grid topGrid = ((GridTile)getTopTile()).fetch();
-        Grid topRightGrid = ((GridTile)getTopRightTile()).fetch();
-        Grid rightGrid = ((GridTile)getRightTile()).fetch();
-        Grid bottomRightGrid = ((GridTile)getBottomRightTile()).fetch();
-        Grid bottomGrid = ((GridTile)getBottomTile()).fetch();
-        Grid bottomLeftGrid = ((GridTile)getBottomLeftTile()).fetch();
-        Grid leftGrid = ((GridTile)getLeftTile()).fetch();
+        Grid topLeftGrid = ((GridTile) getTopLeftTile()).fetch();
+        Grid topGrid = ((GridTile) getTopTile()).fetch();
+        Grid topRightGrid = ((GridTile) getTopRightTile()).fetch();
+        Grid rightGrid = ((GridTile) getRightTile()).fetch();
+        Grid bottomRightGrid = ((GridTile) getBottomRightTile()).fetch();
+        Grid bottomGrid = ((GridTile) getBottomTile()).fetch();
+        Grid bottomLeftGrid = ((GridTile) getBottomLeftTile()).fetch();
+        Grid leftGrid = ((GridTile) getLeftTile()).fetch();
         Grid centerGrid = fetch();
-        
-        int tileRows = grid.getRows();
-        int tileCols = grid.getCols();
+
+        int tileRows = centerGrid.getRows();
+        int tileCols = centerGrid.getCols();
         int megaTileSize = tileRows * 3;
-        BufferedImage img = new BufferedImage(megaTileSize, megaTileSize, BufferedImage.TYPE_INT_ARGB);
         float[][] mergedArray = new float[megaTileSize][megaTileSize];
         for (int r = 0; r < tileRows; r++) {
             System.arraycopy(topLeftGrid.getGrid()[r], 0, mergedArray[r], 0, tileCols);
             System.arraycopy(topGrid.getGrid()[r], 0, mergedArray[r], tileCols, tileCols);
             System.arraycopy(topRightGrid.getGrid()[r], 0, mergedArray[r], tileCols * 2, tileCols);
         }
-        
+
         for (int r = 0; r < tileRows; r++) {
             System.arraycopy(leftGrid.getGrid()[r], 0, mergedArray[r + tileRows], 0, tileCols);
             System.arraycopy(centerGrid.getGrid()[r], 0, mergedArray[r + tileRows], tileCols, tileCols);
             System.arraycopy(rightGrid.getGrid()[r], 0, mergedArray[r + tileRows], tileCols * 2, tileCols);
         }
-        
+
         for (int r = 0; r < tileRows; r++) {
             System.arraycopy(bottomLeftGrid.getGrid()[r], 0, mergedArray[r + tileRows * 2], 0, tileCols);
             System.arraycopy(bottomGrid.getGrid()[r], 0, mergedArray[r + tileRows * 2], tileCols, tileCols);
@@ -159,10 +159,7 @@ public class GridTile extends Tile<Grid> {
         Grid mergedGrid = new Grid(mergedArray, topGrid.getCellSize());
         mergedGrid.setWest(topLeftGrid.getWest());
         mergedGrid.setNorth(topLeftGrid.getNorth());
-        
-        ShaderOperator shader = new ShaderOperator();
-        Grid shading = shader.operate(mergedGrid);
-        ColorizerOperator op = new ColorizerOperator(ColorVisualization.GRAY_SHADING);
-        return op.operate(shading, mergedGrid, img, 0, 0);
+
+        return mergedGrid;
     }
 }

@@ -148,8 +148,6 @@ public abstract class Tile<TileData> {
         return tileSet.getBottomRightTile(this);
     }
     
-    abstract public BufferedImage createMegaTile() throws IOException;
-    
     /**
      * Return the zoom level of this tile
      *
