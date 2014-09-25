@@ -14,6 +14,7 @@ import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
 import edu.oregonstate.carto.tilemanager.ImageTile;
 import edu.oregonstate.carto.mapcomposer.tilerenderer.ImageTileRenderer;
 import edu.oregonstate.carto.mapcomposer.tilerenderer.ShadingGridTileRenderer;
+import edu.oregonstate.carto.tilemanager.DumbCache;
 import edu.oregonstate.carto.tilemanager.Tile;
 import edu.oregonstate.carto.tilemanager.TileRenderer;
 import edu.oregonstate.carto.tilemanager.TileSet;
@@ -32,6 +33,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * A map layer.
@@ -54,7 +56,6 @@ public class Layer {
     private final TileSet tileSet;
 
     private final TileSet maskTileSet = new TileSet(null);
-    ;
 
     private boolean visible = true;
 
@@ -87,6 +88,13 @@ public class Layer {
     //gaussian blur
     private float gaussBlur = 0;
 
+    // FIXME
+    @XmlTransient
+    private final IDWGridTileRenderer idwTileRenderer = new IDWGridTileRenderer();
+    private final TileSet grid1TileSet = new TileSet(null, new DumbCache(), true);
+    private final TileSet grid2TileSet = new TileSet(null, new DumbCache(), true);
+
+    
     public Layer() {
         tileSet = new TileSet(null);
     }
@@ -149,13 +157,11 @@ public class Layer {
             if (tile instanceof ImageTile) {
                 image = new ImageTileRenderer().render(tile);
             } else {
-                //image = new IDWGridTileRenderer().render(tile);
                 image = new ShadingGridTileRenderer().render(tile);
             }
             // convert to ARGB. All following manipulations are optimized for 
             // this modus.
             // image = ImageUtils.convertImageToARGB(image);
-
         }
 
         // tinting
@@ -171,6 +177,15 @@ public class Layer {
                 // no pre-existing image, create a solid color image
                 image = solidColorImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, this.tint.getTintColor());
             }
+        }
+
+        // FIXME hack
+        if (idwTileRenderer != null
+                && grid1TileSet.isURLTemplateValid()
+                && grid2TileSet.isURLTemplateValid()) {
+            Tile gridTile1 = grid1TileSet.getTile(z, x, y);
+            Tile gridTile2 = grid2TileSet.getTile(z, x, y);
+            image = idwTileRenderer.render(gridTile1, gridTile2);
         }
 
         // create solid white background image if no image has been loaded 
@@ -589,4 +604,10 @@ public class Layer {
     public String toString() {
         return getName();
     }
+
+    public void setGridTileURLTemplates(String urlTemplate1, String urlTemplate2) {
+        grid1TileSet.setUrlTemplate(urlTemplate1);
+        grid2TileSet.setUrlTemplate(urlTemplate2);
+    }
+
 }

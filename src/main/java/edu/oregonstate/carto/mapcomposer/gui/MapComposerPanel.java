@@ -2210,6 +2210,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         } else {
             layer.setTint(null);
         }
+        
+        // FIXME
+        layer.setGridTileURLTemplates(gridTextArea1.getText(), gridTextArea2.getText());
 
         // texture
         layer.setTextureScale(this.readTextureScale());

@@ -138,14 +138,13 @@ public class IDWGridTileRenderer implements TileRenderer {
         points.add(point4);
     }
 
-    @Override
-    public BufferedImage render(Tile tile) {
+    public BufferedImage render(Tile tile1, Tile tile2) {
         BufferedImage img = new BufferedImage(Tile.TILE_SIZE * 3,
                 Tile.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
         try {
 
-            Grid attribute1Grid = ((GridTile) tile).createMegaTile();
-            Grid attribute2Grid = new GridScaleOperator(-1).operate(attribute1Grid); // createMegaTile((GridTile)tile); FIXME
+            Grid attribute1Grid = ((GridTile) tile1).createMegaTile();
+            Grid attribute2Grid = ((GridTile) tile2).createMegaTile();
 
             // FIXME
             attribute1Grid = new GridScaleToRangeOperator(0, 1).operate(attribute1Grid);
@@ -155,5 +154,10 @@ public class IDWGridTileRenderer implements TileRenderer {
         } catch (IOException ex) {
         }
         return img;
+    }
+
+    @Override
+    public BufferedImage render(Tile tile) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
