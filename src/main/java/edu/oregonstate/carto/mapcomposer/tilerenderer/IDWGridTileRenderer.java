@@ -142,7 +142,6 @@ public class IDWGridTileRenderer implements TileRenderer {
         BufferedImage img = new BufferedImage(Tile.TILE_SIZE * 3,
                 Tile.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
         try {
-
             Grid attribute1Grid = ((GridTile) tile1).createMegaTile();
             Grid attribute2Grid = ((GridTile) tile2).createMegaTile();
 

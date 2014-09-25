@@ -8,6 +8,8 @@ import com.jhlabs.image.ImageUtils;
 import com.jhlabs.image.LightFilter;
 import com.jhlabs.image.ShadowFilter;
 import com.jhlabs.image.TileImageFilter;
+import edu.oregonstate.carto.grid.operators.GridBinarizeOperator;
+import edu.oregonstate.carto.grid.operators.GridToImageOperator;
 import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWGridTileRenderer;
 import edu.oregonstate.carto.importer.AdobeCurveReader;
 import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
@@ -15,9 +17,11 @@ import edu.oregonstate.carto.tilemanager.ImageTile;
 import edu.oregonstate.carto.mapcomposer.tilerenderer.ImageTileRenderer;
 import edu.oregonstate.carto.mapcomposer.tilerenderer.ShadingGridTileRenderer;
 import edu.oregonstate.carto.tilemanager.DumbCache;
+import edu.oregonstate.carto.tilemanager.GridTile;
 import edu.oregonstate.carto.tilemanager.Tile;
 import edu.oregonstate.carto.tilemanager.TileRenderer;
 import edu.oregonstate.carto.tilemanager.TileSet;
+import edu.oregonstate.carto.tilemanager.util.Grid;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -81,6 +85,8 @@ public class Layer {
 
     private float maskBlur = 0;
 
+    private String maskValues = "0";
+
     private Shadow shadow = null;
 
     private Emboss emboss = null;
@@ -91,10 +97,11 @@ public class Layer {
     // FIXME
     @XmlTransient
     private final IDWGridTileRenderer idwTileRenderer = new IDWGridTileRenderer();
+    @XmlTransient
     private final TileSet grid1TileSet = new TileSet(null, new DumbCache(), true);
+    @XmlTransient
     private final TileSet grid2TileSet = new TileSet(null, new DumbCache(), true);
 
-    
     public Layer() {
         tileSet = new TileSet(null);
     }
@@ -200,24 +207,31 @@ public class Layer {
 
         // masking
         if (isMaskTileSetValid()) {
-            BufferedImage maskImage;
+            BufferedImage maskImage = null;
             Tile maskTile = maskTileSet.getTile(z, x, y);
-
-            maskImage = image = new ImageTileRenderer().render(maskTile);
-            // convert to ARGB. All following manipulations are optimized for 
-            // this modus.
-            //maskImage = ImageUtils.convertImageToARGB(maskImage);
-
-            if (this.maskBlur > 0) {
-                BoxBlurFilter blurFilter = new BoxBlurFilter();
-                blurFilter.setHRadius(this.maskBlur);
-                blurFilter.setVRadius(this.maskBlur);
-                blurFilter.setPremultiplyAlpha(false);
-                blurFilter.setIterations(1);
-                maskImage = blurFilter.filter(maskImage, null);
+            if (maskTile instanceof GridTile && maskValues != null && !maskValues.isEmpty()) {
+                try {
+                    Grid mergedGrid = ((GridTile)maskTile).createMegaTile();
+                    Grid maskGrid = new GridBinarizeOperator(maskValues).operate(mergedGrid);
+                    maskImage = new GridToImageOperator().operate(maskGrid, 0, 1);
+                } catch (IOException ex) {
+                }
+            } else {
+                maskImage = new ImageTileRenderer().render(maskTile);
             }
 
-            image = alphaChannelFromGrayImage(image, maskImage, this.invertMask);
+            if (maskImage != null) {
+                if (this.maskBlur > 0) {
+                    BoxBlurFilter blurFilter = new BoxBlurFilter();
+                    blurFilter.setHRadius(this.maskBlur);
+                    blurFilter.setVRadius(this.maskBlur);
+                    blurFilter.setPremultiplyAlpha(false);
+                    blurFilter.setIterations(1);
+                    maskImage = blurFilter.filter(maskImage, null);
+                }
+
+                image = alphaChannelFromGrayImage(image, maskImage, this.invertMask);
+            }
         }
 
         // embossing
@@ -610,4 +624,20 @@ public class Layer {
         grid2TileSet.setUrlTemplate(urlTemplate2);
     }
 
+    /**
+     * @return the maskValues
+     */
+    public String getMaskValues() {
+        return maskValues;
+    }
+
+    /**
+     * @param maskValues the maskValues to set
+     */
+    public void setMaskValues(String maskValues) {
+        if (maskValues != null) {
+            maskValues = maskValues.trim();
+        }
+        this.maskValues = maskValues;
+    }
 }

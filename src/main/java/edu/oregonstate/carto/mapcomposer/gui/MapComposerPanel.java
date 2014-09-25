@@ -199,6 +199,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 reloadHTMLPreviewMap();
             }
         });
+        
+        // add document listener to mask values text field
+        maskValuesTextField.getDocument().addDocumentListener(new DocumentListenerAdaptor() {
+            @Override
+            protected void textChanged(Layer layer, DocumentEvent e) {
+                layer.setMaskValues(maskValuesTextField.getText().trim());
+                // re-render map preview
+                reloadHTMLPreviewMap();
+            }
+        });
 
         writeGUI();
     }
@@ -475,6 +485,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         maskLoadDirectoryPathButton = new javax.swing.JButton();
         maskTMSCheckBox = new javax.swing.JCheckBox();
         javax.swing.JLabel urlLabel1 = new javax.swing.JLabel();
+        maskValuesTextField = new javax.swing.JTextField();
+        javax.swing.JLabel jLabel7 = new javax.swing.JLabel();
         effectsTabbedPane = new javax.swing.JTabbedPane();
         effectsPanel = new TransparentMacPanel();
         shadowCheckBox = new javax.swing.JCheckBox();
@@ -1105,6 +1117,23 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         maskPanel.add(urlLabel1, gridBagConstraints);
+
+        maskValuesTextField.setText("11 40");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        maskPanel.add(maskValuesTextField, gridBagConstraints);
+
+        jLabel7.setText("Mask Values");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(15, 0, 0, 0);
+        maskPanel.add(jLabel7, gridBagConstraints);
 
         settingsTabbedPane.addTab("Mask", maskPanel);
 
@@ -1906,18 +1935,19 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
         return directoryPath;
     }
+
+    private boolean askIsImageTileSet() {
+        String msg = "Is this an image or grid tile set?";
+        String title = "Tile Set Type";
+        Object[] selectionValues = {"Image", "Grid"};
+        String typeStr = (String) JOptionPane.showInputDialog(this, msg, title,
+                JOptionPane.QUESTION_MESSAGE, null, selectionValues, selectionValues[0]);
+        return typeStr.equals(selectionValues[0]);
+    }
     private void loadDirectoryPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDirectoryPathButtonActionPerformed
         String directoryPath = askTilesDirectory("Select Tiles Directory");
         if (directoryPath != null) {
-            String msg = "Is this an image or grid tile set?";
-            String title = "Tile Set Type";
-            Object[] selectionValues = {"Image", "Grid"};
-            String typeStr = (String)JOptionPane.showInputDialog(this, msg, title, 
-                    JOptionPane.QUESTION_MESSAGE, null, selectionValues, selectionValues[0]);
-            String extension = "bil";
-            if (typeStr.equals(selectionValues[0])) {
-                extension = "png";
-            }
+            String extension = askIsImageTileSet() ? "png" : "bil";
             urlTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}." + extension);
             readGUI();
             addUndo("Load Tiles Directory");
@@ -1927,7 +1957,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private void maskLoadDirectoryPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskLoadDirectoryPathButtonActionPerformed
         String directoryPath = askTilesDirectory("Select Mask Directory with Tiles");
         if (directoryPath != null) {
-            maskUrlTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}.png");
+            String extension = askIsImageTileSet() ? "png" : "bil";
+            maskUrlTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}." + extension);
             this.readGUI();
             addUndo("Load Mask Tiles Directory");
         }
@@ -1951,21 +1982,21 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private void interpolColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_interpolColorButtonActionPerformed
         // TODO add your handling code here:
         // Set grids to use for interpolated color
-        
+
         String directoryPath = askTilesDirectory("Select Grid Tile Set 1 of 2");
         if (directoryPath != null) {
             gridTextArea1.setText("file:///" + directoryPath + "/{z}/{x}/{y}.bil");
             this.readGUI();
             addUndo("Set Grid 1");
         }
-        
+
         String directoryPath2 = askTilesDirectory("Select Grid Tile Set 2 of 2");
         if (directoryPath != null) {
             gridTextArea2.setText("file:///" + directoryPath2 + "/{z}/{x}/{y}.bil");
             this.readGUI();
             addUndo("Set Grid 2");
         }
-        
+
         readGUI();
 
         writeGUI();
@@ -2040,6 +2071,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         this.maskBlurSlider.setEnabled(on);
         this.maskLoadDirectoryPathButton.setEnabled(on);
         this.maskInvertCheckBox.setEnabled(on);
+        this.maskValuesTextField.setEnabled(on);
         this.shadowCheckBox.setEnabled(on);
         this.shadowOffsetSlider.setEnabled(on);
         this.shadowColorButton.setEnabled(on);
@@ -2070,7 +2102,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.gridTextArea2.setText(null);
             return;
         }
-        
+
         if (this.updating) {
             return;
         }
@@ -2129,6 +2161,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.maskInvertCheckBox.setSelected(selectedLayer.isInvertMask());
             this.maskTMSCheckBox.setSelected(maskTileSet != null ? maskTileSet.isTMSSchema() : false);
             this.maskBlurSlider.setValue((int) (selectedLayer.getMaskBlur() * 10f));
+            this.maskValuesTextField.setText(selectedLayer.getMaskValues());
 
             // drop shadow
             if (selectedLayer.getShadow() != null) {
@@ -2201,6 +2234,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layer.setInvertMask(this.maskInvertCheckBox.isSelected());
         layer.setMaskTileSetTMSSchema(maskTMSCheckBox.isSelected());
         layer.setMaskBlur(this.maskBlurSlider.getValue() / 10f);
+        layer.setMaskValues(maskValuesTextField.getText());
 
         // tint
         if (this.tintCheckBox.isSelected()) {
@@ -2210,7 +2244,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         } else {
             layer.setTint(null);
         }
-        
+
         // FIXME
         layer.setGridTileURLTemplates(gridTextArea1.getText(), gridTextArea2.getText());
 
@@ -2336,6 +2370,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JButton maskLoadDirectoryPathButton;
     private javax.swing.JCheckBox maskTMSCheckBox;
     private javax.swing.JTextField maskUrlTextField;
+    private javax.swing.JTextField maskValuesTextField;
     private javax.swing.JSpinner maxZoomSpinner;
     private javax.swing.JSpinner minZoomSpinner;
     private javax.swing.JButton moveDownLayerButton;
