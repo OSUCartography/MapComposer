@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class IDWGridTileRenderer implements TileRenderer {
 
-    private final ArrayList<Point> points = new ArrayList<>();
+    private ArrayList<Point> points = new ArrayList<>();
     private double exponentP = 0.2;
 
     public IDWGridTileRenderer() {
@@ -86,6 +86,28 @@ public class IDWGridTileRenderer implements TileRenderer {
         return ((int) weightedSumB) | (((int) weightedSumG) << 8) | (((int) weightedSumR) << 16) | (255 << 24);
     }
 
+    public void setColorPoints(ArrayList<Point> newPoints) {
+        this.points = newPoints;
+    }
+    
+    
+    public String getColorPointsString() {
+        StringBuilder sb = new StringBuilder();
+        for (Point point : points) {
+            sb.append(point.getAttribute1());
+            sb.append(" ");
+            sb.append(point.getAttribute2());
+            sb.append(" ");
+            sb.append(point.getR());
+            sb.append(" ");
+            sb.append(point.getG());
+            sb.append(" ");
+            sb.append(point.getB());
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+    
     // FIXME hard coded color points for the moment
     private void initPoints() {
         //Assign point x, y values

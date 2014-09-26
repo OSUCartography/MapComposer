@@ -10,14 +10,15 @@ import com.jhlabs.image.ShadowFilter;
 import com.jhlabs.image.TileImageFilter;
 import edu.oregonstate.carto.grid.operators.GridBinarizeOperator;
 import edu.oregonstate.carto.grid.operators.GridToImageOperator;
-import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWGridTileRenderer;
 import edu.oregonstate.carto.importer.AdobeCurveReader;
-import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
-import edu.oregonstate.carto.tilemanager.ImageTile;
+import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWGridTileRenderer;
 import edu.oregonstate.carto.mapcomposer.tilerenderer.ImageTileRenderer;
+import edu.oregonstate.carto.mapcomposer.tilerenderer.Point;
 import edu.oregonstate.carto.mapcomposer.tilerenderer.ShadingGridTileRenderer;
+import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
 import edu.oregonstate.carto.tilemanager.DumbCache;
 import edu.oregonstate.carto.tilemanager.GridTile;
+import edu.oregonstate.carto.tilemanager.ImageTile;
 import edu.oregonstate.carto.tilemanager.Tile;
 import edu.oregonstate.carto.tilemanager.TileRenderer;
 import edu.oregonstate.carto.tilemanager.TileSet;
@@ -32,6 +33,7 @@ import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -55,6 +57,11 @@ public class Layer {
     public enum BlendType {
 
         NORMAL, MULTIPLY
+    }
+
+    public enum ColorType {
+
+        NONE, SOLID, INTERPOLATE
     }
 
     private final TileSet tileSet;
@@ -101,6 +108,8 @@ public class Layer {
     private final TileSet grid1TileSet = new TileSet(null, new DumbCache(), true);
     @XmlTransient
     private final TileSet grid2TileSet = new TileSet(null, new DumbCache(), true);
+
+    private ColorType colorType = ColorType.NONE;
 
     public Layer() {
         tileSet = new TileSet(null);
@@ -172,27 +181,34 @@ public class Layer {
         }
 
         // tinting
-        if (this.tint != null) {
-            // use the pre-existing image for modulating brightness if the image
-            // exists (i.e. a texture image has been created or an image has
-            // been loaded).
-            if (image != null) {
-                TintFilter tintFilter = new TintFilter();
-                tintFilter.setTint(tint.getTintColor());
-                image = tintFilter.filter(image, null);
-            } else {
-                // no pre-existing image, create a solid color image
-                image = solidColorImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, this.tint.getTintColor());
-            }
-        }
+        switch (colorType) {
+            case NONE:
+                break;
 
-        // FIXME hack
-        if (idwTileRenderer != null
-                && grid1TileSet.isURLTemplateValid()
-                && grid2TileSet.isURLTemplateValid()) {
-            Tile gridTile1 = grid1TileSet.getTile(z, x, y);
-            Tile gridTile2 = grid2TileSet.getTile(z, x, y);
-            image = idwTileRenderer.render(gridTile1, gridTile2);
+            case SOLID:
+                // use the pre-existing image for modulating brightness if the image
+                // exists (i.e. a texture image has been created or an image has
+                // been loaded).
+                if (image != null) {
+                    TintFilter tintFilter = new TintFilter();
+                    tintFilter.setTint(tint.getTintColor());
+                    image = tintFilter.filter(image, null);
+                } else {
+                    // no pre-existing image, create a solid color image
+                    image = solidColorImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, this.tint.getTintColor());
+                }
+                break;
+
+            case INTERPOLATE:
+                if (idwTileRenderer != null
+                        && grid1TileSet.isURLTemplateValid()
+                        && grid2TileSet.isURLTemplateValid()) {
+                    Tile gridTile1 = grid1TileSet.getTile(z, x, y);
+                    Tile gridTile2 = grid2TileSet.getTile(z, x, y);
+                    image = idwTileRenderer.render(gridTile1, gridTile2);
+                }
+
+                break;
         }
 
         // create solid white background image if no image has been loaded 
@@ -211,7 +227,7 @@ public class Layer {
             Tile maskTile = maskTileSet.getTile(z, x, y);
             if (maskTile instanceof GridTile && maskValues != null && !maskValues.isEmpty()) {
                 try {
-                    Grid mergedGrid = ((GridTile)maskTile).createMegaTile();
+                    Grid mergedGrid = ((GridTile) maskTile).createMegaTile();
                     Grid maskGrid = new GridBinarizeOperator(maskValues).operate(mergedGrid);
                     maskImage = new GridToImageOperator().operate(maskGrid, 0, 1);
                 } catch (IOException ex) {
@@ -640,4 +656,28 @@ public class Layer {
         }
         this.maskValues = maskValues;
     }
+
+    public void setColorPoints(ArrayList<Point> points) {
+        idwTileRenderer.setColorPoints(points);
+    }
+    
+    public String getColorPointsString() {
+        return idwTileRenderer.getColorPointsString();
+    }
+
+    /**
+     * @return the colorType
+     */
+    public ColorType getColorType() {
+        return colorType;
+    }
+
+    /**
+     * @param colorType the colorType to set
+     */
+    public void setColorType(ColorType colorType) {
+        this.colorType = colorType;
+    }
+    
+    
 }
