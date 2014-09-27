@@ -120,7 +120,7 @@ public class IDWGridTileRenderer implements TileRenderer {
         point1.setG(116);
         point1.setB(96);
         //Set precipitation grid value
-        point1.setAttribute1(0.01);
+        point1.setAttribute1(0.0);
         //Set elevation grid value
         point1.setAttribute2(0.0);
 
@@ -168,8 +168,8 @@ public class IDWGridTileRenderer implements TileRenderer {
             Grid attribute2Grid = ((GridTile) tile2).createMegaTile();
 
             // FIXME
-            attribute1Grid = new GridScaleToRangeOperator(0, 1).operate(attribute1Grid);
-            attribute2Grid = new GridScaleToRangeOperator(0, 1).operate(attribute2Grid);
+//            attribute1Grid = new GridScaleToRangeOperator(0, 1).operate(attribute1Grid);
+//            attribute2Grid = new GridScaleToRangeOperator(0, 1).operate(attribute2Grid);
             renderImage(img, attribute1Grid, attribute2Grid);
 
         } catch (IOException ex) {

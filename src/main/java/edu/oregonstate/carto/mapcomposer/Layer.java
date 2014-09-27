@@ -678,6 +678,9 @@ public class Layer {
     public void setColorType(ColorType colorType) {
         this.colorType = colorType;
     }
-    
+        
+    public void setExponentP(double exponentP) {
+        idwTileRenderer.setExponentP(exponentP);
+    }
     
 }

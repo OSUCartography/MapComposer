@@ -221,7 +221,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      */
     private void initMapPreview() {
         final JFXPanel fxPanel = new JFXPanel();
-        setColorPointsButton.add(fxPanel, BorderLayout.CENTER);
+        exponentLabel.add(fxPanel, BorderLayout.CENTER);
         final String html = loadHTMLPreviewMap(0, 0, 0);
 
         // run in the JavaFX thread
@@ -477,6 +477,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridTextArea1 = new javax.swing.JTextArea();
         interpolColorButton = new javax.swing.JButton();
         setColorPointButton = new javax.swing.JButton();
+        exponentSlider = new javax.swing.JSlider();
+        exponentSliderLabel = new javax.swing.JLabel();
+        exponentValueLabel = new javax.swing.JLabel();
         colorSelectionComboBox = new javax.swing.JComboBox();
         tilesPanel = new TransparentMacPanel();
         javax.swing.JLabel urlLabel = new javax.swing.JLabel();
@@ -531,7 +534,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         textureClearButton = new javax.swing.JButton();
         texturePreviewLabel = new javax.swing.JLabel();
         textureScaleFormattedTextField = new javax.swing.JFormattedTextField();
-        setColorPointsButton = new javax.swing.JPanel();
+        exponentLabel = new javax.swing.JPanel();
 
         extentPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -914,9 +917,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridTextArea2.setToolTipText("");
         gridTextArea2.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 17;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
         interpolatedColorPanel.add(gridTextArea2, gridBagConstraints);
 
         gridTextArea1.setEditable(false);
@@ -926,10 +928,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridTextArea1.setText("file:///.../grid1");
         gridTextArea1.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 15;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 16;
         interpolatedColorPanel.add(gridTextArea1, gridBagConstraints);
 
         interpolColorButton.setText("Select Grids");
@@ -940,8 +940,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 14;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.gridy = 15;
+        gridBagConstraints.gridwidth = 3;
         interpolatedColorPanel.add(interpolColorButton, gridBagConstraints);
 
         setColorPointButton.setText("Set Color Points");
@@ -950,7 +950,37 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 setColorPointButtonActionPerformed(evt);
             }
         });
-        interpolatedColorPanel.add(setColorPointButton, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 18;
+        gridBagConstraints.gridwidth = 3;
+        interpolatedColorPanel.add(setColorPointButton, gridBagConstraints);
+
+        exponentSlider.setMinorTickSpacing(10);
+        exponentSlider.setPaintTicks(true);
+        exponentSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                exponentSliderStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 20;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        interpolatedColorPanel.add(exponentSlider, gridBagConstraints);
+
+        exponentSliderLabel.setText("Exponent Value:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 20;
+        interpolatedColorPanel.add(exponentSliderLabel, gridBagConstraints);
+
+        exponentValueLabel.setText("Value");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 20;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        interpolatedColorPanel.add(exponentValueLabel, gridBagConstraints);
 
         colorMethodPanel.add(interpolatedColorPanel, "interpolatedColorCard");
 
@@ -1576,8 +1606,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         add(layersPanel, java.awt.BorderLayout.WEST);
 
-        setColorPointsButton.setLayout(new java.awt.BorderLayout());
-        add(setColorPointsButton, java.awt.BorderLayout.CENTER);
+        exponentLabel.setLayout(new java.awt.BorderLayout());
+        add(exponentLabel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -2070,23 +2100,23 @@ public class MapComposerPanel extends javax.swing.JPanel {
         String str = getSelectedMapLayer().getColorPointsString();
         colorPointsTextArea.setText(str);
         
-        String title = "title";
+        String title = "Set Point Values";
         int res = JOptionPane.showOptionDialog(this, textScrollPane, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
         if (res == JOptionPane.CANCEL_OPTION) {
             return;
         }
 
         ArrayList<Point> points = new ArrayList<>();
-        //Split the text entered in the tet area by newline
+        //Split the text entered in the text area by newline
         String[] colorPointText = colorPointsTextArea.getText().split("\\r?\\n");
         for (String line : colorPointText) {
             String[] tokens = line.split("\\s+"); //split the text in one line by whitespace
             //convert the pieces of the string to float values
             float v1 = Float.parseFloat(tokens[0]);
             float v2 = Float.parseFloat(tokens[1]);
-            float r = Integer.parseInt(tokens[2]);
-            float g = Integer.parseInt(tokens[3]);
-            float b = Integer.parseInt(tokens[4]);
+            double r = Double.parseDouble(tokens[2]);
+            double g = Double.parseDouble(tokens[3]);
+            double b = Double.parseDouble(tokens[4]);
 
             Point point = new Point(0, 0);
             point.setAttribute1(v1);
@@ -2101,6 +2131,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
         // re-render map preview
         reloadHTMLPreviewMap();
     }//GEN-LAST:event_setColorPointButtonActionPerformed
+
+    private void exponentSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_exponentSliderStateChanged
+        
+        getSelectedMapLayer().setExponentP(exponentSlider.getValue());
+        exponentValueLabel.setText(Double.toString(exponentSlider.getValue() / 10.0));
+        reloadHTMLPreviewMap();
+        
+    }//GEN-LAST:event_exponentSliderStateChanged
 
     /**
      * Updates the value of the texture scale slider
@@ -2460,6 +2498,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JFormattedTextField embossSoftnessFormattedTextField;
     private javax.swing.JSlider embossSoftnessSlider;
     private javax.swing.JPanel emptyPanel;
+    private javax.swing.JPanel exponentLabel;
+    private javax.swing.JSlider exponentSlider;
+    private javax.swing.JLabel exponentSliderLabel;
+    private javax.swing.JLabel exponentValueLabel;
     private javax.swing.JPanel extentPanel;
     private javax.swing.JLabel gaussBlurLabel;
     private javax.swing.JSlider gaussBlurSlider;
@@ -2497,7 +2539,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JButton removeLayerButton;
     private javax.swing.JLabel selectColoringTypeLabel;
     private javax.swing.JButton setColorPointButton;
-    private javax.swing.JPanel setColorPointsButton;
     private javax.swing.JRadioButton shadingRadioButton;
     private javax.swing.JCheckBox shadowCheckBox;
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton shadowColorButton;
