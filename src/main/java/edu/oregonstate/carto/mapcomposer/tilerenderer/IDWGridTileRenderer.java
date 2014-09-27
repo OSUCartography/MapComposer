@@ -1,7 +1,5 @@
 package edu.oregonstate.carto.mapcomposer.tilerenderer;
 
-import edu.oregonstate.carto.grid.operators.GridScaleOperator;
-import edu.oregonstate.carto.grid.operators.GridScaleToRangeOperator;
 import edu.oregonstate.carto.tilemanager.GridTile;
 import edu.oregonstate.carto.tilemanager.Tile;
 import edu.oregonstate.carto.tilemanager.TileRenderer;
@@ -43,22 +41,20 @@ public class IDWGridTileRenderer implements TileRenderer {
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                int color = interpolateValue(col, row, attribute1Grid, attribute2Grid);
+                double attr1AtPixel = attribute1Grid.getValue(col, row);
+                double attr2AtPixel = attribute2Grid.getValue(col, row);
+                int color = interpolateValue(attr1AtPixel, attr2AtPixel);
                 colorizedImage.setRGB(col, row, color);
             }
         }
     }
-
-    //Computes an interpolated value. Parameters are the x,y coords of a pixel
-    public int interpolateValue(int col, int row, Grid attribute1Grid, Grid attribute2Grid) {
+    
+    private int interpolateValue(double attr1AtPixel, double attr2AtPixel) {
 
         double wTot = 0;
         double weightedSumR = 0;
         double weightedSumG = 0;
         double weightedSumB = 0;
-
-        double attr1AtPixel = attribute1Grid.getValue(col, row);
-        double attr2AtPixel = attribute2Grid.getValue(col, row);
 
         /* loop over all points. For each point, compute distance */
         for (int i = 0; i <= points.size() - 1; i++) {
@@ -89,8 +85,7 @@ public class IDWGridTileRenderer implements TileRenderer {
     public void setColorPoints(ArrayList<Point> newPoints) {
         this.points = newPoints;
     }
-    
-    
+
     public String getColorPointsString() {
         StringBuilder sb = new StringBuilder();
         for (Point point : points) {
@@ -107,7 +102,7 @@ public class IDWGridTileRenderer implements TileRenderer {
         }
         return sb.toString();
     }
-    
+
     // FIXME hard coded color points for the moment
     private void initPoints() {
         //Assign point x, y values
@@ -166,12 +161,7 @@ public class IDWGridTileRenderer implements TileRenderer {
         try {
             Grid attribute1Grid = ((GridTile) tile1).createMegaTile();
             Grid attribute2Grid = ((GridTile) tile2).createMegaTile();
-
-            // FIXME
-//            attribute1Grid = new GridScaleToRangeOperator(0, 1).operate(attribute1Grid);
-//            attribute2Grid = new GridScaleToRangeOperator(0, 1).operate(attribute2Grid);
             renderImage(img, attribute1Grid, attribute2Grid);
-
         } catch (IOException ex) {
         }
         return img;
@@ -181,4 +171,24 @@ public class IDWGridTileRenderer implements TileRenderer {
     public BufferedImage render(Tile tile) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    /**
+     * Renders an image with all possible colors.
+     *
+     * @param width Width of the image
+     * @param height Height of the image
+     * @return The new image.
+     */
+    public BufferedImage getDiagramImage(int width, int height) {
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                double x = c / (width - 1d);
+                double y = 1d - r / (height - 1d);
+                img.setRGB(c, r, interpolateValue(x, y));
+            }
+        }
+        return img;
+    }
+
 }

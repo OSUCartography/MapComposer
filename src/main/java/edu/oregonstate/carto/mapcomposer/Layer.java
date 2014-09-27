@@ -682,5 +682,12 @@ public class Layer {
     public void setExponentP(double exponentP) {
         idwTileRenderer.setExponentP(exponentP);
     }
+
+    /**
+     * @return the idwTileRenderer
+     */
+    public IDWGridTileRenderer getIdwTileRenderer() {
+        return idwTileRenderer;
+    }
     
 }

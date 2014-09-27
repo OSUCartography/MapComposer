@@ -480,6 +480,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         exponentSlider = new javax.swing.JSlider();
         exponentSliderLabel = new javax.swing.JLabel();
         exponentValueLabel = new javax.swing.JLabel();
+        idwPanel = new edu.oregonstate.carto.mapcomposer.gui.IDWPanel();
         colorSelectionComboBox = new javax.swing.JComboBox();
         tilesPanel = new TransparentMacPanel();
         javax.swing.JLabel urlLabel = new javax.swing.JLabel();
@@ -978,6 +979,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 20;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         interpolatedColorPanel.add(exponentValueLabel, gridBagConstraints);
+        interpolatedColorPanel.add(idwPanel, new java.awt.GridBagConstraints());
 
         colorMethodPanel.add(interpolatedColorPanel, "interpolatedColorCard");
 
@@ -2112,7 +2114,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         getSelectedMapLayer().setExponentP(exponentSlider.getValue());
         exponentValueLabel.setText(Double.toString(exponentSlider.getValue() / 10.0));
         reloadHTMLPreviewMap();
-        
+        idwPanel.repaint();
     }//GEN-LAST:event_exponentSliderStateChanged
 
     /**
@@ -2254,6 +2256,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 this.tintCheckBox.setSelected(false);
                 this.tintColorButton.setColor(Color.BLACK);
             }
+            
+            idwPanel.setIdw(selectedLayer.getIdwTileRenderer());
 
             // texture
             textureURLLabel.setText(selectedLayer.getTextureTileFilePath());
@@ -2479,6 +2483,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JSlider gaussBlurSlider;
     private javax.swing.JTextArea gridTextArea1;
     private javax.swing.JTextArea gridTextArea2;
+    private edu.oregonstate.carto.mapcomposer.gui.IDWPanel idwPanel;
     private javax.swing.JButton interpolColorButton;
     private javax.swing.JLabel interpolColorLabel;
     private javax.swing.JPanel interpolatedColorPanel;
