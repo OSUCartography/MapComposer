@@ -6,12 +6,7 @@ import java.awt.geom.Rectangle2D;
  *
  * @author darbyshj
  */
-public class Point {
-
-    //create fields for the class
-    private double x;
-    private double y;
-    
+public class IDWPoint {
     //color values for the point (0-255)
     private int r; 
     private int g; 
@@ -20,50 +15,8 @@ public class Point {
     private double attribute1; //ex: precipitation
     private double attribute2; //ex: elevation
 
-    //constructor
-    public Point(double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    //Getters & Setters
-    /**
-     * @return the x
-     */
-    public double getX() {
-        return x;
-    }
-
-    /**
-     * @param x the x to set
-     */
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    /**
-     * @return the y
-     */
-    public double getY() {
-        return y;
-    }
-
-    /**
-     * @param y the y to set
-     */
-    public void setY(double y) {
-        this.y = y;
-    }
-
     public String toString() {
-        return " " + x + "/" + y + " ";
-    }
-
-    //Return a bounding box of size 0,0 for points
-    public Rectangle2D getBoundingBox() {
-        Rectangle2D.Double rectangle = new Rectangle2D.Double();
-        rectangle.setRect(x, y, 0, 0);
-        return rectangle;
+        return " " + r + " " + g + " " + b;
     }
 
     /**

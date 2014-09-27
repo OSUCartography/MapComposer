@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class IDWGridTileRenderer implements TileRenderer {
 
-    private ArrayList<Point> points = new ArrayList<>();
+    private ArrayList<IDWPoint> points = new ArrayList<>();
     private double exponentP = 0.2;
 
     public IDWGridTileRenderer() {
@@ -58,7 +58,7 @@ public class IDWGridTileRenderer implements TileRenderer {
 
         /* loop over all points. For each point, compute distance */
         for (int i = 0; i <= points.size() - 1; i++) {
-            Point point = points.get(i);
+            IDWPoint point = points.get(i);
             double attr1Point = point.getAttribute1();
             double attr2Point = point.getAttribute2();
 
@@ -82,13 +82,13 @@ public class IDWGridTileRenderer implements TileRenderer {
         return ((int) weightedSumB) | (((int) weightedSumG) << 8) | (((int) weightedSumR) << 16) | (255 << 24);
     }
 
-    public void setColorPoints(ArrayList<Point> newPoints) {
+    public void setColorPoints(ArrayList<IDWPoint> newPoints) {
         this.points = newPoints;
     }
 
     public String getColorPointsString() {
         StringBuilder sb = new StringBuilder();
-        for (Point point : points) {
+        for (IDWPoint point : points) {
             sb.append(point.getAttribute1());
             sb.append(" ");
             sb.append(point.getAttribute2());
@@ -110,7 +110,7 @@ public class IDWGridTileRenderer implements TileRenderer {
         //Set grid values (normalized 0-1)
 
         //Point 1: 0 elevation and .01 precip = brown
-        Point point1 = new Point(0, 0);
+        IDWPoint point1 = new IDWPoint();
         point1.setR(131);
         point1.setG(116);
         point1.setB(96);
@@ -120,7 +120,7 @@ public class IDWGridTileRenderer implements TileRenderer {
         point1.setAttribute2(0.0);
 
         //Point 2: 0.0 elevation and 1.0 precip = green
-        Point point2 = new Point(200, 200);
+        IDWPoint point2 = new IDWPoint();
         point2.setR(0);
         point2.setG(100);
         point2.setB(0);
@@ -130,7 +130,7 @@ public class IDWGridTileRenderer implements TileRenderer {
         point2.setAttribute2(0.0);
 
         //Point 3: 1 elevation and 1 precip = white
-        Point point3 = new Point(50, 180);
+        IDWPoint point3 = new IDWPoint();
         point3.setR(255);
         point3.setG(255);
         point3.setB(255);
@@ -140,7 +140,7 @@ public class IDWGridTileRenderer implements TileRenderer {
         point3.setAttribute2(1.0);
 
         //Point 4: 1 elevation and 0 precip = best color?
-        Point point4 = new Point(80, 200);
+        IDWPoint point4 = new IDWPoint();
         point4.setR(0);
         point4.setG(0);
         point4.setB(255);

@@ -9,7 +9,7 @@ import edu.oregonstate.carto.mapcomposer.Emboss;
 import edu.oregonstate.carto.mapcomposer.Layer;
 import edu.oregonstate.carto.mapcomposer.Map;
 import edu.oregonstate.carto.mapcomposer.Shadow;
-import edu.oregonstate.carto.mapcomposer.tilerenderer.Point;
+import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWPoint;
 import edu.oregonstate.carto.tilemanager.Tile;
 import edu.oregonstate.carto.tilemanager.TileGenerator;
 import edu.oregonstate.carto.tilemanager.TileSet;
@@ -487,7 +487,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         idwExponentSlider = new javax.swing.JSlider();
         javax.swing.JLabel idwExponentSliderLabel = new javax.swing.JLabel();
         idwExponentValueLabel = new javax.swing.JLabel();
-        idwPanel = new edu.oregonstate.carto.mapcomposer.gui.IDWPanel();
+        idwPanel = new edu.oregonstate.carto.mapcomposer.gui.IDWPreview();
         jLabel8 = new javax.swing.JLabel();
         tilesPanel = new TransparentMacPanel();
         javax.swing.JLabel urlLabel = new javax.swing.JLabel();
@@ -2110,7 +2110,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             return;
         }
 
-        ArrayList<Point> points = new ArrayList<>();
+        ArrayList<IDWPoint> points = new ArrayList<>();
         //Split the text entered in the text area by newline
         String[] colorPointText = colorPointsTextArea.getText().split("\\r?\\n");
         for (String line : colorPointText) {
@@ -2122,7 +2122,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             int g = Integer.parseInt(tokens[3]);
             int b = Integer.parseInt(tokens[4]);
 
-            Point point = new Point(0, 0);
+            IDWPoint point = new IDWPoint();
             point.setAttribute1(v1);
             point.setAttribute2(v2);
             point.setR(r);
@@ -2531,7 +2531,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JButton idwColorPointsButton;
     private javax.swing.JSlider idwExponentSlider;
     private javax.swing.JLabel idwExponentValueLabel;
-    private edu.oregonstate.carto.mapcomposer.gui.IDWPanel idwPanel;
+    private edu.oregonstate.carto.mapcomposer.gui.IDWPreview idwPanel;
     private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
