@@ -674,5 +674,19 @@ public class Layer {
     public IDWGridTileRenderer getIdwTileRenderer() {
         return idwTileRenderer;
     }
+
+    /**
+     * @return the grid1TileSet
+     */
+    public TileSet getGrid1TileSet() {
+        return grid1TileSet;
+    }
+
+    /**
+     * @return the grid2TileSet
+     */
+    public TileSet getGrid2TileSet() {
+        return grid2TileSet;
+    }
     
 }
