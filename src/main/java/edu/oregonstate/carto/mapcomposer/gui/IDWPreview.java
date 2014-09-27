@@ -12,8 +12,11 @@ import javax.swing.JComponent;
  */
 public class IDWPreview extends JComponent {
 
-    protected IDWGridTileRenderer idw = null;
+    private IDWGridTileRenderer idw = null;
 
+    public IDWPreview(){
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

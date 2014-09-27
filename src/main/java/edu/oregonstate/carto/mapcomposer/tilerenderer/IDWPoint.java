@@ -1,5 +1,6 @@
 package edu.oregonstate.carto.mapcomposer.tilerenderer;
 
+import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -61,6 +62,16 @@ public class IDWPoint {
         this.b = b;
     }
 
+    public Color getRGB() {
+        return new Color(r, g, b);
+    }
+    
+    public void setRGB(Color rgb) {
+        this.r = rgb.getRed();
+        this.g = rgb.getGreen();
+        this.b = rgb.getBlue();
+    }
+    
     /**
      * @return the attribute1
      */

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class IDWGridTileRenderer implements TileRenderer {
 
     private ArrayList<IDWPoint> points = new ArrayList<>();
-    private double exponentP = 0.2;
+    private double exponentP = 1.3;
 
     public IDWGridTileRenderer() {
         initPoints();
@@ -35,6 +35,13 @@ public class IDWGridTileRenderer implements TileRenderer {
         this.exponentP = exponentP;
     }
 
+    /**
+     * @return the points
+     */
+    public ArrayList<IDWPoint> getPoints() {
+        return points;
+    }
+
     public void renderImage(BufferedImage colorizedImage, Grid attribute1Grid, Grid attribute2Grid) {
         int cols = colorizedImage.getWidth();
         int rows = colorizedImage.getHeight();
@@ -49,7 +56,7 @@ public class IDWGridTileRenderer implements TileRenderer {
         }
     }
     
-    private int interpolateValue(double attr1AtPixel, double attr2AtPixel) {
+    public int interpolateValue(double attr1AtPixel, double attr2AtPixel) {
 
         double wTot = 0;
         double weightedSumR = 0;
