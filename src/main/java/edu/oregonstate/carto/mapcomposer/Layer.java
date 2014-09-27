@@ -84,7 +84,7 @@ public class Layer {
 
     private Curve[] curves = null;
 
-    private Tint tint = null;
+    private Tint tint = new Tint();
 
     private float textureScale = 1f;
 
@@ -678,11 +678,7 @@ public class Layer {
     public void setColorType(ColorType colorType) {
         this.colorType = colorType;
     }
-        
-    public void setExponentP(double exponentP) {
-        idwTileRenderer.setExponentP(exponentP);
-    }
-
+    
     /**
      * @return the idwTileRenderer
      */

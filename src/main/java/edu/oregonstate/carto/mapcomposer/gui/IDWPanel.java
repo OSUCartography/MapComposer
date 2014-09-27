@@ -23,14 +23,11 @@ public class IDWPanel extends JComponent {
             int y = getInsets().top;
             int w = getWidth() - getInsets().left - getInsets().right;
             int h = getHeight() - getInsets().top - getInsets().bottom;
-            BufferedImage img = idw.getDiagramImage(w, h);
-            g.drawImage(img, x, y, null);
+            if (w > 0 && h > 0) {
+                BufferedImage img = idw.getDiagramImage(w, h);
+                g.drawImage(img, x, y, null);
+            }
         }
-    }
-    
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension (200, 200);
     }
 
     /**

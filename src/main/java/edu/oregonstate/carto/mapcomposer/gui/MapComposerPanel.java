@@ -464,24 +464,22 @@ public class MapComposerPanel extends javax.swing.JPanel {
         javax.swing.JLabel gradationCurveLabel = new javax.swing.JLabel();
         loadCurveFileButton = new javax.swing.JButton();
         removeCurveFileButton = new javax.swing.JButton();
-        javax.swing.JLabel tintLabel = new javax.swing.JLabel();
-        tintCheckBox = new javax.swing.JCheckBox();
         curveTextArea = new javax.swing.JTextArea();
-        interpolColorLabel = new javax.swing.JLabel();
-        colorMethodPanel = new javax.swing.JPanel();
-        emptyPanel = new javax.swing.JPanel();
-        solidColorPanel = new javax.swing.JPanel();
-        tintColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
-        interpolatedColorPanel = new javax.swing.JPanel();
-        gridTextArea2 = new javax.swing.JTextArea();
-        gridTextArea1 = new javax.swing.JTextArea();
-        interpolColorButton = new javax.swing.JButton();
-        setColorPointButton = new javax.swing.JButton();
-        exponentSlider = new javax.swing.JSlider();
-        exponentSliderLabel = new javax.swing.JLabel();
-        exponentValueLabel = new javax.swing.JLabel();
-        idwPanel = new edu.oregonstate.carto.mapcomposer.gui.IDWPanel();
         colorSelectionComboBox = new javax.swing.JComboBox();
+        colorMethodPanel = new TransparentMacPanel();
+        javax.swing.JPanel emptyPanel = new TransparentMacPanel();
+        javax.swing.JPanel solidColorPanel = new TransparentMacPanel();
+        tintColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
+        javax.swing.JPanel interpolatedColorPanel = new TransparentMacPanel();
+        idwGridTextArea2 = new javax.swing.JTextArea();
+        idwGridTextArea1 = new javax.swing.JTextArea();
+        idwGridsButton = new javax.swing.JButton();
+        idwColorPointsButton = new javax.swing.JButton();
+        idwExponentSlider = new javax.swing.JSlider();
+        javax.swing.JLabel idwExponentSliderLabel = new javax.swing.JLabel();
+        idwExponentValueLabel = new javax.swing.JLabel();
+        idwPanel = new edu.oregonstate.carto.mapcomposer.gui.IDWPanel();
+        jLabel8 = new javax.swing.JLabel();
         tilesPanel = new TransparentMacPanel();
         javax.swing.JLabel urlLabel = new javax.swing.JLabel();
         urlTextField = new javax.swing.JTextField();
@@ -745,7 +743,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         blendingModeLabel.setText("Blending:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         colorPanel.add(blendingModeLabel, gridBagConstraints);
 
@@ -761,7 +759,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         colorPanel.add(normalBlendingRadioButton, gridBagConstraints);
@@ -778,14 +776,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         colorPanel.add(multiplyBlendingRadioButton, gridBagConstraints);
 
         opacityLabel.setText("Opacity:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         colorPanel.add(opacityLabel, gridBagConstraints);
 
@@ -803,7 +801,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         colorPanel.add(opacitySlider, gridBagConstraints);
@@ -812,8 +810,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         opacityValueLabel.setText("100");
         opacityValueLabel.setPreferredSize(new java.awt.Dimension(30, 14));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 6;
         colorPanel.add(opacityValueLabel, gridBagConstraints);
 
         gradationCurveLabel.setText("Curve:");
@@ -851,27 +849,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         colorPanel.add(removeCurveFileButton, gridBagConstraints);
 
-        tintLabel.setText("Tint:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        colorPanel.add(tintLabel, gridBagConstraints);
-
-        tintCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        tintCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        tintCheckBox.setName("Apply Tint"); // NOI18N
-        tintCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 11;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        colorPanel.add(tintCheckBox, gridBagConstraints);
-
         curveTextArea.setEditable(false);
         curveTextArea.setColumns(20);
         curveTextArea.setFont(curveTextArea.getFont().deriveFont(curveTextArea.getFont().getSize()-2f));
@@ -881,16 +858,23 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 9;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 15, 0);
         colorPanel.add(curveTextArea, gridBagConstraints);
 
-        interpolColorLabel.setText("Interpolated Color:");
+        colorSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Solid", "Interpolated" }));
+        colorSelectionComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                colorSelectionComboBoxItemStateChanged(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 14;
-        colorPanel.add(interpolColorLabel, gridBagConstraints);
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        colorPanel.add(colorSelectionComboBox, gridBagConstraints);
 
         colorMethodPanel.setLayout(new java.awt.CardLayout());
         colorMethodPanel.add(emptyPanel, "emptyCard");
@@ -907,79 +891,90 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         interpolatedColorPanel.setLayout(new java.awt.GridBagLayout());
 
-        gridTextArea2.setEditable(false);
-        gridTextArea2.setColumns(20);
-        gridTextArea2.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-        gridTextArea2.setRows(5);
-        gridTextArea2.setText("file:///.../grid2");
-        gridTextArea2.setToolTipText("");
-        gridTextArea2.setOpaque(false);
+        idwGridTextArea2.setEditable(false);
+        idwGridTextArea2.setColumns(20);
+        idwGridTextArea2.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        idwGridTextArea2.setRows(5);
+        idwGridTextArea2.setText("file:///.../grid2");
+        idwGridTextArea2.setToolTipText("");
+        idwGridTextArea2.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 17;
-        interpolatedColorPanel.add(gridTextArea2, gridBagConstraints);
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        interpolatedColorPanel.add(idwGridTextArea2, gridBagConstraints);
 
-        gridTextArea1.setEditable(false);
-        gridTextArea1.setColumns(20);
-        gridTextArea1.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-        gridTextArea1.setRows(5);
-        gridTextArea1.setText("file:///.../grid1");
-        gridTextArea1.setOpaque(false);
+        idwGridTextArea1.setEditable(false);
+        idwGridTextArea1.setColumns(20);
+        idwGridTextArea1.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        idwGridTextArea1.setRows(5);
+        idwGridTextArea1.setText("file:///.../grid1");
+        idwGridTextArea1.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 16;
-        interpolatedColorPanel.add(gridTextArea1, gridBagConstraints);
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 3;
+        interpolatedColorPanel.add(idwGridTextArea1, gridBagConstraints);
 
-        interpolColorButton.setText("Select Grids");
-        interpolColorButton.addActionListener(new java.awt.event.ActionListener() {
+        idwGridsButton.setText("Select Grids");
+        idwGridsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                interpolColorButtonActionPerformed(evt);
+                idwGridsButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 15;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 3;
-        interpolatedColorPanel.add(interpolColorButton, gridBagConstraints);
+        interpolatedColorPanel.add(idwGridsButton, gridBagConstraints);
 
-        setColorPointButton.setText("Set Color Points");
-        setColorPointButton.addActionListener(new java.awt.event.ActionListener() {
+        idwColorPointsButton.setText("Set Color Points");
+        idwColorPointsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setColorPointButtonActionPerformed(evt);
+                idwColorPointsButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 18;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 3;
-        interpolatedColorPanel.add(setColorPointButton, gridBagConstraints);
+        interpolatedColorPanel.add(idwColorPointsButton, gridBagConstraints);
 
-        exponentSlider.setMinorTickSpacing(10);
-        exponentSlider.setPaintTicks(true);
-        exponentSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+        idwExponentSlider.setMajorTickSpacing(5);
+        idwExponentSlider.setMaximum(20);
+        idwExponentSlider.setMinorTickSpacing(1);
+        idwExponentSlider.setPaintTicks(true);
+        idwExponentSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                exponentSliderStateChanged(evt);
+                idwExponentSliderStateChanged(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 20;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        interpolatedColorPanel.add(exponentSlider, gridBagConstraints);
+        interpolatedColorPanel.add(idwExponentSlider, gridBagConstraints);
 
-        exponentSliderLabel.setText("Exponent Value:");
+        idwExponentSliderLabel.setText("Exponent");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        interpolatedColorPanel.add(idwExponentSliderLabel, gridBagConstraints);
+
+        idwExponentValueLabel.setText("Value");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 20;
-        interpolatedColorPanel.add(exponentSliderLabel, gridBagConstraints);
-
-        exponentValueLabel.setText("Value");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 20;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        interpolatedColorPanel.add(exponentValueLabel, gridBagConstraints);
-        interpolatedColorPanel.add(idwPanel, new java.awt.GridBagConstraints());
+        interpolatedColorPanel.add(idwExponentValueLabel, gridBagConstraints);
+
+        idwPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        idwPanel.setPreferredSize(new java.awt.Dimension(50, 50));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 3;
+        interpolatedColorPanel.add(idwPanel, gridBagConstraints);
 
         colorMethodPanel.add(interpolatedColorPanel, "interpolatedColorCard");
 
@@ -990,18 +985,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridheight = 3;
         colorPanel.add(colorMethodPanel, gridBagConstraints);
 
-        colorSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No Color", "Solid Color", "Interpolated Color" }));
-        colorSelectionComboBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                colorSelectionComboBoxItemStateChanged(evt);
-            }
-        });
+        jLabel8.setText("Color:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 18;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        colorPanel.add(colorSelectionComboBox, gridBagConstraints);
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        colorPanel.add(jLabel8, gridBagConstraints);
 
         settingsTabbedPane.addTab("Color", colorPanel);
 
@@ -2031,20 +2020,20 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_lockedCheckBoxActionPerformed
 
-    private void interpolColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_interpolColorButtonActionPerformed
+    private void idwGridsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwGridsButtonActionPerformed
         // TODO add your handling code here:
         // Set grids to use for interpolated color
 
         String directoryPath = askTilesDirectory("Select Grid Tile Set 1 of 2");
         if (directoryPath != null) {
-            gridTextArea1.setText("file:///" + directoryPath + "/{z}/{x}/{y}.bil");
+            idwGridTextArea1.setText("file:///" + directoryPath + "/{z}/{x}/{y}.bil");
             this.readGUI();
             addUndo("Set Grid 1");
         }
 
         String directoryPath2 = askTilesDirectory("Select Grid Tile Set 2 of 2");
         if (directoryPath != null) {
-            gridTextArea2.setText("file:///" + directoryPath2 + "/{z}/{x}/{y}.bil");
+            idwGridTextArea2.setText("file:///" + directoryPath2 + "/{z}/{x}/{y}.bil");
             this.readGUI();
             addUndo("Set Grid 2");
         }
@@ -2053,7 +2042,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         writeGUI();
         addUndo("Interpolated Color");
-    }//GEN-LAST:event_interpolColorButtonActionPerformed
+    }//GEN-LAST:event_idwGridsButtonActionPerformed
 
     private void colorSelectionComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_colorSelectionComboBoxItemStateChanged
         int selectedMenuItem = colorSelectionComboBox.getSelectedIndex();
@@ -2072,11 +2061,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
         readGUI();
     }//GEN-LAST:event_colorSelectionComboBoxItemStateChanged
 
-    private void setColorPointButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setColorPointButtonActionPerformed
-        
+    private void idwColorPointsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwColorPointsButtonActionPerformed
+
         String str = getSelectedMapLayer().getColorPointsString();
         colorPointsTextArea.setText(str);
-        
+
         String title = "Set Point Values";
         int res = JOptionPane.showOptionDialog(this, textScrollPane, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
         if (res == JOptionPane.CANCEL_OPTION) {
@@ -2107,15 +2096,15 @@ public class MapComposerPanel extends javax.swing.JPanel {
         getSelectedMapLayer().setColorPoints(points);
         // re-render map preview
         reloadHTMLPreviewMap();
-    }//GEN-LAST:event_setColorPointButtonActionPerformed
+    }//GEN-LAST:event_idwColorPointsButtonActionPerformed
 
-    private void exponentSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_exponentSliderStateChanged
-        
-        getSelectedMapLayer().setExponentP(exponentSlider.getValue());
-        exponentValueLabel.setText(Double.toString(exponentSlider.getValue() / 10.0));
+    private void idwExponentSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_idwExponentSliderStateChanged
+        double exp = idwExponentSlider.getValue() / 10d;
+        getSelectedMapLayer().getIdwTileRenderer().setExponentP(exp);
+        idwExponentValueLabel.setText(Double.toString(exp));
         reloadHTMLPreviewMap();
         idwPanel.repaint();
-    }//GEN-LAST:event_exponentSliderStateChanged
+    }//GEN-LAST:event_idwExponentSliderStateChanged
 
     /**
      * Updates the value of the texture scale slider
@@ -2174,8 +2163,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
         this.curveTextArea.setEnabled(on);
         this.loadCurveFileButton.setEnabled(on);
         this.removeCurveFileButton.setEnabled(on && hasCurveURL);
-        this.tintCheckBox.setEnabled(on);
+        this.colorSelectionComboBox.setEnabled(on);
         this.tintColorButton.setEnabled(on);
+        this.idwGridsButton.setEnabled(on);
+        this.idwColorPointsButton.setEnabled(on);
+        this.idwExponentSlider.setEnabled(on);
+        this.idwPanel.setEnabled(on);
         this.textureSelectionButton.setEnabled(on);
         this.textureClearButton.setEnabled(on);
         this.textureURLLabel.setEnabled(on);
@@ -2203,14 +2196,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
         this.removeLayerButton.setEnabled(on);
         this.moveUpLayerButton.setEnabled(on && selectedLayerID != 0);
         this.moveDownLayerButton.setEnabled(on && selectedLayerID != map.getLayerCount() - 1);
-        this.interpolColorButton.setEnabled(on);
 
         if (selectedLayer == null) {
             this.urlTextField.setText(null);
             this.curveTextArea.setText(null);
             this.maskUrlTextField.setText(null);
-            this.gridTextArea1.setText(null);
-            this.gridTextArea2.setText(null);
+            this.idwGridTextArea1.setText(null);
+            this.idwGridTextArea2.setText(null);
             return;
         }
 
@@ -2249,14 +2241,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.curveTextArea.setText(selectedLayer.getCurveURL());
 
             // tinting
-            if (selectedLayer.getTint() != null) {
-                this.tintCheckBox.setSelected(true);
-                this.tintColorButton.setColor(selectedLayer.getTint().getTintColor());
-            } else {
-                this.tintCheckBox.setSelected(false);
-                this.tintColorButton.setColor(Color.BLACK);
-            }
-            
+            tintColorButton.setColor(selectedLayer.getTint().getTintColor());
+            int exp = (int) Math.round(selectedLayer.getIdwTileRenderer().getExponentP() * 10);
+            idwExponentSlider.setValue(exp);
             idwPanel.setIdw(selectedLayer.getIdwTileRenderer());
 
             // texture
@@ -2363,13 +2350,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 break;
             case 2:
                 getSelectedMapLayer().setColorType(Layer.ColorType.INTERPOLATE);
-                
+
                 break;
 
         }
-     
+
         // FIXME
-        layer.setGridTileURLTemplates(gridTextArea1.getText(), gridTextArea2.getText());
+        layer.setGridTileURLTemplates(idwGridTextArea1.getText(), idwGridTextArea2.getText());
 
         // texture
         layer.setTextureScale(this.readTextureScale());
@@ -2473,21 +2460,19 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel embossPanel;
     private javax.swing.JFormattedTextField embossSoftnessFormattedTextField;
     private javax.swing.JSlider embossSoftnessSlider;
-    private javax.swing.JPanel emptyPanel;
     private javax.swing.JPanel exponentLabel;
-    private javax.swing.JSlider exponentSlider;
-    private javax.swing.JLabel exponentSliderLabel;
-    private javax.swing.JLabel exponentValueLabel;
     private javax.swing.JPanel extentPanel;
     private javax.swing.JLabel gaussBlurLabel;
     private javax.swing.JSlider gaussBlurSlider;
-    private javax.swing.JTextArea gridTextArea1;
-    private javax.swing.JTextArea gridTextArea2;
+    private javax.swing.JButton idwColorPointsButton;
+    private javax.swing.JSlider idwExponentSlider;
+    private javax.swing.JLabel idwExponentValueLabel;
+    private javax.swing.JTextArea idwGridTextArea1;
+    private javax.swing.JTextArea idwGridTextArea2;
+    private javax.swing.JButton idwGridsButton;
     private edu.oregonstate.carto.mapcomposer.gui.IDWPanel idwPanel;
-    private javax.swing.JButton interpolColorButton;
-    private javax.swing.JLabel interpolColorLabel;
-    private javax.swing.JPanel interpolatedColorPanel;
     private javax.swing.JFormattedTextField jFormattedTextField3;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private edu.oregonstate.carto.mapcomposer.gui.DraggableList layerList;
     private javax.swing.JScrollPane layerListScrollPane;
@@ -2513,13 +2498,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel opacityValueLabel;
     private javax.swing.JButton removeCurveFileButton;
     private javax.swing.JButton removeLayerButton;
-    private javax.swing.JButton setColorPointButton;
     private javax.swing.JCheckBox shadowCheckBox;
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton shadowColorButton;
     private javax.swing.JSlider shadowFuziSlider;
     private javax.swing.JLabel shadowOffsetLabel;
     private javax.swing.JSlider shadowOffsetSlider;
-    private javax.swing.JPanel solidColorPanel;
     private javax.swing.JFormattedTextField southField;
     private javax.swing.JScrollPane textScrollPane;
     private javax.swing.JButton textureClearButton;
@@ -2529,7 +2512,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JButton textureSelectionButton;
     private javax.swing.JLabel textureURLLabel;
     private javax.swing.JPanel tilesPanel;
-    private javax.swing.JCheckBox tintCheckBox;
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton tintColorButton;
     private javax.swing.JCheckBox tmsCheckBox;
     private javax.swing.JTextField urlTextField;
