@@ -13,9 +13,9 @@ public class Point {
     private double y;
     
     //color values for the point (0-255)
-    private double r; 
-    private double g; 
-    private double b;
+    private int r; 
+    private int g; 
+    private int b;
     
     private double attribute1; //ex: precipitation
     private double attribute2; //ex: elevation
@@ -76,7 +76,7 @@ public class Point {
     /**
      * @param r the r to set
      */
-    public void setR(double r) {
+    public void setR(int r) {
         this.r = r;
     }
 
@@ -90,7 +90,7 @@ public class Point {
     /**
      * @param g the g to set
      */
-    public void setG(double g) {
+    public void setG(int g) {
         this.g = g;
     }
 
@@ -104,7 +104,7 @@ public class Point {
     /**
      * @param b the b to set
      */
-    public void setB(double b) {
+    public void setB(int b) {
         this.b = b;
     }
 

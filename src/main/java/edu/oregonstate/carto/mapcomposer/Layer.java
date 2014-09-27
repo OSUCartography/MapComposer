@@ -13,14 +13,12 @@ import edu.oregonstate.carto.grid.operators.GridToImageOperator;
 import edu.oregonstate.carto.importer.AdobeCurveReader;
 import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWGridTileRenderer;
 import edu.oregonstate.carto.mapcomposer.tilerenderer.ImageTileRenderer;
-import edu.oregonstate.carto.mapcomposer.tilerenderer.Point;
 import edu.oregonstate.carto.mapcomposer.tilerenderer.ShadingGridTileRenderer;
 import edu.oregonstate.carto.mapcomposer.utils.TintFilter;
 import edu.oregonstate.carto.tilemanager.DumbCache;
 import edu.oregonstate.carto.tilemanager.GridTile;
 import edu.oregonstate.carto.tilemanager.ImageTile;
 import edu.oregonstate.carto.tilemanager.Tile;
-import edu.oregonstate.carto.tilemanager.TileRenderer;
 import edu.oregonstate.carto.tilemanager.TileSet;
 import edu.oregonstate.carto.tilemanager.util.Grid;
 import java.awt.AlphaComposite;
@@ -33,7 +31,6 @@ import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -655,14 +652,6 @@ public class Layer {
             maskValues = maskValues.trim();
         }
         this.maskValues = maskValues;
-    }
-
-    public void setColorPoints(ArrayList<Point> points) {
-        idwTileRenderer.setColorPoints(points);
-    }
-    
-    public String getColorPointsString() {
-        return idwTileRenderer.getColorPointsString();
     }
 
     /**

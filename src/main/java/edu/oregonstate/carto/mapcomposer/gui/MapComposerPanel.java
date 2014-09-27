@@ -2063,7 +2063,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     private void idwColorPointsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwColorPointsButtonActionPerformed
 
-        String str = getSelectedMapLayer().getColorPointsString();
+        String str = getSelectedMapLayer().getIdwTileRenderer().getColorPointsString();
         colorPointsTextArea.setText(str);
 
         String title = "Set Point Values";
@@ -2080,9 +2080,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
             //convert the pieces of the string to float values
             float v1 = Float.parseFloat(tokens[0]);
             float v2 = Float.parseFloat(tokens[1]);
-            double r = Double.parseDouble(tokens[2]);
-            double g = Double.parseDouble(tokens[3]);
-            double b = Double.parseDouble(tokens[4]);
+            int r = Integer.parseInt(tokens[2]);
+            int g = Integer.parseInt(tokens[3]);
+            int b = Integer.parseInt(tokens[4]);
 
             Point point = new Point(0, 0);
             point.setAttribute1(v1);
@@ -2093,7 +2093,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             points.add(point);
         }
 
-        getSelectedMapLayer().setColorPoints(points);
+        getSelectedMapLayer().getIdwTileRenderer().setColorPoints(points);
         // re-render map preview
         reloadHTMLPreviewMap();
     }//GEN-LAST:event_idwColorPointsButtonActionPerformed
