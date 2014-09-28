@@ -2280,6 +2280,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         String title = "Tile Sets for IDW Interpolation";
         JOptionPane.showOptionDialog(this, idwTileSetsPanel, title,
                 JOptionPane.YES_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+        readGUI();
     }//GEN-LAST:event_idwTileSetsButtonActionPerformed
 
     /**
@@ -2421,9 +2422,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
             // tinting
             tintColorButton.setColor(selectedLayer.getTint().getTintColor());
             grid1URLTextField.setText(selectedLayer.getGrid1TileSet().getUrlTemplate());
-            grid1TMSCheckBox.setEnabled(selectedLayer.getGrid1TileSet().isTMSSchema());
+            grid1TMSCheckBox.setSelected(selectedLayer.getGrid1TileSet().isTMSSchema());
             grid2URLTextField.setText(selectedLayer.getGrid2TileSet().getUrlTemplate());
-            grid2TMSCheckBox.setEnabled(selectedLayer.getGrid2TileSet().isTMSSchema());
+            grid2TMSCheckBox.setSelected(selectedLayer.getGrid2TileSet().isTMSSchema());
             int exp = (int) Math.round(selectedLayer.getIdwTileRenderer().getExponentP() * 10);
             idwExponentSlider.setValue(exp);
             idwPreview.setIdw(selectedLayer.getIdwTileRenderer());
@@ -2531,7 +2532,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 getSelectedMapLayer().setColorType(Layer.ColorType.INTERPOLATE);
                 String url1 = grid1URLTextField.getText();
                 String url2 = grid2URLTextField.getText();
-                layer.setGridTileURLTemplates(url1, url2);
+                layer.setIDWGridTileURLTemplates(url1, url2);
+                layer.getGrid1TileSet().setTMSSchema(grid1TMSCheckBox.isSelected());
+                layer.getGrid2TileSet().setTMSSchema(grid2TMSCheckBox.isSelected());
                 break;
         }
 

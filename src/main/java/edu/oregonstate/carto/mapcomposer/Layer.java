@@ -632,7 +632,7 @@ public class Layer {
         return getName();
     }
 
-    public void setGridTileURLTemplates(String urlTemplate1, String urlTemplate2) {
+    public void setIDWGridTileURLTemplates(String urlTemplate1, String urlTemplate2) {
         grid1TileSet.setUrlTemplate(urlTemplate1);
         grid2TileSet.setUrlTemplate(urlTemplate2);
     }
