@@ -226,7 +226,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 String horLabel = getSelectedMapLayer().getGrid1TileSet().getUrlTemplate();
                 if (horLabel != null) {
                     String[] tokens = horLabel.split("/");
-                    if (tokens.length >= 4) {
+                    if (tokens.length >= 5) {
                         horLabel = tokens[tokens.length - 4];
                     }
                 }
