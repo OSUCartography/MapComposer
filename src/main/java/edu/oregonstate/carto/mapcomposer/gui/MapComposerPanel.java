@@ -243,10 +243,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
                 idwPanel.setIdw(getSelectedMapLayer().getIdwTileRenderer());
                 String title = "IDW Color Interpolation";
+                Object[] options = {"OK"};
+                JOptionPane.showOptionDialog(panel, idwColorPanel, title,
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
-                int res = JOptionPane.showOptionDialog(panel, idwColorPanel, title,
-                        JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
-                
                 // re-render map preview
                 reloadHTMLPreviewMap();
                 addUndo("IDW Color Points");
@@ -498,9 +498,20 @@ public class MapComposerPanel extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         idwColorChooser = new javax.swing.JColorChooser();
-        idwApplyButton = new javax.swing.JButton();
         idwHorizontalLabel = new javax.swing.JLabel();
         idwVerticalLabel = new edu.oregonstate.carto.mapcomposer.gui.RotatedLabel();
+        javax.swing.JPanel idwButtonPanel = new javax.swing.JPanel();
+        idwTileSetsButton = new javax.swing.JButton();
+        idwApplyButton = new javax.swing.JButton();
+        idwTileSetsPanel = new javax.swing.JPanel();
+        javax.swing.JLabel grid1URLLabel = new javax.swing.JLabel();
+        grid1URLTextField = new javax.swing.JTextField();
+        grid1TMSCheckBox = new javax.swing.JCheckBox();
+        grid1LoadDirectoryPathButton = new javax.swing.JButton();
+        javax.swing.JLabel grid2URLLabel = new javax.swing.JLabel();
+        grid2URLTextField = new javax.swing.JTextField();
+        grid2TMSCheckBox = new javax.swing.JCheckBox();
+        grid2LoadDirectoryPathButton = new javax.swing.JButton();
         layersPanel = new javax.swing.JPanel();
         Icon folderIcon = UIManager.getDefaults().getIcon("FileView.directoryIcon");
         int iconH = folderIcon.getIconHeight();
@@ -533,14 +544,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         javax.swing.JPanel solidColorPanel = new TransparentMacPanel();
         tintColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
         javax.swing.JPanel interpolatedColorPanel = new TransparentMacPanel();
-        javax.swing.JLabel grid1URLLabel = new javax.swing.JLabel();
-        grid1URLTextField = new javax.swing.JTextField();
-        grid1TMSCheckBox = new javax.swing.JCheckBox();
-        grid1LoadDirectoryPathButton = new javax.swing.JButton();
-        javax.swing.JLabel grid2URLLabel = new javax.swing.JLabel();
-        grid2URLTextField = new javax.swing.JTextField();
-        grid2TMSCheckBox = new javax.swing.JCheckBox();
-        grid2LoadDirectoryPathButton = new javax.swing.JButton();
         idwPreview = new edu.oregonstate.carto.mapcomposer.gui.IDWPreview();
         jLabel8 = new javax.swing.JLabel();
         tilesPanel = new TransparentMacPanel();
@@ -788,20 +791,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         idwColorPanel.add(idwColorChooser, gridBagConstraints);
 
-        idwApplyButton.setText("Apply");
-        idwApplyButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                idwApplyButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
-        idwColorPanel.add(idwApplyButton, gridBagConstraints);
-
         idwHorizontalLabel.setFont(idwHorizontalLabel.getFont().deriveFont(idwHorizontalLabel.getFont().getSize()-2f));
         idwHorizontalLabel.setText("horLabel");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -817,6 +806,122 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         idwColorPanel.add(idwVerticalLabel, gridBagConstraints);
+
+        idwButtonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 5));
+
+        idwTileSetsButton.setText("Tile Sets…");
+        idwTileSetsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idwTileSetsButtonActionPerformed(evt);
+            }
+        });
+        idwButtonPanel.add(idwTileSetsButton);
+
+        idwApplyButton.setText("Apply");
+        idwApplyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idwApplyButtonActionPerformed(evt);
+            }
+        });
+        idwButtonPanel.add(idwApplyButton);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 4;
+        idwColorPanel.add(idwButtonPanel, gridBagConstraints);
+
+        idwTileSetsPanel.setLayout(new java.awt.GridBagLayout());
+
+        grid1URLLabel.setText("Grid 1 URL (Horizontal Axis)");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        idwTileSetsPanel.add(grid1URLLabel, gridBagConstraints);
+
+        grid1URLTextField.setFont(grid1URLTextField.getFont().deriveFont(grid1URLTextField.getFont().getSize()-2f));
+        grid1URLTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
+        grid1URLTextField.setPreferredSize(new java.awt.Dimension(200, 28));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        idwTileSetsPanel.add(grid1URLTextField, gridBagConstraints);
+
+        grid1TMSCheckBox.setText("TMS");
+        grid1TMSCheckBox.setName("Tiles TMS"); // NOI18N
+        grid1TMSCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MapComposerPanel.this.actionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        idwTileSetsPanel.add(grid1TMSCheckBox, gridBagConstraints);
+
+        grid1LoadDirectoryPathButton.setIcon(folderIcon);
+        grid1LoadDirectoryPathButton.setPreferredSize(new Dimension(iconW + 18, iconH + 18));
+        grid1LoadDirectoryPathButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                grid1LoadDirectoryPathButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        idwTileSetsPanel.add(grid1LoadDirectoryPathButton, gridBagConstraints);
+
+        grid2URLLabel.setText("Grid 2 URL (Vertical Axis)");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        idwTileSetsPanel.add(grid2URLLabel, gridBagConstraints);
+
+        grid2URLTextField.setFont(grid2URLTextField.getFont().deriveFont(grid2URLTextField.getFont().getSize()-2f));
+        grid2URLTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
+        grid2URLTextField.setPreferredSize(new java.awt.Dimension(200, 28));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        idwTileSetsPanel.add(grid2URLTextField, gridBagConstraints);
+
+        grid2TMSCheckBox.setText("TMS");
+        grid2TMSCheckBox.setName("Tiles TMS"); // NOI18N
+        grid2TMSCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MapComposerPanel.this.actionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        idwTileSetsPanel.add(grid2TMSCheckBox, gridBagConstraints);
+
+        grid2LoadDirectoryPathButton.setIcon(folderIcon);
+        grid2LoadDirectoryPathButton.setPreferredSize(new Dimension(iconW + 18, iconH + 18));
+        grid2LoadDirectoryPathButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                grid2LoadDirectoryPathButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        idwTileSetsPanel.add(grid2LoadDirectoryPathButton, gridBagConstraints);
 
         setLayout(new java.awt.BorderLayout());
 
@@ -1060,98 +1165,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         interpolatedColorPanel.setLayout(new java.awt.GridBagLayout());
 
-        grid1URLLabel.setText("Grid 1 URL");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        interpolatedColorPanel.add(grid1URLLabel, gridBagConstraints);
-
-        grid1URLTextField.setFont(grid1URLTextField.getFont().deriveFont(grid1URLTextField.getFont().getSize()-2f));
-        grid1URLTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
-        grid1URLTextField.setPreferredSize(new java.awt.Dimension(200, 28));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        interpolatedColorPanel.add(grid1URLTextField, gridBagConstraints);
-
-        grid1TMSCheckBox.setText("TMS");
-        grid1TMSCheckBox.setName("Tiles TMS"); // NOI18N
-        grid1TMSCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        interpolatedColorPanel.add(grid1TMSCheckBox, gridBagConstraints);
-
-        grid1LoadDirectoryPathButton.setIcon(folderIcon);
-        grid1LoadDirectoryPathButton.setPreferredSize(new Dimension(iconW + 18, iconH + 18));
-        grid1LoadDirectoryPathButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                grid1LoadDirectoryPathButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        interpolatedColorPanel.add(grid1LoadDirectoryPathButton, gridBagConstraints);
-
-        grid2URLLabel.setText("Grid 2 URL");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        interpolatedColorPanel.add(grid2URLLabel, gridBagConstraints);
-
-        grid2URLTextField.setFont(grid2URLTextField.getFont().deriveFont(grid2URLTextField.getFont().getSize()-2f));
-        grid2URLTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
-        grid2URLTextField.setPreferredSize(new java.awt.Dimension(200, 28));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        interpolatedColorPanel.add(grid2URLTextField, gridBagConstraints);
-
-        grid2TMSCheckBox.setText("TMS");
-        grid2TMSCheckBox.setName("Tiles TMS"); // NOI18N
-        grid2TMSCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        interpolatedColorPanel.add(grid2TMSCheckBox, gridBagConstraints);
-
-        grid2LoadDirectoryPathButton.setIcon(folderIcon);
-        grid2LoadDirectoryPathButton.setPreferredSize(new Dimension(iconW + 18, iconH + 18));
-        grid2LoadDirectoryPathButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                grid2LoadDirectoryPathButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        interpolatedColorPanel.add(grid2LoadDirectoryPathButton, gridBagConstraints);
-
         idwPreview.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        idwPreview.setPreferredSize(new java.awt.Dimension(50, 50));
+        idwPreview.setPreferredSize(new java.awt.Dimension(70, 70));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 15;
@@ -2251,11 +2266,21 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 idwColorChooser.setColor(pt.getColor());
             }
         }
+        if ("colorChanged".equals(evt.getPropertyName())) {
+            idwPreview.repaint();
+        }
     }//GEN-LAST:event_idwPanelPropertyChange
 
     private void idwApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwApplyButtonActionPerformed
         reloadHTMLPreviewMap();
     }//GEN-LAST:event_idwApplyButtonActionPerformed
+
+    private void idwTileSetsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwTileSetsButtonActionPerformed
+        Object[] options = {"OK"};
+        String title = "Tile Sets for IDW Interpolation";
+        JOptionPane.showOptionDialog(this, idwTileSetsPanel, title,
+                JOptionPane.YES_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+    }//GEN-LAST:event_idwTileSetsButtonActionPerformed
 
     /**
      * Updates the value of the texture scale slider
@@ -2630,6 +2655,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel idwHorizontalLabel;
     private edu.oregonstate.carto.mapcomposer.gui.IDWPanel idwPanel;
     private edu.oregonstate.carto.mapcomposer.gui.IDWPreview idwPreview;
+    private javax.swing.JButton idwTileSetsButton;
+    private javax.swing.JPanel idwTileSetsPanel;
     private edu.oregonstate.carto.mapcomposer.gui.RotatedLabel idwVerticalLabel;
     private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JLabel jLabel10;

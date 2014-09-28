@@ -176,6 +176,7 @@ public class IDWPanel extends IDWPreview {
         attr2 = Math.min(Math.max(0d, attr2), 1d);
         selectedPoint.setAttribute2(attr2);
         repaint();
+        firePropertyChange("colorChanged", null, null);
     }
 
     /**
@@ -200,6 +201,7 @@ public class IDWPanel extends IDWPreview {
         if (selectedPoint != null) {
             selectedPoint.setColor(color);
             repaint();
+            firePropertyChange("colorChanged", null, null);
         }
     }
 }
