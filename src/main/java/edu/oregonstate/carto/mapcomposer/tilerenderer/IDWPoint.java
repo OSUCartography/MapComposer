@@ -62,11 +62,11 @@ public class IDWPoint {
         this.b = b;
     }
 
-    public Color getRGB() {
+    public Color getColor() {
         return new Color(r, g, b);
     }
     
-    public void setRGB(Color rgb) {
+    public void setColor(Color rgb) {
         this.r = rgb.getRed();
         this.g = rgb.getGreen();
         this.b = rgb.getBlue();
