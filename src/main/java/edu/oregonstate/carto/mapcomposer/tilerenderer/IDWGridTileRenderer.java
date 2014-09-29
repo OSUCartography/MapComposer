@@ -7,11 +7,14 @@ import edu.oregonstate.carto.tilemanager.util.Grid;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 /**
  *
  * @author darbyshj
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class IDWGridTileRenderer implements TileRenderer {
 
     private ArrayList<IDWPoint> points = new ArrayList<>();

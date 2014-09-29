@@ -1,12 +1,14 @@
 package edu.oregonstate.carto.mapcomposer.tilerenderer;
 
 import java.awt.Color;
-import java.awt.geom.Rectangle2D;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 /**
  *
  * @author darbyshj
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class IDWPoint {
     //color values for the point (0-255)
     private int r; 

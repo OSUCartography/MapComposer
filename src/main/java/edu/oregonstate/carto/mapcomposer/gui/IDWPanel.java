@@ -68,7 +68,7 @@ public class IDWPanel extends IDWPreview {
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (getSelectedPoint() != null && e.getClickCount() == 1) {
+                if (getSelectedPoint() != null) {
                     moveIDWPoint(e.getX(), e.getY());
                 }
             }

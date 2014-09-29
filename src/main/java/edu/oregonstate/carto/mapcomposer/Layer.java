@@ -96,12 +96,8 @@ public class Layer {
     //gaussian blur
     private float gaussBlur = 0;
 
-    // FIXME
-    @XmlTransient
     private final IDWGridTileRenderer idwTileRenderer = new IDWGridTileRenderer();
-    @XmlTransient
     private final TileSet grid1TileSet = new TileSet(null, new DumbCache(), true);
-    @XmlTransient
     private final TileSet grid2TileSet = new TileSet(null, new DumbCache(), true);
 
     private ColorType colorType = ColorType.NONE;
