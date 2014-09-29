@@ -5,6 +5,8 @@
  */
 package edu.oregonstate.carto.mapcomposer.gui;
 
+import edu.oregonstate.carto.importer.AdobeCurveReader;
+import edu.oregonstate.carto.mapcomposer.Curve;
 import edu.oregonstate.carto.mapcomposer.Emboss;
 import edu.oregonstate.carto.mapcomposer.Layer;
 import edu.oregonstate.carto.mapcomposer.Map;
@@ -512,6 +514,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         grid2URLTextField = new javax.swing.JTextField();
         grid2TMSCheckBox = new javax.swing.JCheckBox();
         grid2LoadDirectoryPathButton = new javax.swing.JButton();
+        curvesPanel = new javax.swing.JPanel();
+        gradationGraph = new edu.oregonstate.carto.mapcomposer.gui.GradationGraph();
+        loadCurveFileButton = new javax.swing.JButton();
+        resetCurveFileButton = new javax.swing.JButton();
         layersPanel = new javax.swing.JPanel();
         Icon folderIcon = UIManager.getDefaults().getIcon("FileView.directoryIcon");
         int iconH = folderIcon.getIconHeight();
@@ -534,10 +540,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         javax.swing.JLabel opacityLabel = new javax.swing.JLabel();
         opacitySlider = new javax.swing.JSlider();
         opacityValueLabel = new javax.swing.JLabel();
-        javax.swing.JLabel gradationCurveLabel = new javax.swing.JLabel();
-        loadCurveFileButton = new javax.swing.JButton();
-        removeCurveFileButton = new javax.swing.JButton();
-        curveTextArea = new javax.swing.JTextArea();
         colorSelectionComboBox = new javax.swing.JComboBox();
         colorMethodPanel = new TransparentMacPanel();
         javax.swing.JPanel emptyPanel = new TransparentMacPanel();
@@ -545,7 +547,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         tintColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
         javax.swing.JPanel interpolatedColorPanel = new TransparentMacPanel();
         idwPreview = new edu.oregonstate.carto.mapcomposer.gui.IDWPreview();
-        jLabel8 = new javax.swing.JLabel();
+        colorLabel = new javax.swing.JLabel();
+        curvesButton = new javax.swing.JButton();
         tilesPanel = new TransparentMacPanel();
         javax.swing.JLabel urlLabel = new javax.swing.JLabel();
         urlTextField = new javax.swing.JTextField();
@@ -923,6 +926,42 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         idwTileSetsPanel.add(grid2LoadDirectoryPathButton, gridBagConstraints);
 
+        curvesPanel.setLayout(new java.awt.GridBagLayout());
+
+        gradationGraph.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                gradationGraphPropertyChange(evt);
+            }
+        });
+        curvesPanel.add(gradationGraph, new java.awt.GridBagConstraints());
+
+        loadCurveFileButton.setText("Load Photoshop ACV Curve File");
+        loadCurveFileButton.setToolTipText("Load an ACV Photoshop curve file");
+        loadCurveFileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadCurveFileButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(8, 0, 8, 0);
+        curvesPanel.add(loadCurveFileButton, gridBagConstraints);
+
+        resetCurveFileButton.setText("Reset Curves");
+        resetCurveFileButton.setToolTipText("Remove the curve");
+        resetCurveFileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetCurveFileButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        curvesPanel.add(resetCurveFileButton, gridBagConstraints);
+
         setLayout(new java.awt.BorderLayout());
 
         layersPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -1088,55 +1127,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 6;
         colorPanel.add(opacityValueLabel, gridBagConstraints);
 
-        gradationCurveLabel.setText("Curve:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        colorPanel.add(gradationCurveLabel, gridBagConstraints);
-
-        loadCurveFileButton.setText("File");
-        loadCurveFileButton.setToolTipText("Load an ACV Photoshop curve file");
-        loadCurveFileButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadCurveFileButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 2;
-        colorPanel.add(loadCurveFileButton, gridBagConstraints);
-
-        removeCurveFileButton.setText("Remove");
-        removeCurveFileButton.setToolTipText("Remove the curve");
-        removeCurveFileButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeCurveFileButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        colorPanel.add(removeCurveFileButton, gridBagConstraints);
-
-        curveTextArea.setEditable(false);
-        curveTextArea.setColumns(20);
-        curveTextArea.setFont(curveTextArea.getFont().deriveFont(curveTextArea.getFont().getSize()-2f));
-        curveTextArea.setRows(1);
-        curveTextArea.setText("file:///../curve.acv");
-        curveTextArea.setOpaque(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 15, 0);
-        colorPanel.add(curveTextArea, gridBagConstraints);
-
         colorSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Solid", "Interpolated" }));
         colorSelectionComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -1182,12 +1172,25 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.gridheight = 3;
         colorPanel.add(colorMethodPanel, gridBagConstraints);
 
-        jLabel8.setText("Color:");
+        colorLabel.setText("Color:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        colorPanel.add(jLabel8, gridBagConstraints);
+        colorPanel.add(colorLabel, gridBagConstraints);
+
+        curvesButton.setText("Curves…");
+        curvesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                curvesButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        colorPanel.add(curvesButton, gridBagConstraints);
 
         settingsTabbedPane.addTab("Color", colorPanel);
 
@@ -2116,11 +2119,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
         if (filePath == null) {
             return;
         }
-        curveTextArea.setText("file:///" + filePath);
-        readGUI();
-
-        // update enable state of remove button
-        writeGUI();
+        String fileURL = "file:///" + filePath;
+        getSelectedMapLayer().loadCurve(fileURL);
+        gradationGraph.setCurves(getSelectedMapLayer().getCurves());
+        reloadHTMLPreviewMap();
         addUndo("Load Curve");
     }//GEN-LAST:event_loadCurveFileButtonActionPerformed
 
@@ -2153,12 +2155,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
     }
 
-    private void removeCurveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeCurveFileButtonActionPerformed
-        getSelectedMapLayer().setCurveURL(null);
-        // update enable state of remove button and curve text area
-        writeGUI();
-        addUndo("Remove Curve");
-    }//GEN-LAST:event_removeCurveFileButtonActionPerformed
+    private void resetCurveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetCurveFileButtonActionPerformed
+        Curve curve = new Curve();
+        getSelectedMapLayer().setCurve(curve);
+        gradationGraph.setCurve(curve);
+        reloadHTMLPreviewMap();
+        addUndo("Reset Curve");
+    }//GEN-LAST:event_resetCurveFileButtonActionPerformed
 
     private String askTilesDirectory(String msg) {
         String directoryPath;
@@ -2283,6 +2286,21 @@ public class MapComposerPanel extends javax.swing.JPanel {
         readGUI();
     }//GEN-LAST:event_idwTileSetsButtonActionPerformed
 
+    private void curvesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_curvesButtonActionPerformed
+        Object[] options = {"OK"};
+        String title = "Curves";
+        gradationGraph.setCurves(getSelectedMapLayer().getCurves());
+        JOptionPane.showOptionDialog(this, curvesPanel, title,
+                JOptionPane.YES_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+        readGUI();
+    }//GEN-LAST:event_curvesButtonActionPerformed
+
+    private void gradationGraphPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_gradationGraphPropertyChange
+        if ("GradationGraph curve changed".equals(evt.getPropertyName())) {
+            reloadHTMLPreviewMap();
+        }
+    }//GEN-LAST:event_gradationGraphPropertyChange
+
     /**
      * Updates the value of the texture scale slider
      *
@@ -2329,7 +2347,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         // enable or disable user interface elements depending on whether
         // a layer is currently selected
         final boolean on = selectedLayer != null && !selectedLayer.isLocked();
-        boolean hasCurveURL = selectedLayer != null && selectedLayer.getCurveURL() != null;
         this.visibleCheckBox.setEnabled(on);
         this.urlTextField.setEnabled(on);
         this.loadDirectoryPathButton.setEnabled(on);
@@ -2337,9 +2354,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         this.normalBlendingRadioButton.setEnabled(on);
         this.multiplyBlendingRadioButton.setEnabled(on);
         this.opacitySlider.setEnabled(on);
-        this.curveTextArea.setEnabled(on);
-        this.loadCurveFileButton.setEnabled(on);
-        this.removeCurveFileButton.setEnabled(on && hasCurveURL);
+        this.curvesButton.setEnabled(on);
+        this.resetCurveFileButton.setEnabled(on);
         this.colorSelectionComboBox.setEnabled(on);
         this.tintColorButton.setEnabled(on);
         this.grid1URLTextField.setEnabled(on);
@@ -2380,7 +2396,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         if (selectedLayer == null) {
             this.urlTextField.setText(null);
-            this.curveTextArea.setText(null);
             this.maskUrlTextField.setText(null);
             return;
         }
@@ -2416,8 +2431,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.opacitySlider.setValue((int) (selectedLayer.getOpacity() * 100));
             opacityValueLabel.setText(Integer.toString(opacitySlider.getValue()));
 
-            // curve
-            this.curveTextArea.setText(selectedLayer.getCurveURL());
+            // curves
+            Curve[] curves = selectedLayer.getCurves();
+            gradationGraph.setCurves(curves);
 
             // tinting
             tintColorButton.setColor(selectedLayer.getTint().getTintColor());
@@ -2503,9 +2519,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 ? Layer.BlendType.NORMAL : Layer.BlendType.MULTIPLY);
         layer.setOpacity(opacitySlider.getValue() / 100.f);
 
-        // curve
-        layer.setCurveURL(curveTextArea.getText());
-
         // URL
         layer.setTileSetURLTemplate(urlTextField.getText());
 
@@ -2518,6 +2531,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layer.setMaskTileSetTMSSchema(maskTMSCheckBox.isSelected());
         layer.setMaskBlur(this.maskBlurSlider.getValue() / 10f);
         layer.setMaskValues(maskValuesTextField.getText());
+
+        // curves
+        getSelectedMapLayer().setCurves(gradationGraph.getCurves());
 
         // tint
         switch (colorSelectionComboBox.getSelectedIndex()) {
@@ -2622,11 +2638,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel blurPanel;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.JLabel colorLabel;
     private javax.swing.JPanel colorMethodPanel;
     private javax.swing.JPanel colorPanel;
     private javax.swing.JTextArea colorPointsTextArea;
     private javax.swing.JComboBox colorSelectionComboBox;
-    private javax.swing.JTextArea curveTextArea;
+    private javax.swing.JButton curvesButton;
+    private javax.swing.JPanel curvesPanel;
     private javax.swing.JFormattedTextField eastField;
     private javax.swing.JPanel effectsPanel;
     private javax.swing.JTabbedPane effectsTabbedPane;
@@ -2644,6 +2662,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel extentPanel;
     private javax.swing.JLabel gaussBlurLabel;
     private javax.swing.JSlider gaussBlurSlider;
+    private edu.oregonstate.carto.mapcomposer.gui.GradationGraph gradationGraph;
     private javax.swing.JButton grid1LoadDirectoryPathButton;
     private javax.swing.JCheckBox grid1TMSCheckBox;
     private javax.swing.JTextField grid1URLTextField;
@@ -2663,7 +2682,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private edu.oregonstate.carto.mapcomposer.gui.RotatedLabel idwVerticalLabel;
     private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private edu.oregonstate.carto.mapcomposer.gui.DraggableList layerList;
@@ -2688,8 +2706,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JFormattedTextField northField;
     private javax.swing.JSlider opacitySlider;
     private javax.swing.JLabel opacityValueLabel;
-    private javax.swing.JButton removeCurveFileButton;
     private javax.swing.JButton removeLayerButton;
+    private javax.swing.JButton resetCurveFileButton;
     private javax.swing.JCheckBox shadowCheckBox;
     private edu.oregonstate.carto.mapcomposer.gui.ColorButton shadowColorButton;
     private javax.swing.JSlider shadowFuziSlider;

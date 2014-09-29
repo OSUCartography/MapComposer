@@ -77,9 +77,7 @@ public class Layer {
 
     private float opacity = 1;
 
-    private String curveURL;
-
-    private Curve[] curves = null;
+    private Curve[] curves = new Curve[]{new Curve()};
 
     private Tint tint = new Tint();
 
@@ -214,9 +212,7 @@ public class Layer {
         }
 
         // gradation curve
-        if (this.curves != null) {
-            image = curve(image);
-        }
+        image = curve(image);
 
         // masking
         if (isMaskTileSetValid()) {
@@ -296,14 +292,11 @@ public class Layer {
      * @return
      */
     private BufferedImage curve(BufferedImage image) {
+        // TODO don't apply linear curve
         // apply curve to image
-        if (curves != null) {
-            CurvesFilter curvesFilter = new CurvesFilter();
-            curvesFilter.setCurves(curves);
-            return curvesFilter.filter(image, null);
-        } else {
-            return null;
-        }
+        CurvesFilter curvesFilter = new CurvesFilter();
+        curvesFilter.setCurves(curves);
+        return curvesFilter.filter(image, null);
     }
 
     /**
@@ -482,38 +475,36 @@ public class Layer {
     }
 
     /**
-     * @return the curveURL
-     */
-    public String getCurveURL() {
-        return curveURL;
-    }
-
-    /**
      * @param curveURL the curveURL to set
      */
-    public void setCurveURL(String curveURL) {
-        if (curveURL != null && curveURL.trim().isEmpty()) {
-            curveURL = null;
+    public void loadCurve(String curveURL) {
+        if (curveURL == null || curveURL.trim().isEmpty()) {
+            return;
         }
-        this.curveURL = curveURL;
-
-        // reset curves (curveURL can be null)
-        curves = null;
 
         // load curve from URL
         try {
-            if (curveURL != null && !curveURL.isEmpty()) {
-                AdobeCurveReader acr = new AdobeCurveReader();
-                acr.readACV(new URL(curveURL));
-                curves = acr.getCurves();
-                for (Curve c : curves) {
-                    c.normalize();
-                }
+            AdobeCurveReader acr = new AdobeCurveReader();
+            acr.readACV(new URL(curveURL));
+            curves = acr.getCurves();
+            for (Curve c : curves) {
+                c.normalize();
             }
         } catch (IOException ex) {
             Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
-            curves = null;
         }
+    }
+
+    public Curve[] getCurves() {
+        return curves;
+    }
+
+    public void setCurve(Curve curve) {
+        curves = new Curve[]{curve};
+    }
+    
+    public void setCurves(Curve[] curves) {
+        this.curves = curves;
     }
 
     /**
@@ -667,7 +658,7 @@ public class Layer {
     public void setColorType(ColorType colorType) {
         this.colorType = colorType;
     }
-    
+
     /**
      * @return the idwTileRenderer
      */
@@ -688,5 +679,5 @@ public class Layer {
     public TileSet getGrid2TileSet() {
         return grid2TileSet;
     }
-    
+
 }

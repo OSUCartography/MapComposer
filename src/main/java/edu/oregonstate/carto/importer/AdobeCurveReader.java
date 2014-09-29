@@ -8,7 +8,6 @@
 package edu.oregonstate.carto.importer;
 
 import edu.oregonstate.carto.mapcomposer.Curve;
-import edu.oregonstate.carto.mapcomposer.CurvesFilter;
 import java.io.*;
 import java.net.URL;
 
