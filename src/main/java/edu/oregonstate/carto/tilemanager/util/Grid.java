@@ -388,6 +388,14 @@ public class Grid {
         return interp_cubic(v, c0, c1, c2, c3);
     }
 
+    public double getAspect(int col, int row) {
+        final double w = getValue(col - 1, row);
+        final double e = getValue(col + 1, row);
+        final double s = getValue(col, row + 1);
+        final double n = getValue(col, row - 1);
+        return Math.atan2(n - s, e - w);
+    }
+    
     public double getAspect(double x, double y) {
 
         final float w = this.getBilinearInterpol(x - this.cellSize, y);
@@ -395,7 +403,22 @@ public class Grid {
         final float s = this.getBilinearInterpol(x, y - this.cellSize);
         final float n = this.getBilinearInterpol(x, y + this.cellSize);
         return Math.atan2(n - s, e - w);
-
+    }
+    
+    /**
+     * Returns aspect angle in radians for a provided position.
+     *
+     * @param x
+     * @param y
+     * @param samplingDist
+     * @return Angle in radians in counter-clockwise direction. East is 0.
+     */
+    public double getAspect(double x, double y, double samplingDist) {
+        final double w = getBilinearInterpol(x - samplingDist, y);
+        final double e = getBilinearInterpol(x + samplingDist, y);
+        final double s = getBilinearInterpol(x, y - samplingDist);
+        final double n = getBilinearInterpol(x, y + samplingDist);
+        return Math.atan2(n - s, e - w);
     }
 
     /**
