@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class IDWGridTileRenderer implements TileRenderer {
 
-    private static final int LUT_SIZE = 512;
+    private static final int LUT_SIZE = 256;
 
     private int[][] lut = new int[LUT_SIZE][LUT_SIZE];
     private ArrayList<IDWPoint> points = new ArrayList<>();
@@ -219,7 +219,9 @@ public class IDWGridTileRenderer implements TileRenderer {
             for (int c = 0; c < width; c++) {
                 double x = c / (width - 1d);
                 double y = 1d - r / (height - 1d);
-                img.setRGB(c, r, interpolateValue(x, y));
+                int lutCol = (int)Math.round(x * (LUT_SIZE - 1));
+                int lutRow = (int)Math.round(y * (LUT_SIZE - 1));
+                img.setRGB(c, r, lut[lutRow][lutCol]);
             }
         }
         return img;
