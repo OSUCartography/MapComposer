@@ -370,6 +370,25 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
         });
     }
+    
+    /**
+     * Set zoom level and central point of map.
+     * @param zoom Map zoom level.
+     * @param lon Longitude of central point.
+     * @param lat Latitudes of central point.
+     */
+    public void panAndZoom(final int zoom, final double lon, final double lat) {
+        // run in JavaFX thread
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                WebEngine webEngine = webView.getEngine();
+                // create and load new HTML page with same map center and zoom
+                String html = loadHTMLPreviewMap(zoom, lon, lat);
+                webEngine.loadContent(html);
+            }
+        });
+    }
 
     /**
      * Returns the MapLayer currently selected by the user.

@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBException;
 
 /**
@@ -38,7 +39,15 @@ public class MapComposerFrame extends javax.swing.JFrame {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
+        zoomAndPanPanel = new javax.swing.JPanel();
+        javax.swing.JLabel zoomMapLabel = new javax.swing.JLabel();
+        zoomFormattedTextField = new javax.swing.JFormattedTextField();
+        javax.swing.JLabel longitudeLabel = new javax.swing.JLabel();
+        longitudeFormattedTextField = new javax.swing.JFormattedTextField();
+        javax.swing.JLabel latitudeLabel = new javax.swing.JLabel();
+        latitudeFormattedTextField = new javax.swing.JFormattedTextField();
         mapComposerPanel = new edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -58,6 +67,47 @@ public class MapComposerFrame extends javax.swing.JFrame {
         mapExtentMenuItem = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         reloadMapPreviewMenuItem = new javax.swing.JMenuItem();
+        javax.swing.JPopupMenu.Separator jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        zoomAndPanMenuItem = new javax.swing.JMenuItem();
+
+        zoomAndPanPanel.setLayout(new java.awt.GridBagLayout());
+
+        zoomMapLabel.setText("Zoom");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        zoomAndPanPanel.add(zoomMapLabel, gridBagConstraints);
+
+        zoomFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        zoomFormattedTextField.setPreferredSize(new java.awt.Dimension(140, 28));
+        zoomAndPanPanel.add(zoomFormattedTextField, new java.awt.GridBagConstraints());
+
+        longitudeLabel.setText("Longitude");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        zoomAndPanPanel.add(longitudeLabel, gridBagConstraints);
+
+        longitudeFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.#####"))));
+        longitudeFormattedTextField.setPreferredSize(new java.awt.Dimension(140, 28));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        zoomAndPanPanel.add(longitudeFormattedTextField, gridBagConstraints);
+
+        latitudeLabel.setText("Latitude");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        zoomAndPanPanel.add(latitudeLabel, gridBagConstraints);
+
+        latitudeFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.#####"))));
+        latitudeFormattedTextField.setPreferredSize(new java.awt.Dimension(140, 28));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        zoomAndPanPanel.add(latitudeFormattedTextField, gridBagConstraints);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -164,6 +214,15 @@ public class MapComposerFrame extends javax.swing.JFrame {
             }
         });
         mapMenu.add(reloadMapPreviewMenuItem);
+        mapMenu.add(jSeparator5);
+
+        zoomAndPanMenuItem.setText("Zoom and Pan Map");
+        zoomAndPanMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zoomAndPanMenuItemActionPerformed(evt);
+            }
+        });
+        mapMenu.add(zoomAndPanMenuItem);
 
         menuBar.add(mapMenu);
 
@@ -245,11 +304,25 @@ public class MapComposerFrame extends javax.swing.JFrame {
         mapComposerPanel.removeAllLayers();
     }//GEN-LAST:event_removeAllLayersMenuItemActionPerformed
 
+    private void zoomAndPanMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomAndPanMenuItemActionPerformed
+        String title = "Zoom and Pan";
+        int res = JOptionPane.showOptionDialog(mapComposerPanel, zoomAndPanPanel, title,
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+        if (res == JOptionPane.OK_OPTION) {
+            int zoom = ((Number) zoomFormattedTextField.getValue()).intValue();
+            double lon = ((Number) longitudeFormattedTextField.getValue()).doubleValue();
+            double lat = ((Number) latitudeFormattedTextField.getValue()).doubleValue();
+            mapComposerPanel.panAndZoom(zoom, lon, lat);
+        }
+    }//GEN-LAST:event_zoomAndPanMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addLayerMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JFormattedTextField latitudeFormattedTextField;
+    private javax.swing.JFormattedTextField longitudeFormattedTextField;
     private edu.oregonstate.carto.mapcomposer.gui.MapComposerPanel mapComposerPanel;
     private javax.swing.JMenuItem mapExtentMenuItem;
     private javax.swing.JMenu mapMenu;
@@ -262,5 +335,8 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveMapMenuItem;
     private javax.swing.JMenuItem saveStyleMenuItem;
     private javax.swing.JMenuItem undoMenuItem;
+    private javax.swing.JMenuItem zoomAndPanMenuItem;
+    private javax.swing.JPanel zoomAndPanPanel;
+    private javax.swing.JFormattedTextField zoomFormattedTextField;
     // End of variables declaration//GEN-END:variables
 }
