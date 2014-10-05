@@ -28,8 +28,11 @@ public class IDWGridTileRenderer implements TileRenderer {
         initPoints();
     }
 
+    /**
+     * Updates the color look-up table. Needs to be called after any point or
+     * the exponent changes.
+     */
     private void updateLUT() {
-        // update the color look-up table
         for (int r = 0; r < LUT_SIZE; r++) {
             double y = r / (LUT_SIZE - 1d);
             for (int c = 0; c < LUT_SIZE; c++) {
@@ -215,13 +218,14 @@ public class IDWGridTileRenderer implements TileRenderer {
      */
     public BufferedImage getDiagramImage(int width, int height) {
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        int[] imageBuffer = ((DataBufferInt) (img.getRaster().getDataBuffer())).getData();
         for (int r = 0; r < height; r++) {
             for (int c = 0; c < width; c++) {
                 double x = c / (width - 1d);
                 double y = 1d - r / (height - 1d);
                 int lutCol = (int)Math.round(x * (LUT_SIZE - 1));
                 int lutRow = (int)Math.round(y * (LUT_SIZE - 1));
-                img.setRGB(c, r, lut[lutRow][lutCol]);
+                imageBuffer[r * width + c] = lut[lutRow][lutCol];
             }
         }
         return img;

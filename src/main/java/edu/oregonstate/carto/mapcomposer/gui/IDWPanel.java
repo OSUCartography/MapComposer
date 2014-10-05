@@ -89,11 +89,16 @@ public class IDWPanel extends IDWPreview {
         getActionMap().put("deletePoint", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                getIdw().getPoints().remove(selectedPoint);
+                removeSelectedPoint();
                 repaint();
-                selectPoint(null);
             }
         });
+    }
+
+    private void removeSelectedPoint() {
+        getIdw().getPoints().remove(selectedPoint);
+        firePropertyChange("colorChanged", null, null);
+        selectPoint(null);
     }
 
     @Override
@@ -116,7 +121,7 @@ public class IDWPanel extends IDWPreview {
             }
         }
     }
-    
+
     private int idwAttr1ToPixelX(double attr1) {
         int insetX = getInsets().left;
         int w = getWidth() - getInsets().left - getInsets().right;
