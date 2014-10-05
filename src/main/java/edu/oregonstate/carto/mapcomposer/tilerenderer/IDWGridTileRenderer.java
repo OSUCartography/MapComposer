@@ -56,7 +56,6 @@ public class IDWGridTileRenderer implements TileRenderer {
                 double attr1AtPixel = attribute1Grid.getValue(col, row);
                 double attr2AtPixel = attribute2Grid.getValue(col, row);
                 int color = interpolateValue(attr1AtPixel, attr2AtPixel);
-                img.setRGB(col, row, color);
                 imageBuffer[row * cols + col] = color;
             }
         }
