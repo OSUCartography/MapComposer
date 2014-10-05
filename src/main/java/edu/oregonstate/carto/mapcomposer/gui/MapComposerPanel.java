@@ -2290,6 +2290,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
         }
         if ("colorChanged".equals(evt.getPropertyName())) {
+            idwPanel.getIdw().colorPointsChanged();
             idwPreview.repaint();
         }
     }//GEN-LAST:event_idwPanelPropertyChange

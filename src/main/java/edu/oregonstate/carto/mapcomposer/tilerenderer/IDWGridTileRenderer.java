@@ -13,16 +13,34 @@ import javax.xml.bind.annotation.XmlAccessorType;
 
 /**
  *
- * @author darbyshj
+ * @author Jane Darbyshire and Bernie Jenny, Oregon State University
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class IDWGridTileRenderer implements TileRenderer {
 
+    private static final int LUT_SIZE = 512;
+
+    private int[][] lut = new int[LUT_SIZE][LUT_SIZE];
     private ArrayList<IDWPoint> points = new ArrayList<>();
     private double exponentP = 1.3;
 
     public IDWGridTileRenderer() {
         initPoints();
+    }
+
+    private void updateLUT() {
+        // update the color look-up table
+        for (int r = 0; r < LUT_SIZE; r++) {
+            double y = r / (LUT_SIZE - 1d);
+            for (int c = 0; c < LUT_SIZE; c++) {
+                double x = c / (LUT_SIZE - 1d);
+                lut[r][c] = interpolateValue(x, y);
+            }
+        }
+    }
+
+    public void colorPointsChanged() {
+        updateLUT();
     }
 
     /**
@@ -37,6 +55,7 @@ public class IDWGridTileRenderer implements TileRenderer {
      */
     public void setExponentP(double exponentP) {
         this.exponentP = exponentP;
+        updateLUT();
     }
 
     /**
@@ -50,13 +69,15 @@ public class IDWGridTileRenderer implements TileRenderer {
         int cols = img.getWidth();
         int rows = img.getHeight();
         int[] imageBuffer = ((DataBufferInt) (img.getRaster().getDataBuffer())).getData();
-        
+
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 double attr1AtPixel = attribute1Grid.getValue(col, row);
                 double attr2AtPixel = attribute2Grid.getValue(col, row);
-                int color = interpolateValue(attr1AtPixel, attr2AtPixel);
-                imageBuffer[row * cols + col] = color;
+                //int color = interpolateValue(attr1AtPixel, attr2AtPixel);
+                int lutCol = (int) Math.round(attr1AtPixel * (LUT_SIZE - 1));
+                int lutRow = (int) Math.round(attr2AtPixel * (LUT_SIZE - 1));
+                imageBuffer[row * cols + col] = lut[lutRow][lutCol];
             }
         }
     }
@@ -96,6 +117,7 @@ public class IDWGridTileRenderer implements TileRenderer {
 
     public void setColorPoints(ArrayList<IDWPoint> newPoints) {
         this.points = newPoints;
+        updateLUT();
     }
 
     public String getColorPointsString() {
