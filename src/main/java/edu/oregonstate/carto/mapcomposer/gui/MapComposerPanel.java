@@ -370,9 +370,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
         });
     }
-    
+
     /**
      * Set zoom level and central point of map.
+     *
      * @param zoom Map zoom level.
      * @param lon Longitude of central point.
      * @param lat Latitudes of central point.
@@ -2455,6 +2456,18 @@ public class MapComposerPanel extends javax.swing.JPanel {
             gradationGraph.setCurves(curves);
 
             // tinting
+            switch (selectedLayer.getColorType()) {
+                case NONE:
+                    colorSelectionComboBox.setSelectedIndex(0);
+                    break;
+                case SOLID:
+                    colorSelectionComboBox.setSelectedIndex(1);
+                    break;
+                case INTERPOLATE:
+                    colorSelectionComboBox.setSelectedIndex(2);
+                    break;
+            }
+
             tintColorButton.setColor(selectedLayer.getTint().getTintColor());
             grid1URLTextField.setText(selectedLayer.getGrid1TileSet().getUrlTemplate());
             grid1TMSCheckBox.setSelected(selectedLayer.getGrid1TileSet().isTMSSchema());
