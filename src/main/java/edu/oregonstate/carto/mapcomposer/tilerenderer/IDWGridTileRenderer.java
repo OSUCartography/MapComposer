@@ -5,6 +5,7 @@ import edu.oregonstate.carto.tilemanager.Tile;
 import edu.oregonstate.carto.tilemanager.TileRenderer;
 import edu.oregonstate.carto.tilemanager.util.Grid;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -45,20 +46,22 @@ public class IDWGridTileRenderer implements TileRenderer {
         return points;
     }
 
-    public void renderImage(BufferedImage colorizedImage, Grid attribute1Grid, Grid attribute2Grid) {
-        int cols = colorizedImage.getWidth();
-        int rows = colorizedImage.getHeight();
-
+    public void renderImage(BufferedImage img, Grid attribute1Grid, Grid attribute2Grid) {
+        int cols = img.getWidth();
+        int rows = img.getHeight();
+        int[] imageBuffer = ((DataBufferInt) (img.getRaster().getDataBuffer())).getData();
+        
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 double attr1AtPixel = attribute1Grid.getValue(col, row);
                 double attr2AtPixel = attribute2Grid.getValue(col, row);
                 int color = interpolateValue(attr1AtPixel, attr2AtPixel);
-                colorizedImage.setRGB(col, row, color);
+                img.setRGB(col, row, color);
+                imageBuffer[row * cols + col] = color;
             }
         }
     }
-    
+
     public int interpolateValue(double attr1AtPixel, double attr2AtPixel) {
 
         double wTot = 0;
