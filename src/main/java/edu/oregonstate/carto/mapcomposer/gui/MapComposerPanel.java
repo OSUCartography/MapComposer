@@ -1052,7 +1052,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         visibleCheckBox.setName("Visibility"); // NOI18N
         visibleCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
+                visibleCheckBoxActionPerformed(evt);
             }
         });
         layerListToolBar.add(visibleCheckBox);
@@ -2322,6 +2322,23 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_gradationGraphPropertyChange
 
+    private void visibleCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visibleCheckBoxActionPerformed
+        boolean visible = visibleCheckBox.isSelected();
+        Layer layer = getSelectedMapLayer();
+        if (layer != null) {
+            this.updating = true;
+            try {
+                layer.setVisible(visible);
+                writeGUI();
+                reloadHTMLPreviewMap();
+                addUndoFromNamedComponent((JComponent) (evt.getSource()));
+            } finally {
+                this.updating = false;
+            }
+        }
+
+    }//GEN-LAST:event_visibleCheckBoxActionPerformed
+
     /**
      * Updates the value of the texture scale slider
      *
@@ -2367,8 +2384,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         // enable or disable user interface elements depending on whether
         // a layer is currently selected
-        final boolean on = selectedLayer != null && !selectedLayer.isLocked();
-        this.visibleCheckBox.setEnabled(on);
+        final boolean on = selectedLayer != null
+                && !selectedLayer.isLocked()
+                && selectedLayer.isVisible();
+        this.visibleCheckBox.setEnabled(selectedLayer != null
+                && !selectedLayer.isLocked());
         this.urlTextField.setEnabled(on);
         this.loadDirectoryPathButton.setEnabled(on);
         this.tmsCheckBox.setEnabled(on);
