@@ -536,8 +536,8 @@
 		});
 
 		var map = L.map('map',{
-			center: new L.LatLng($$viewCenterLatitude$$, $$viewCenterLongitude$$),
-			zoom: $$viewZoomlevel$$,
+			center: new L.LatLng(45, -122),   //replace these 3 #'s with original file contents to make this viewable in MapComposer again
+			zoom: 4,
 			layers: [osm, new_tiles]
 		});
 		
@@ -604,67 +604,37 @@
 			colorMarkers.removeLayer(circleMarkerID);	
 		}
 		
-		function hexToRgb(hex) {
-    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-        return r + r + g + g + b + b;
-    });
-
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-}
-
-		
 		//FINISH ME: Gets each circle object on the map and stores this information in an array
 		//I think this really also needs to get the marker leaflet IDs though, since those locations have to be changed too, so instead of using a new array, maybe it's best to just
 		//use the colorMarkers.getLayers() array and pull info from there? can ID circles b/c they have options.color, and markers don't.
 		//if we need to create a new array, it should really be marker id & location, circle id, location, and color. Also, the correct marker (the one immediately preceding) needs to 
 		//be changed for the correct circleMarker, and I'm not sure how that would get indicated to setColors except by order.
 		function getColors(){
-			console.log(colorMarkers.getLayers());
+			/*console.log(colorMarkers.getLayers());
 			
 			var colorMarkersArray = [];
 			colorMarkersArray = colorMarkers.getLayers(); //assigns the array of layers in colorMarkers to a variable
 			
-			var res = []; //a new array to hold only the circle layers
+			var circleArray = []; //a new array to hold only the circle layers
 			
 			for (i = 0; i < colorMarkersArray.length; i++) {
 				if (colorMarkersArray[i].options.color != undefined){
-					var circle = colorMarkersArray[i];
-					res.push(circle._latlng.lng);
-					res.push(circle._latlng.lat);
-					var color = circle.options.color;
-					var rgb = color;/*hexToRgb(color);
-					// need to convert color string to r, g, and b values, and add these values to the array.
-					r = ...
-					g = ...
-					b = ...
-					res.push(r);
-					res.push(g);
-					res.push(b);*/
-					res.push(rgb);
+					circleArray.push(colorMarkersArray[i])
 				}
 			}
 			
-			console.log(res);
+			console.log(circleArray);
 			
 			//from here, we need can then access the lat/long (xy) and color options for each member of the array, ie:
 			// circleArray[0].options.color     and      circleArray[0]._latlng
 			//What about the leaflet ID? circleArray[0]._leaflet_id
-			/*
+			
 			console.log(circleArray[0].options.color);
 			console.log(circleArray[0]._latlng.lat);
 			console.log(circleArray[0]._latlng.lng);
 			console.log(circleArray[0]._leaflet_id);
-			*/
 			//at this point, do I need an array with just these things, or can I leave circleArray as is? What else do I need to do here?*/
-			
-			return res;
+			return 123;
 		}
 		
 		//FINISH ME: 

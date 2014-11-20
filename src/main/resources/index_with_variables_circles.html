@@ -536,8 +536,8 @@
 		});
 
 		var map = L.map('map',{
-			center: new L.LatLng($$viewCenterLatitude$$, $$viewCenterLongitude$$),
-			zoom: $$viewZoomlevel$$,
+			center: new L.LatLng(45, -122),   //replace these 3 #'s with original file contents to make this viewable in MapComposer again
+			zoom: 4,
 			layers: [osm, new_tiles]
 		});
 		
@@ -562,7 +562,7 @@
 		
 		//Define the color picker (uses spectrum.js)
 		function openColorPicker(circleMarker){
-		//Color picker with some options configured (see http://bgrins.github.io/spectrum/)
+		//Color picker with more options configured (see http://bgrins.github.io/spectrum/)
 			$(".custom").spectrum({
 				color: circleMarker.options.color,
 				showButtons: false,
@@ -595,124 +595,25 @@
 			});
 		}
 		
-		//Deletes a marker & its associated circle. Called by clicking the Delete button in the popup bound to the marker.
-		//Clicking the Delete button calls the function and gets the marker & circleMarker IDs associated with the popup, which are used as parameters
-		function deleteMarkers(markerID, circleMarkerID){
+		//FIX ME: Deletes a marker & its associated circle. Called by clicking the Delete button in the popup.
+		//parameters should probably be circleMarker & marker, right?
+		function deleteMarkers(){
+			//Get the leaflet ID of the circleMarker and the marker associated with the popup that the button is in(is this even a thing??)
+			//or should this just get ALL of the leafletIDs for ALL of the circleMarkers & markers, then do something in the popup? No idea how this should work. Derp.
 			
-			//Delete the things with the desired IDs:
-			colorMarkers.removeLayer(markerID);
-			colorMarkers.removeLayer(circleMarkerID);	
-		}
-		
-		function hexToRgb(hex) {
-    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-        return r + r + g + g + b + b;
-    });
-
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-}
-
-		
-		//FINISH ME: Gets each circle object on the map and stores this information in an array
-		//I think this really also needs to get the marker leaflet IDs though, since those locations have to be changed too, so instead of using a new array, maybe it's best to just
-		//use the colorMarkers.getLayers() array and pull info from there? can ID circles b/c they have options.color, and markers don't.
-		//if we need to create a new array, it should really be marker id & location, circle id, location, and color. Also, the correct marker (the one immediately preceding) needs to 
-		//be changed for the correct circleMarker, and I'm not sure how that would get indicated to setColors except by order.
-		function getColors(){
-			console.log(colorMarkers.getLayers());
+			//leaflet ID's obtained via: marker._leaflet_id  &  circleMarker._leaflet_id
+			//popups don't seem to have IDs
 			
-			var colorMarkersArray = [];
-			colorMarkersArray = colorMarkers.getLayers(); //assigns the array of layers in colorMarkers to a variable
+			//Delete the things with the desired IDs using:
+			//map.removeLayer();
+			//need a way to specify the right objects & IDs to the removeLayer function
+			console.log("lol bye");
 			
-			var res = []; //a new array to hold only the circle layers
-			
-			for (i = 0; i < colorMarkersArray.length; i++) {
-				if (colorMarkersArray[i].options.color != undefined){
-					var circle = colorMarkersArray[i];
-					res.push(circle._latlng.lng);
-					res.push(circle._latlng.lat);
-					var color = circle.options.color;
-					var rgb = color;/*hexToRgb(color);
-					// need to convert color string to r, g, and b values, and add these values to the array.
-					r = ...
-					g = ...
-					b = ...
-					res.push(r);
-					res.push(g);
-					res.push(b);*/
-					res.push(rgb);
-				}
+			marker.on('remove', function(e){
+				
 			}
 			
-			console.log(res);
-			
-			//from here, we need can then access the lat/long (xy) and color options for each member of the array, ie:
-			// circleArray[0].options.color     and      circleArray[0]._latlng
-			//What about the leaflet ID? circleArray[0]._leaflet_id
-			/*
-			console.log(circleArray[0].options.color);
-			console.log(circleArray[0]._latlng.lat);
-			console.log(circleArray[0]._latlng.lng);
-			console.log(circleArray[0]._leaflet_id);
-			*/
-			//at this point, do I need an array with just these things, or can I leave circleArray as is? What else do I need to do here?*/
-			
-			return res;
 		}
-		
-		//FINISH ME: 
-		//Also, the correct marker (the one immediately preceding) needs to 
-		//be changed for the correct circleMarker, and I'm not sure how that would get indicated to setColors except by order.  
-		function setColors(colorMarkers){
-		
-			//remove colorMarkers Layer Group from map
-			map.removeLayer(colorMarkers);
-
-			//TODO: get Leaflet IDs that had colors and locations changed by the Java interface, and the actual changes
-			
-			//figure out which positions those IDs have in the colorMarkers.getLayers() array
-			//if position has desired ._leaflet_id(s), change properties
-			//change/set the marker & circleMarker latlng locations 
-			//change/set the circleMarker colors
-			
-			//Place holder values (31 and 36 are always the first marker and circleMarker if you check the coloredMarkers box first, otherwise it's 31 & 32)
-			var changedMarker = 31;
-			var changedCircleMarker = 36;
-			var newColor = "red";
-			
-			//if getColors generates a new array, which is then altered by the Java side & returned,
-			//then that array needs to be used in the for/if conditions and passed to this function.
-			for (i = 0; i < colorMarkers.getLayers().length; i++) {
-				if (changedMarker == colorMarkers.getLayers()[i]._leaflet_id){
-					colorMarkers.getLayers()[i]._latlng = L.latLng(46,-145);
-				}
-				
-				if (changedCircleMarker == colorMarkers.getLayers()[i]._leaflet_id){
-					colorMarkers.getLayers()[i]._latlng = L.latLng(46,-145);
-				}
-				
-				if (changedCircleMarker == colorMarkers.getLayers()[i]._leaflet_id){
-					colorMarkers.getLayers()[i].setStyle({color: newColor});
-				}
-			}
-
-			console.log(colorMarkers.getLayers());
-
-			//Add colorMarkers Layer Group back to map
-			map.addLayer(colorMarkers);
-		}
-		
-		//TESTING setColors function using right-click on map
-		map.on('contextmenu', function(){
-			setColors(colorMarkers);			
-		});
 		
 		/*Create a new circle marker (IDW color) and a new marker (drag handler) when the map is clicked at the clicked location, 
 		then add them to their respective Layer Groups*/
@@ -720,20 +621,17 @@
 		
 			//make a draggable marker & add to the colorMarkers Layer Group
 			var marker = new L.marker(e.latlng, markerOptions).addTo(colorMarkers);
+			console.log("marker ID" + " " + marker._leaflet_id);
+			console.log(marker);
 			
 			//make a circle marker & add to Layer Group
 			var circleMarker = new L.circleMarker(e.latlng, circleOptions).addTo(colorMarkers);
+			console.log("circle ID" + " " + circleMarker._leaflet_id);
 			
-			console.log(colorMarkers.getLayers());
-			
-			//TESTING: Calls the getColors function
-			//getColors(colorMarkers);
-			
-			//define popup content:
-				//initializes the color picker and links it to the jQuery color picker class
-				//provides a button for deleting the marker & circleMarker pair 
-					//onClick function calls deleteMarkers, which takes in the leaflet IDs of the layers to be deleted
-			var popupContent = "<input type='text' class='custom'/><br><br><input type='button' value='Delete' onClick='deleteMarkers("+marker._leaflet_id+","+circleMarker._leaflet_id+")' />";
+			//define popup content
+			//initializes the color picker and links it to the jQuery color picker class
+			//FIX ME: provides a button for deleting the marker & circleMarker pair 
+			var popupContent = "<input type='text' class='custom'/><input type='button' value='Delete' onClick='deleteMarkers()' />"; /*onClick= call deleteMarkers function*/
 			
 			//Set popup options
 			var popupOptions = {

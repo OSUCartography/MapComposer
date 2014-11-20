@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet debug page</title>
+
+	<link rel="stylesheet" href="../lib/leaflet-0.6.4/leaflet.css" />
+    <link rel="stylesheet" href="../css/marker-extend.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="../lib/leaflet-0.6.4/leaflet.ie.css" /><![endif]-->
+
+	<script src="../lib/leaflet-0.6.4/leaflet-src.js"></script>
+	<script src="../src/L.CircleEditor.js" ></script> 
+</head>
+<body>
+	<div id="map" style="width: 800px; height: 600px; border: 1px solid #ccc"></div>
+
+	<script src="route.js"></script>
+	<script>
+		var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png',
+			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18}),
+			map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(51.505, -0.04), zoom: 13});
+
+
+		var circleLocation = new L.LatLng(51.51, -0.03),
+		circleOptions = {
+		    color: 'red', 
+		    fillColor: 'yellow', 
+		    fillOpacity: 0.7,
+            extendedIconClass : 'extend-icon' /*there are 3 classes defined in the marker-extend.css file*/
+		};
+        var circle = new L.CircleEditor(circleLocation, 500, circleOptions);
+		
+		map.addLayer(circle);
+		
+		circle.bindPopup('I am a circle');
+
+
+        circleOptions = {
+            color: 'red', 
+            fillColor: 'yellow', 
+            fillOpacity: 0.7,
+            extendedIconClass : ''
+        };
+        var circle2 = new L.CircleEditor(new L.LatLng(51.51, -0.07), 500, circleOptions);
+        map.addLayer(circle2);
+
+
+		circle.on('edit', function() {
+            console.log('Circle was edited!');
+        });
+
+		circle.on('centerchange', function() {
+			console.log('the circle has moved.');
+		});
+
+		circle.on('radiuschange', function() {
+			console.log('the radius has chahged to: ' + this._mRadius);
+		});
+	</script>
+</body>
+</html>

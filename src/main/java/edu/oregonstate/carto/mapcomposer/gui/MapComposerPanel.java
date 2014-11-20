@@ -30,8 +30,10 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -59,6 +61,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.xml.bind.JAXBException;
+import netscape.javascript.JSObject;
 
 public class MapComposerPanel extends javax.swing.JPanel {
 
@@ -587,13 +590,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         maskValuesTextField = new javax.swing.JTextField();
         javax.swing.JLabel jLabel7 = new javax.swing.JLabel();
         effectsTabbedPane = new javax.swing.JTabbedPane();
-        effectsPanel = new TransparentMacPanel();
-        shadowCheckBox = new javax.swing.JCheckBox();
-        shadowOffsetLabel = new javax.swing.JLabel();
-        shadowOffsetSlider = new javax.swing.JSlider();
-        shadowColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
-        javax.swing.JLabel DropShadowFuzinessLabel = new javax.swing.JLabel();
-        shadowFuziSlider = new javax.swing.JSlider();
         embossPanel = new TransparentMacPanel();
         embossCheckBox = new javax.swing.JCheckBox();
         javax.swing.JLabel embossAzimuthLabel = new javax.swing.JLabel();
@@ -619,7 +615,15 @@ public class MapComposerPanel extends javax.swing.JPanel {
         textureClearButton = new javax.swing.JButton();
         texturePreviewLabel = new javax.swing.JLabel();
         textureScaleFormattedTextField = new javax.swing.JFormattedTextField();
+        effectsPanel = new TransparentMacPanel();
+        shadowCheckBox = new javax.swing.JCheckBox();
+        shadowOffsetLabel = new javax.swing.JLabel();
+        shadowOffsetSlider = new javax.swing.JSlider();
+        shadowColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
+        javax.swing.JLabel DropShadowFuzinessLabel = new javax.swing.JLabel();
+        shadowFuziSlider = new javax.swing.JSlider();
         exponentLabel = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
 
         extentPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -1401,81 +1405,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         bottomPanel.add(settingsTabbedPane, gridBagConstraints);
 
-        effectsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        effectsPanel.setLayout(new java.awt.GridBagLayout());
-
-        shadowCheckBox.setText("Drop Shadow");
-        shadowCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        shadowCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        shadowCheckBox.setName("Apply Drop Shadow"); // NOI18N
-        shadowCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
-        effectsPanel.add(shadowCheckBox, gridBagConstraints);
-
-        shadowOffsetLabel.setText("Offset:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        effectsPanel.add(shadowOffsetLabel, gridBagConstraints);
-
-        shadowOffsetSlider.setMaximum(20);
-        shadowOffsetSlider.setValue(1);
-        shadowOffsetSlider.setName("Shadow Offset"); // NOI18N
-        shadowOffsetSlider.setPreferredSize(new java.awt.Dimension(120, 29));
-        shadowOffsetSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                sliderStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        effectsPanel.add(shadowOffsetSlider, gridBagConstraints);
-
-        shadowColorButton.setName("Shadow Color"); // NOI18N
-        shadowColorButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MapComposerPanel.this.actionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        effectsPanel.add(shadowColorButton, gridBagConstraints);
-
-        DropShadowFuzinessLabel.setText("Fuzziness:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        effectsPanel.add(DropShadowFuzinessLabel, gridBagConstraints);
-
-        shadowFuziSlider.setMaximum(20);
-        shadowFuziSlider.setValue(10);
-        shadowFuziSlider.setName("Shadow Fuzziness"); // NOI18N
-        shadowFuziSlider.setPreferredSize(new java.awt.Dimension(120, 29));
-        shadowFuziSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                sliderStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        effectsPanel.add(shadowFuziSlider, gridBagConstraints);
-
-        effectsTabbedPane.addTab("Shadow", effectsPanel);
-
         embossPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
         embossPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -1779,6 +1708,81 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         effectsTabbedPane.addTab("Texture", texturePanel);
 
+        effectsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        effectsPanel.setLayout(new java.awt.GridBagLayout());
+
+        shadowCheckBox.setText("Drop Shadow");
+        shadowCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        shadowCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        shadowCheckBox.setName("Apply Drop Shadow"); // NOI18N
+        shadowCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MapComposerPanel.this.actionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
+        effectsPanel.add(shadowCheckBox, gridBagConstraints);
+
+        shadowOffsetLabel.setText("Offset:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        effectsPanel.add(shadowOffsetLabel, gridBagConstraints);
+
+        shadowOffsetSlider.setMaximum(20);
+        shadowOffsetSlider.setValue(1);
+        shadowOffsetSlider.setName("Shadow Offset"); // NOI18N
+        shadowOffsetSlider.setPreferredSize(new java.awt.Dimension(120, 29));
+        shadowOffsetSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sliderStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        effectsPanel.add(shadowOffsetSlider, gridBagConstraints);
+
+        shadowColorButton.setName("Shadow Color"); // NOI18N
+        shadowColorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MapComposerPanel.this.actionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        effectsPanel.add(shadowColorButton, gridBagConstraints);
+
+        DropShadowFuzinessLabel.setText("Fuzziness:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        effectsPanel.add(DropShadowFuzinessLabel, gridBagConstraints);
+
+        shadowFuziSlider.setMaximum(20);
+        shadowFuziSlider.setValue(10);
+        shadowFuziSlider.setName("Shadow Fuzziness"); // NOI18N
+        shadowFuziSlider.setPreferredSize(new java.awt.Dimension(120, 29));
+        shadowFuziSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sliderStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        effectsPanel.add(shadowFuziSlider, gridBagConstraints);
+
+        effectsTabbedPane.addTab("Shadow", effectsPanel);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -1791,6 +1795,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         exponentLabel.setLayout(new java.awt.BorderLayout());
         add(exponentLabel, java.awt.BorderLayout.CENTER);
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        add(jButton1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -2339,6 +2351,35 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_visibleCheckBoxActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Layer layer = getSelectedMapLayer();
+        final ArrayList<IDWPoint> points = layer.getIdwTileRenderer().getPoints();
+        points.clear();
+        
+        // run in JavaFX thread
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                WebEngine webEngine = webView.getEngine();
+                // run scripts to retreive current map center and zoom
+                JSObject ret = (JSObject) webEngine.executeScript("getColors()");
+                Object len = ret.getMember("length");
+                int n = ((Number) len).intValue();
+                for (int i = 0; i < n; i += 3) {
+                    Number lon = (Number)ret.getSlot(i);
+                    Number lat = (Number)ret.getSlot(i+1);
+                    String color = (String)ret.getSlot(i+2);
+                    IDWPoint p = new IDWPoint();
+                    // convert lon/lat or x/y to attribute 1 and attribute 2
+                    // TODO
+                    p.setAttribute1(lon.doubleValue());
+                    p.setAttribute1(lat.doubleValue());
+                    System.out.println(color);
+                }
+            }
+        });
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * Updates the value of the texture scale slider
      *
@@ -2733,6 +2774,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JButton idwTileSetsButton;
     private javax.swing.JPanel idwTileSetsPanel;
     private edu.oregonstate.carto.mapcomposer.gui.RotatedLabel idwVerticalLabel;
+    private javax.swing.JButton jButton1;
     private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel9;
