@@ -1,12 +1,7 @@
 package edu.oregonstate.carto.tilemanager;
 
-import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWGridTileRenderer;
 import edu.oregonstate.carto.importer.BinaryGridReader;
 import edu.oregonstate.carto.tilemanager.util.Grid;
-import edu.oregonstate.carto.grid.operators.ColorizerOperator;
-import edu.oregonstate.carto.grid.operators.ColorizerOperator.ColorVisualization;
-import edu.oregonstate.carto.grid.operators.ShaderOperator;
-import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
