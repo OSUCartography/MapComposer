@@ -15,6 +15,7 @@ import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWPoint;
 import edu.oregonstate.carto.tilemanager.Tile;
 import edu.oregonstate.carto.tilemanager.TileGenerator;
 import edu.oregonstate.carto.tilemanager.TileSet;
+import edu.oregonstate.carto.tilemanager.util.Grid;
 import edu.oregonstate.carto.utils.FileUtils;
 import edu.oregonstate.carto.utils.GUIUtil;
 import java.awt.BorderLayout;
@@ -44,9 +45,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -286,6 +289,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 fxPanel.setScene(scene);
                 webView = new WebView();
                 group.getChildren().add(webView);
+                webView.getEngine().setOnAlert(new EventHandler<WebEvent<String>>() {
+
+                    @Override
+                    public void handle(WebEvent<String> t) {
+                        System.out.println(t);
+                    }
+                });
                 webView.getEngine().loadContent(html);
 
                 final Worker<Void> worker = webView.getEngine().getLoadWorker();
@@ -2351,11 +2361,59 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_visibleCheckBoxActionPerformed
 
+    /**
+     * extract values from grid TileSet
+     *
+     * @param zoom
+     * @param lon
+     * @param lat
+     * @param tileSet
+     * @return
+     */
+    private float getValueFromGridTileSet(int zoom, double lon, double lat, TileSet tileSet) throws IOException {
+        double[] mxy = new double[2];
+        double[] pxy = new double[2];
+        double[] tltxy = new double[2];
+        Tile tile = tileSet.getTile(zoom, lon, lat);
+        // convert latitude/longitude to meters
+        TileSet.latLonToMeters(lat, lon, mxy);
+        // convert from meters to pixel coordinates
+        TileSet.metersToPixels(mxy[0], mxy[1], zoom, pxy);
+        // convert to pixel coordinates relative to top-left corner.
+        TileSet.pixelsToTopLeftTilePixels(pxy[0], pxy[1], tltxy);
+        // get grid value
+        Grid grid = (Grid) tile.fetch();
+        return grid.getBilinearInterpol(tltxy[0], tltxy[1]);
+    }
+
+    private IDWPoint createIDWPoint(double lon, double lat, String color, TileSet tileSet1, TileSet tileSet2) {
+        try {
+            IDWPoint p = new IDWPoint();
+            p.setLonLat(lon, lat);
+            
+            //Hex to RGB Conversion, convert the hex value from the color picker
+            p.setColor(Color.decode(color));
+
+            // TODO
+            int zoom = 10;
+
+            float v1 = getValueFromGridTileSet(zoom, lon, lat, tileSet1);
+            float v2 = getValueFromGridTileSet(zoom, lon, lat, tileSet2);
+            if (Float.isNaN(v1) || Float.isNaN(v2)) {
+                return null;
+            }
+            p.setAttribute1(v1);
+            p.setAttribute2(v2);
+            return p;
+        } catch (IOException ex) {
+            return null;
+        }
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Layer layer = getSelectedMapLayer();
         final ArrayList<IDWPoint> points = layer.getIdwTileRenderer().getPoints();
         points.clear();
-        
+
         // run in JavaFX thread
         Platform.runLater(new Runnable() {
             @Override
@@ -2363,19 +2421,36 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 WebEngine webEngine = webView.getEngine();
                 // run scripts to retreive current map center and zoom
                 JSObject ret = (JSObject) webEngine.executeScript("getColors()");
+                
+                // TODO should this run in the Swing event dispatching thread
+                // instead of the JavaFX thread? 
                 Object len = ret.getMember("length");
                 int n = ((Number) len).intValue();
+                Layer layer = getSelectedMapLayer();
                 for (int i = 0; i < n; i += 3) {
-                    Number lon = (Number)ret.getSlot(i);
-                    Number lat = (Number)ret.getSlot(i+1);
-                    String color = (String)ret.getSlot(i+2);
-                    IDWPoint p = new IDWPoint();
-                    // convert lon/lat or x/y to attribute 1 and attribute 2
-                    // TODO
-                    p.setAttribute1(lon.doubleValue());
-                    p.setAttribute1(lat.doubleValue());
-                    System.out.println(color);
+                    double lon = ((Number) ret.getSlot(i)).doubleValue();
+                    double lat = ((Number) ret.getSlot(i + 1)).doubleValue();
+                    
+                    // make sure longitude values are within -180..+180
+                    while (lon > 180) {
+                        lon -= 360;
+                    }
+                    while (lon < -180) {
+                        lon += 360;
+                    }
+                    String color = (String) ret.getSlot(i + 2);
+                    TileSet tileSet1 = layer.getGrid1TileSet();
+                    TileSet tileSet2 = layer.getGrid2TileSet();
+                    IDWPoint p = createIDWPoint(lon, lat, color, tileSet1, tileSet2);
+                    if (p != null) {
+                        points.add(p);
+                    }
+                    System.out.println(p);
                 }
+                layer.getIdwTileRenderer().colorPointsChanged();
+                //idwPanel.repaint();
+                reloadHTMLPreviewMap();
+                
             }
         });
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -10,16 +10,21 @@ import javax.xml.bind.annotation.XmlAccessorType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class IDWPoint {
+
     //color values for the point (0-255)
-    private int r; 
-    private int g; 
+
+    private int r;
+    private int g;
     private int b;
-    
+
     private double attribute1; //ex: precipitation
     private double attribute2; //ex: elevation
 
+    private double lon;
+    private double lat;
+
     public String toString() {
-        return " " + r + " " + g + " " + b;
+        return " " + r + " " + g + " " + b + " " + attribute1 + " " + attribute2;
     }
 
     /**
@@ -67,13 +72,13 @@ public class IDWPoint {
     public Color getColor() {
         return new Color(r, g, b);
     }
-    
+
     public void setColor(Color rgb) {
         this.r = rgb.getRed();
         this.g = rgb.getGreen();
         this.b = rgb.getBlue();
     }
-    
+
     /**
      * @return the attribute1
      */
@@ -101,4 +106,24 @@ public class IDWPoint {
     public void setAttribute2(double attribute2) {
         this.attribute2 = attribute2;
     }
+
+    public void setLonLat(double lon, double lat) {
+        this.lon = lon;
+        this.lat = lat;
+    }
+
+    /**
+     * @return the lon
+     */
+    public double getLon() {
+        return lon;
+    }
+
+    /**
+     * @return the lat
+     */
+    public double getLat() {
+        return lat;
+    }
+
 }

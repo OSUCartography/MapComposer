@@ -343,11 +343,7 @@ public class TileSet {
 
         TileSet.latLonToMeters(lat, lon, mxy);
         TileSet.metersToPixels(mxy[0], mxy[1], z, pxy);
-        if (isTMSSchema()) {
-            TileSet.pixelsToTMSTile(pxy[0], pxy[1], txy);
-        } else {
-            TileSet.pixelsToGoogleTile(pxy[0], pxy[1], z, txy);
-        }
+        TileSet.pixelsToGoogleTile(pxy[0], pxy[1], z, txy);
         return getTile(z, txy[0], txy[1]);       
     }
 

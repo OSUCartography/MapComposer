@@ -1,0 +1,5 @@
+com.aptana.editor.common.useGlobalDefaults=true
+eclipse.preferences.version=1
+tabWidth=4
+useAnnotationsPrefPage=true
+useQuickDiffPrefPage=true
