@@ -5,7 +5,6 @@
  */
 package edu.oregonstate.carto.mapcomposer.gui;
 
-import edu.oregonstate.carto.importer.AdobeCurveReader;
 import edu.oregonstate.carto.mapcomposer.Curve;
 import edu.oregonstate.carto.mapcomposer.Emboss;
 import edu.oregonstate.carto.mapcomposer.Layer;
@@ -59,6 +58,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
@@ -538,6 +538,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         javax.swing.JPanel idwButtonPanel = new javax.swing.JPanel();
         idwTileSetsButton = new javax.swing.JButton();
         idwApplyButton = new javax.swing.JButton();
+        readIDWPointsButton = new javax.swing.JButton();
         idwTileSetsPanel = new javax.swing.JPanel();
         javax.swing.JLabel grid1URLLabel = new javax.swing.JLabel();
         grid1URLTextField = new javax.swing.JTextField();
@@ -633,7 +634,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         javax.swing.JLabel DropShadowFuzinessLabel = new javax.swing.JLabel();
         shadowFuziSlider = new javax.swing.JSlider();
         exponentLabel = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
 
         extentPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -861,6 +861,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
         });
         idwButtonPanel.add(idwApplyButton);
+
+        readIDWPointsButton.setText("Read Points from Map");
+        readIDWPointsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                readIDWPointsButtonActionPerformed(evt);
+            }
+        });
+        idwButtonPanel.add(readIDWPointsButton);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1805,14 +1813,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         exponentLabel.setLayout(new java.awt.BorderLayout());
         add(exponentLabel, java.awt.BorderLayout.CENTER);
-
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        add(jButton1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -2317,8 +2317,65 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_idwPanelPropertyChange
 
+    private void readIDWPoints() {
+        final ArrayList<IDWPoint> points = new ArrayList<>();
+        final Layer layer = getSelectedMapLayer();
+        final TileSet tileSet1 = layer.getGrid1TileSet();
+        final TileSet tileSet2 = layer.getGrid2TileSet();
+        if (!tileSet1.isURLTemplateValid() || !tileSet2.isURLTemplateValid()){
+            String msg = "Tile sets have not been selected.";
+            ErrorDialog.showErrorDialog(msg, "MapComposer Error", null, this);
+        }
+        // run in JavaFX thread
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                WebEngine webEngine = webView.getEngine();
+                // run scripts to retreive color points from map
+                JSObject ret = (JSObject) webEngine.executeScript("getColors()");
+
+                // convert the JavaScript result to IDWPoint objects
+                Object len = ret.getMember("length");
+                int n = ((Number) len).intValue();
+
+                for (int i = 0; i < n; i += 3) {
+                    double lon = ((Number) ret.getSlot(i)).doubleValue();
+                    double lat = ((Number) ret.getSlot(i + 1)).doubleValue();
+
+                    // make sure longitude values are within -180..+180
+                    while (lon > 180) {
+                        lon -= 360;
+                    }
+                    while (lon < -180) {
+                        lon += 360;
+                    }
+
+                    String color = (String) ret.getSlot(i + 2);
+                    IDWPoint p = createIDWPoint(lon, lat, color, tileSet1, tileSet2);
+                    if (p != null) {
+                        points.add(p);
+                    }
+                }
+
+                // run in Swing EDT thread
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Layer layer = getSelectedMapLayer();
+                        layer.getIdwTileRenderer().setColorPoints(points);
+                        idwPanel.repaint();
+                        idwPreview.repaint();
+                    }
+                });
+
+            }
+        });
+    }
+
     private void idwApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwApplyButtonActionPerformed
         reloadHTMLPreviewMap();
+        setMapPoints();
     }//GEN-LAST:event_idwApplyButtonActionPerformed
 
     private void idwTileSetsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwTileSetsButtonActionPerformed
@@ -2361,6 +2418,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_visibleCheckBoxActionPerformed
 
+    private void readIDWPointsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readIDWPointsButtonActionPerformed
+        readIDWPoints();
+    }//GEN-LAST:event_readIDWPointsButtonActionPerformed
+
     /**
      * extract values from grid TileSet
      *
@@ -2390,7 +2451,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         try {
             IDWPoint p = new IDWPoint();
             p.setLonLat(lon, lat);
-            
+
             //Hex to RGB Conversion, convert the hex value from the color picker
             p.setColor(Color.decode(color));
 
@@ -2405,55 +2466,21 @@ public class MapComposerPanel extends javax.swing.JPanel {
             p.setAttribute1(v1);
             p.setAttribute2(v2);
             return p;
-        } catch (IOException ex) {
+        } catch (Throwable ex) {
             return null;
         }
     }
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Layer layer = getSelectedMapLayer();
-        final ArrayList<IDWPoint> points = layer.getIdwTileRenderer().getPoints();
-        points.clear();
 
-        // run in JavaFX thread
+    private void setMapPoints() {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 WebEngine webEngine = webView.getEngine();
-                // run scripts to retreive current map center and zoom
-                JSObject ret = (JSObject) webEngine.executeScript("getColors()");
-                
-                // TODO should this run in the Swing event dispatching thread
-                // instead of the JavaFX thread? 
-                Object len = ret.getMember("length");
-                int n = ((Number) len).intValue();
-                Layer layer = getSelectedMapLayer();
-                for (int i = 0; i < n; i += 3) {
-                    double lon = ((Number) ret.getSlot(i)).doubleValue();
-                    double lat = ((Number) ret.getSlot(i + 1)).doubleValue();
-                    
-                    // make sure longitude values are within -180..+180
-                    while (lon > 180) {
-                        lon -= 360;
-                    }
-                    while (lon < -180) {
-                        lon += 360;
-                    }
-                    String color = (String) ret.getSlot(i + 2);
-                    TileSet tileSet1 = layer.getGrid1TileSet();
-                    TileSet tileSet2 = layer.getGrid2TileSet();
-                    IDWPoint p = createIDWPoint(lon, lat, color, tileSet1, tileSet2);
-                    if (p != null) {
-                        points.add(p);
-                    }
-                    System.out.println(p);
-                }
-                layer.getIdwTileRenderer().colorPointsChanged();
-                //idwPanel.repaint();
-                reloadHTMLPreviewMap();
-                
+                // run scripts to set color points in map
+                webEngine.executeScript("setColors()");
             }
         });
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }
 
     /**
      * Updates the value of the texture scale slider
@@ -2849,7 +2876,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JButton idwTileSetsButton;
     private javax.swing.JPanel idwTileSetsPanel;
     private edu.oregonstate.carto.mapcomposer.gui.RotatedLabel idwVerticalLabel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel9;
@@ -2876,6 +2902,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JFormattedTextField northField;
     private javax.swing.JSlider opacitySlider;
     private javax.swing.JLabel opacityValueLabel;
+    private javax.swing.JButton readIDWPointsButton;
     private javax.swing.JButton removeLayerButton;
     private javax.swing.JButton resetCurveFileButton;
     private javax.swing.JCheckBox shadowCheckBox;

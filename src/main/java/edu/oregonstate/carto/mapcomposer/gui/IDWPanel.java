@@ -1,6 +1,7 @@
 package edu.oregonstate.carto.mapcomposer.gui;
 
 import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWPoint;
+import edu.oregonstate.carto.utils.ColorUtils;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -115,7 +116,11 @@ public class IDWPanel extends IDWPreview {
                 if (point == selectedPoint) {
                     g2d.setColor(Color.RED);
                 } else {
-                    g2d.setColor(Color.BLACK);
+                    if (ColorUtils.getBrightness(point.getColor()) > 100) {
+                        g2d.setColor(Color.BLACK);
+                    } else {
+                        g2d.setColor(Color.WHITE);
+                    }
                 }
                 g2d.drawRect(px - RECT_DIM / 2, py - RECT_DIM / 2, RECT_DIM, RECT_DIM);
             }

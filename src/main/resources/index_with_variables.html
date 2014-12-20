@@ -5627,7 +5627,8 @@
 
 					// extend jQuery itself if only one argument is passed
 					if (length === i) {
-						target = this; --i;
+						target = this;
+						--i;
 					}
 
 					for (; i < length; i++) {
@@ -17225,7 +17226,6 @@
 			//Define the color picker (uses spectrum.js)
 			function openColorPicker(circleMarker) {
 				//Color picker with some options configured (see http://bgrins.github.io/spectrum/)
-				alert("hello jane");
 				$(".custom").spectrum({
 					color : circleMarker.options.color,
 					showButtons : false,
@@ -17259,8 +17259,7 @@
 			//if we need to create a new array, it should really be marker id & location, circle id, location, and color. Also, the correct marker (the one immediately preceding) needs to
 			//be changed for the correct circleMarker, and I'm not sure how that would get indicated to setColors except by order.
 			function getColors() {
-				alert("get colors");
-				alert(colorMarkers.getLayers());
+				alert("JS getColors called");
 
 				var colorMarkersArray = [];
 				colorMarkersArray = colorMarkers.getLayers();
@@ -17287,16 +17286,69 @@
 				console.log(circleArray[0]._latlng.lng);
 				console.log(circleArray[0]._leaflet_id);
 				*/
-				//at this point, do I need an array with just these things, or can I leave circleArray as is? What else do I need to do here?*/
 
 				return res;
+			}
+
+			function createPoint(latlng) {
+				//make a draggable marker & add to the colorMarkers Layer Group
+				var marker = new L.marker(latlng, markerOptions).addTo(colorMarkers);
+
+				//make a circle marker & add to Layer Group
+				var circleMarker = new L.circleMarker(latlng, circleOptions).addTo(colorMarkers);
+
+				//define popup content:
+				//initializes the color picker and links it to the jQuery color picker class
+				//provides a button for deleting the marker & circleMarker pair
+				//onClick function calls deleteMarkers, which takes in the leaflet IDs of the layers to be deleted
+				var popupContent = "<input type='text' class='custom'/><br><br><input type='button' value='Delete' onClick='deleteMarkers(" + marker._leaflet_id + "," + circleMarker._leaflet_id + ")' />";
+
+				//Set popup options
+				var popupOptions = {
+					maxWidth : 55,
+					offset : [0, 3] //adjusts the anchor position
+				};
+
+				//bind a popup to the marker
+				marker.bindPopup(popupContent, popupOptions).openPopup();
+
+				marker.on('click', function() {
+					openColorPicker(circleMarker);
+				});
+
+				openColorPicker(circleMarker);
+
+				//Get the starting position of the marker
+				var startPosition = marker.getLatLng();
+
+				//Get the marker position on the start of movement
+				//Set the circle marker to the marker position
+				marker.on('movestart', function() {
+					var moveStartPosition = marker.getLatLng();
+					circleMarker.setLatLng(moveStartPosition);
+				});
+
+				//Get the marker position during movement
+				//Set the circle marker position to the marker position during movement
+				marker.on('move', function() {
+					var movePosition = marker.getLatLng();
+					circleMarker.setLatLng(movePosition);
+				});
+
+				//Get the marker position at the end of movement
+				//Set the circle marker to the marker position when the movement ends
+				marker.on('moveend', function() {
+					var endPosition = marker.getLatLng();
+					circleMarker.setLatLng(endPosition);
+				});
 			}
 
 			//FINISH ME:
 			//Also, the correct marker (the one immediately preceding) needs to
 			//be changed for the correct circleMarker, and I'm not sure how that would get indicated to setColors except by order.
 			function setColors(colorMarkers) {
-				alert("setColors called");
+				alert("JS setColors called");
+				// this should call createPoint()
 				return;
 				//remove colorMarkers Layer Group from map
 				map.removeLayer(colorMarkers);
@@ -17345,67 +17397,7 @@
 			/*Create a new circle marker (IDW color) and a new marker (drag handler) when the map is clicked at the clicked location,
 			 then add them to their respective Layer Groups*/
 			map.on('click', function(e) {
-				alert("start click");
-				//make a draggable marker & add to the colorMarkers Layer Group
-				var marker = new L.marker(e.latlng, markerOptions).addTo(colorMarkers);
-
-				//make a circle marker & add to Layer Group
-				var circleMarker = new L.circleMarker(e.latlng, circleOptions).addTo(colorMarkers);
-
-				console.log(colorMarkers.getLayers());
-
-				//TESTING: Calls the getColors function
-				//getColors(colorMarkers);
-
-				//define popup content:
-				//initializes the color picker and links it to the jQuery color picker class
-				//provides a button for deleting the marker & circleMarker pair
-				//onClick function calls deleteMarkers, which takes in the leaflet IDs of the layers to be deleted
-				var popupContent = "<input type='text' class='custom'/><br><br><input type='button' value='Delete' onClick='deleteMarkers(" + marker._leaflet_id + "," + circleMarker._leaflet_id + ")' />";
-
-				//Set popup options
-				var popupOptions = {
-					maxWidth : 55,
-					offset : [0, 3] //adjusts the anchor position
-				};
-
-				//bind a popup to the marker
-				marker.bindPopup(popupContent, popupOptions).openPopup();
-				alert("bind popup");
-
-				//comment this
-				marker.on('click', function() {
-					alert("open picker");
-					openColorPicker(circleMarker);
-				});
-
-				//comment this
-				openColorPicker(circleMarker);
-
-				//Get the starting position of the marker
-				var startPosition = marker.getLatLng();
-
-				//Get the marker position on the start of movement
-				//Set the circle marker to the marker position
-				marker.on('movestart', function() {
-					var moveStartPosition = marker.getLatLng();
-					circleMarker.setLatLng(moveStartPosition);
-				});
-
-				//Get the marker position during movement
-				//Set the circle marker position to the marker position during movement
-				marker.on('move', function() {
-					var movePosition = marker.getLatLng();
-					circleMarker.setLatLng(movePosition);
-				});
-
-				//Get the marker position at the end of movement
-				//Set the circle marker to the marker position when the movement ends
-				marker.on('moveend', function() {
-					var endPosition = marker.getLatLng();
-					circleMarker.setLatLng(endPosition);
-				});
-
+				createPoint(e.latlng);
 			});
 
 			var baseMaps = {
@@ -17414,7 +17406,7 @@
 
 			var overlayMaps = {
 				"Tileset" : new_tiles,
-				"colorMarkers" : colorMarkers,
+				"Color Markers" : colorMarkers,
 			};
 
 			L.control.layers(baseMaps, overlayMaps, {
