@@ -2472,12 +2472,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     private void setMapPoints() {
+        final String str = getSelectedMapLayer().getIdwTileRenderer().getColorPointsString();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 WebEngine webEngine = webView.getEngine();
                 // run scripts to set color points in map
-                webEngine.executeScript("setColors()");
+                webEngine.executeScript("setColors(" + str + ")");
             }
         });
     }
