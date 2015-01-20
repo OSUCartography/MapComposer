@@ -5627,8 +5627,7 @@
 
 					// extend jQuery itself if only one argument is passed
 					if (length === i) {
-						target = this;
-						--i;
+						target = this; --i;
 					}
 
 					for (; i < length; i++) {
@@ -17194,7 +17193,7 @@
 			});
 
 			// use custom map protocol to have map tiles rendered on the fly
-			var new_tiles = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			var new_tiles = L.tileLayer('map:{z}/{x}/{y}.png', {
 				maxZoom : 22
 			});
 
@@ -17203,7 +17202,7 @@
 				zoom : $$viewZoomlevel$$,
 				layers : [osm, new_tiles]
 			});
-
+			
 			//Set marker icon options
 			//Makes a transparent (invisible) marker that is located on top of the circle marker
 			var myIcon = L.icon({
@@ -17281,11 +17280,11 @@
 				// circleArray[0].options.color     and      circleArray[0]._latlng
 				//What about the leaflet ID? circleArray[0]._leaflet_id
 				/*
-				console.log(circleArray[0].options.color);
-				console.log(circleArray[0]._latlng.lat);
-				console.log(circleArray[0]._latlng.lng);
-				console.log(circleArray[0]._leaflet_id);
-				*/
+				 console.log(circleArray[0].options.color);
+				 console.log(circleArray[0]._latlng.lat);
+				 console.log(circleArray[0]._latlng.lng);
+				 console.log(circleArray[0]._leaflet_id);
+				 */
 
 				return res;
 			}
@@ -17393,6 +17392,10 @@
 			map.on('contextmenu', function() {
 				setColors(colorMarkers);
 			});
+			
+			//Add the colorMarkers Layer Group to the map 
+			//(checks associated overlay box when map is loaded)
+			colorMarkers.addTo(map);
 
 			/*Create a new circle marker (IDW color) and a new marker (drag handler) when the map is clicked at the clicked location,
 			 then add them to their respective Layer Groups*/

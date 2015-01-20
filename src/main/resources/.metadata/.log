@@ -247,3 +247,785 @@ The remote debugger version might not match the expected protocol version (20060
 !ENTRY com.aptana.php.debug.epl 4 150 2014-12-19 12:25:46.470
 !MESSAGE Incompatible debugger version.
 The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-19 16:34:23.597
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-20 18:16:58.621
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-20 18:55:16.063
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-21 06:05:40.774
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-22 01:27:58.734
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-22 03:30:28.393
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2014-12-22 09:59:59.555
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-22 20:05:42.064
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-23 15:17:55.174
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-23 20:08:50.076
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-24 11:49:05.008
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-24 15:44:15.290
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-24 23:44:20.172
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-26 12:10:06.754
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2014-12-27 01:34:49.003
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-27 17:13:27.152
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-28 03:44:04.910
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-28 19:03:00.601
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-29 13:13:27.460
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-29 13:43:31.829
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-29 14:15:04.276
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-29 21:33:14.196
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-29 23:18:37.067
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-30 11:33:29.019
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2014-12-30 11:49:40.664
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 4 2014-12-30 11:49:40.668
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-30 11:59:43.276
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-30 16:33:37.018
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2014-12-31 19:27:19.384
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2014-12-31 22:44:31.288
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-01 01:54:49.969
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-01 02:12:56.965
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-01 03:02:42.047
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-01 07:53:11.984
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-01 09:03:05.309
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-01 11:02:32.854
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-01 21:52:17.722
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-02 01:24:31.126
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-02 02:54:36.642
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.commandline.launcher 4 0 2015-01-02 13:55:04.003
+!MESSAGE (Build 3.6.1.201410201044) [ERROR]  Connection reset
+!STACK 0
+java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.net.SocketInputStream.read(Unknown Source)
+	at sun.nio.cs.StreamDecoder.readBytes(Unknown Source)
+	at sun.nio.cs.StreamDecoder.implRead(Unknown Source)
+	at sun.nio.cs.StreamDecoder.read(Unknown Source)
+	at java.io.InputStreamReader.read(Unknown Source)
+	at java.io.BufferedReader.fill(Unknown Source)
+	at java.io.BufferedReader.readLine(Unknown Source)
+	at java.io.BufferedReader.readLine(Unknown Source)
+	at com.aptana.commandline.launcher.server.LauncherServer$CommandLineArgsServer.run(LauncherServer.java:126)
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-02 14:04:32.907
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 15:44:10.578
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 15:45:00.567
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 15:46:23.211
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 15:46:52.583
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 15:47:01.807
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 16:11:01.570
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 16:13:42.895
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 16:25:48.353
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 16:29:39.828
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 16:37:04.720
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 16:51:15.973
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-03 23:57:52.169
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 00:01:55.064
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 00:31:37.946
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 03:38:25.035
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 06:56:19.575
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 07:05:42.960
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 07:29:41.876
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 07:52:25.052
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-04 13:58:48.681
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 14:25:29.542
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 14:36:13.581
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 14:49:23.970
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 15:14:40.619
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 15:34:44.337
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 15:43:25.606
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-04 21:35:54.807
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-05 07:19:16.291
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-05 13:40:01.694
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-05 13:59:56.409
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-05 14:23:03.891
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-05 15:29:16.283
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-05 19:29:25.141
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-05 20:50:41.795
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-05 23:04:33.544
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-06 04:45:12.494
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-06 06:32:59.275
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-06 09:56:38.674
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-06 13:36:04.057
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-06 14:20:46.160
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-06 21:30:15.577
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-06 22:53:10.343
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-06 23:40:18.656
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-07 00:43:02.069
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-07 05:34:40.686
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-07 06:36:47.586
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-07 07:13:21.210
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-07 11:13:51.710
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-07 12:08:04.263
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-07 13:37:47.531
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-07 13:37:47.851
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-07 14:08:11.313
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-07 18:35:11.779
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-08 04:14:46.495
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-08 06:06:17.137
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-08 07:35:56.747
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-08 10:06:47.334
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-08 12:16:28.208
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-08 22:52:34.701
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-08 23:07:59.424
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-09 11:23:18.298
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-09 11:25:25.119
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-09 15:12:50.781
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-09 18:18:55.682
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-09 19:22:10.021
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-10 00:53:12.835
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-10 02:38:31.011
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-10 04:22:59.678
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-10 17:40:58.587
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-10 18:41:13.945
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-10 20:48:37.594
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-10 20:48:37.616
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-10 20:48:37.636
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-10 20:48:37.657
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-10 20:48:37.678
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-10 20:48:37.692
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-10 20:48:39.139
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-10 20:48:47.141
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-10 20:48:47.254
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-10 20:48:51.141
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-11 00:28:23.216
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-11 01:17:18.476
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-11 05:34:44.920
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-11 13:39:00.351
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-11 16:32:54.642
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-11 17:35:45.651
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-11 17:44:35.400
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-12 16:57:40.629
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-12 17:55:08.678
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-12 19:35:41.812
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-13 02:50:55.654
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-13 04:30:27.193
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-13 05:35:31.770
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-13 10:31:03.628
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+!SESSION 2015-01-13 17:20:38.399 -----------------------------------------------
+eclipse.buildId=3.6.1.201410201044
+java.version=1.7.0_71
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY com.aptana.core 4 0 2015-01-15 11:15:24.611
+!MESSAGE (Build 3.6.1.201410201044) [ERROR]  Could not encode: http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+!STACK 0
+java.net.URISyntaxException: Illegal character in authority at index 7: http://{s}.tile.openstreetmap.org/%7Bz%7D/%7Bx%7D/%7By%7D.png
+	at java.net.URI$Parser.fail(Unknown Source)
+	at java.net.URI$Parser.parseAuthority(Unknown Source)
+	at java.net.URI$Parser.parseHierarchical(Unknown Source)
+	at java.net.URI$Parser.parse(Unknown Source)
+	at java.net.URI.<init>(Unknown Source)
+	at com.aptana.core.util.URLEncoder.encode(URLEncoder.java:47)
+	at com.aptana.editor.common.text.hyperlink.URIHyperlink.<init>(URIHyperlink.java:45)
+	at com.aptana.editor.common.text.hyperlink.HyperlinkDetector.detectHyperlinks(HyperlinkDetector.java:115)
+	at org.eclipse.ui.texteditor.HyperlinkDetectorRegistry$HyperlinkDetectorDelegate.detectHyperlinks(HyperlinkDetectorRegistry.java:80)
+	at org.eclipse.jface.text.hyperlink.HyperlinkManager.findHyperlinks(HyperlinkManager.java:289)
+	at org.eclipse.jface.text.hyperlink.HyperlinkManager.findHyperlinks(HyperlinkManager.java:261)
+	at org.eclipse.jface.text.hyperlink.HyperlinkManager.mouseMove(HyperlinkManager.java:469)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:212)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1057)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4170)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3759)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$9.run(PartRenderingEngine.java:1113)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:997)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:140)
+	at org.eclipse.ui.internal.Workbench$5.run(Workbench.java:611)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:567)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:150)
+	at com.aptana.rcp.IDEApplication.start(IDEApplication.java:126)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:354)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:181)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:636)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:591)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1450)
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-15 12:19:37.029
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.core 4 0 2015-01-15 13:33:36.670
+!MESSAGE (Build 3.6.1.201410201044) [ERROR]  Could not encode: http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+!STACK 0
+java.net.URISyntaxException: Illegal character in authority at index 7: http://{s}.tile.openstreetmap.org/%7Bz%7D/%7Bx%7D/%7By%7D.png
+	at java.net.URI$Parser.fail(Unknown Source)
+	at java.net.URI$Parser.parseAuthority(Unknown Source)
+	at java.net.URI$Parser.parseHierarchical(Unknown Source)
+	at java.net.URI$Parser.parse(Unknown Source)
+	at java.net.URI.<init>(Unknown Source)
+	at com.aptana.core.util.URLEncoder.encode(URLEncoder.java:47)
+	at com.aptana.editor.common.text.hyperlink.URIHyperlink.<init>(URIHyperlink.java:45)
+	at com.aptana.editor.common.text.hyperlink.HyperlinkDetector.detectHyperlinks(HyperlinkDetector.java:115)
+	at org.eclipse.ui.texteditor.HyperlinkDetectorRegistry$HyperlinkDetectorDelegate.detectHyperlinks(HyperlinkDetectorRegistry.java:80)
+	at org.eclipse.jface.text.hyperlink.HyperlinkManager.findHyperlinks(HyperlinkManager.java:289)
+	at org.eclipse.jface.text.hyperlink.HyperlinkManager.findHyperlinks(HyperlinkManager.java:261)
+	at org.eclipse.jface.text.hyperlink.HyperlinkManager.mouseMove(HyperlinkManager.java:469)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:212)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1057)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4170)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3759)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$9.run(PartRenderingEngine.java:1113)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:997)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:140)
+	at org.eclipse.ui.internal.Workbench$5.run(Workbench.java:611)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:567)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:150)
+	at com.aptana.rcp.IDEApplication.start(IDEApplication.java:126)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:354)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:181)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:636)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:591)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1450)
+
+!ENTRY com.aptana.core 4 0 2015-01-15 13:33:36.683
+!MESSAGE (Build 3.6.1.201410201044) [ERROR]  Could not encode: http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+!STACK 0
+java.net.URISyntaxException: Illegal character in authority at index 7: http://{s}.tile.openstreetmap.org/%7Bz%7D/%7Bx%7D/%7By%7D.png
+	at java.net.URI$Parser.fail(Unknown Source)
+	at java.net.URI$Parser.parseAuthority(Unknown Source)
+	at java.net.URI$Parser.parseHierarchical(Unknown Source)
+	at java.net.URI$Parser.parse(Unknown Source)
+	at java.net.URI.<init>(Unknown Source)
+	at com.aptana.core.util.URLEncoder.encode(URLEncoder.java:47)
+	at com.aptana.editor.common.text.hyperlink.URIHyperlink.<init>(URIHyperlink.java:45)
+	at com.aptana.editor.common.text.hyperlink.HyperlinkDetector.detectHyperlinks(HyperlinkDetector.java:115)
+	at org.eclipse.ui.texteditor.HyperlinkDetectorRegistry$HyperlinkDetectorDelegate.detectHyperlinks(HyperlinkDetectorRegistry.java:80)
+	at org.eclipse.jface.text.hyperlink.HyperlinkManager.findHyperlinks(HyperlinkManager.java:289)
+	at org.eclipse.jface.text.hyperlink.HyperlinkManager.findHyperlinks(HyperlinkManager.java:261)
+	at org.eclipse.jface.text.hyperlink.HyperlinkManager.mouseMove(HyperlinkManager.java:469)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:212)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1057)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4170)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3759)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$9.run(PartRenderingEngine.java:1113)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:997)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:140)
+	at org.eclipse.ui.internal.Workbench$5.run(Workbench.java:611)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:567)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:150)
+	at com.aptana.rcp.IDEApplication.start(IDEApplication.java:126)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:354)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:181)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:636)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:591)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1450)
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-15 16:53:54.574
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-15 17:53:57.711
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-15 21:17:51.599
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-16 03:35:32.351
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-16 07:46:11.394
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-16 11:38:46.327
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-16 19:33:09.809
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-17 03:24:16.270
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-17 07:31:17.859
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-17 09:05:37.246
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-17 15:43:33.678
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-17 16:17:25.727
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-17 22:02:54.763
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-18 03:52:19.346
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-18 09:49:41.422
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-18 18:09:57.400
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-18 19:00:17.292
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-18 20:09:09.304
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-19 00:55:36.215
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-19 04:02:23.670
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-19 04:08:04.167
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-19 09:50:52.414
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-01-19 10:16:15.166
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-19 12:32:52.130
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-19 18:03:35.729
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-20 03:16:35.331
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-20 04:32:24.201
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-01-20 05:26:23.097
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).

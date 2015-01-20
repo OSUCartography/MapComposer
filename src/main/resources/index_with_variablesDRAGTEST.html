@@ -17192,7 +17192,7 @@
 				attribution : 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
 			});
 
-			// use custom map protocol to have map tiles rendered on the fly
+			// use custom map protocol to have map tiles rendered on the fly (replace the openstreetmap bit with: 'map:{z}/{x}/{y}.png' to get this working in MapComposer)
 			var new_tiles = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 				maxZoom : 22
 			});

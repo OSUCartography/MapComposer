@@ -376,9 +376,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 Number centerLat = (Number) webEngine.executeScript("map.getCenter().lat");
                 Number centerLon = (Number) webEngine.executeScript("map.getCenter().lng");
                 Number zoom = (Number) webEngine.executeScript("map.getZoom()");
+                //Array colorMarkers = (Array) webEngine.executeScript ("colorMarkers.getLayers()");
 
                 // create and load new HTML page with same map center and zoom
-                String html = loadHTMLPreviewMap(zoom, centerLon, centerLat);
+                String html = loadHTMLPreviewMap(zoom, centerLon, centerLat /*, colorMarkers*/);
                 webEngine.loadContent(html);
             }
         });
