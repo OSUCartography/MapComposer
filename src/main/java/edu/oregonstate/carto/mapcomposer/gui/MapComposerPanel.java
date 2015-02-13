@@ -2355,8 +2355,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
                     String color = (String) ret.getSlot(i + 2);
                     IDWPoint p = createIDWPoint(lon, lat, color, tileSet1, tileSet2);
                     if (p != null) {
+                        System.out.println(p.toString());
                         points.add(p);
+                    } else {
+                        System.err.println("could not create point for " + lon + " " + lat + " " + color);
                     }
+                    
                 }
 
                 // run in Swing EDT thread
@@ -2479,7 +2483,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             public void run() {
                 WebEngine webEngine = webView.getEngine();
                 // run scripts to set color points in map
-                webEngine.executeScript("setColors(" + str + ")");
+                webEngine.executeScript("setColors('" + str + "')");
             }
         });
     }

@@ -125,20 +125,20 @@ public class IDWGridTileRenderer implements TileRenderer {
 
     public String getColorPointsString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("[");
         for (IDWPoint point : points) {
             sb.append(point.getLon());
             sb.append(", ");
             sb.append(point.getLat());
-            sb.append(", ");
+            sb.append(", 0x");
             sb.append(Integer.toHexString(point.getColor().getRGB()));
-            
-            sb.append(",");
+            sb.append(", ");
         }
-        // remove last coma
+        // remove last coma and trailing empty space
         String str = sb.toString();
-        str = str.substring(0, str.length() - 2);
-        return str = "]";
+        if (str.length() >= 2) {
+            str = str.substring(0, str.length() - 2);
+        }
+        return str;
     }
 
     // FIXME hard coded color points for the moment

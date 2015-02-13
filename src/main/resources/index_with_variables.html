@@ -17315,8 +17315,6 @@
 					openColorPicker(circleMarker);
 				});
 
-				openColorPicker(circleMarker);
-
 				//Get the starting position of the marker
 				var startPosition = marker.getLatLng();
 
@@ -17340,59 +17338,24 @@
 					var endPosition = marker.getLatLng();
 					circleMarker.setLatLng(endPosition);
 				});
+				
+				return circleMarker;
 			}
 
-			//FINISH ME:
-			//Also, the correct marker (the one immediately preceding) needs to
-			//be changed for the correct circleMarker, and I'm not sure how that would get indicated to setColors except by order.
-			function setColors(stuff) {
-				alert("JS setColors called");
-				// this should call createPoint()
-				return;
-				//remove colorMarkers Layer Group from map
-				map.removeLayer(colorMarkers);
-
-				//TODO: get Leaflet IDs that had colors and locations changed by the Java interface, and the actual changes
-
-				//figure out which positions those IDs have in the colorMarkers.getLayers() array
-				//if position has desired ._leaflet_id(s), change properties
-				//change/set the marker & circleMarker latlng locations
-				//change/set the circleMarker colors
-
-				//Place holder values (31 and 36 are always the first marker and circleMarker if you check the coloredMarkers box first, otherwise it's 31 & 32)
-				var changedMarker = 31;
-				var changedCircleMarker = 36;
-				var newColor = "red";
-
-				//if getColors generates a new array, which is then altered by the Java side & returned,
-				//then that array needs to be used in the for/if conditions and passed to this function.
-				for ( i = 0; i < colorMarkers.getLayers().length; i++) {
-					if (changedMarker == colorMarkers.getLayers()[i]._leaflet_id) {
-						colorMarkers.getLayers()[i]._latlng = L.latLng(46, -145);
-					}
-
-					if (changedCircleMarker == colorMarkers.getLayers()[i]._leaflet_id) {
-						colorMarkers.getLayers()[i]._latlng = L.latLng(46, -145);
-					}
-
-					if (changedCircleMarker == colorMarkers.getLayers()[i]._leaflet_id) {
-						colorMarkers.getLayers()[i].setStyle({
-							color : newColor
-						});
-					}
+			function setColors(pointsStr) {
+				
+				var circleMarker, parameters = pointsStr.split(',');
+				for ( i = 0; i < parameters.length; i += 3) {
+					alert("new point");
+					alert("$"+parameters[i + 1]+"$");
+					alert("$"+parameters[i]+"$");
+					alert("$"+parameters[i + 2]+"$");
+					latLng = L.latLng(parameters[i + 1], parameters[i]);
+					circleMarker = createPoint(latLng);
+					circleMarker.options.color = parameters[i + 2];
 				}
-
-				console.log(colorMarkers.getLayers());
-
-				//Add colorMarkers Layer Group back to map
-				map.addLayer(colorMarkers);
 			}
 
-			//TESTING setColors function using right-click on map
-			map.on('contextmenu', function() {
-				setColors(colorMarkers);
-			});
-			
 			//Add the colorMarkers Layer Group to the map 
 			//(checks associated overlay box when map is loaded)
 			colorMarkers.addTo(map);
@@ -17400,7 +17363,8 @@
 			/*Create a new circle marker (IDW color) and a new marker (drag handler) when the map is clicked at the clicked location,
 			 then add them to their respective Layer Groups*/
 			map.on('click', function(e) {
-				createPoint(e.latlng);
+				var circleMarker = createPoint(e.latlng);
+				openColorPicker(circleMarker);
 			});
 
 			var baseMaps = {

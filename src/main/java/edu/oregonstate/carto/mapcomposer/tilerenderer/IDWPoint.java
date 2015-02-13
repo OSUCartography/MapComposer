@@ -24,7 +24,7 @@ public class IDWPoint {
     private double lat;
 
     public String toString() {
-        return " " + r + " " + g + " " + b + " " + attribute1 + " " + attribute2;
+        return lon + " " + lat + " " + r + " " + g + " " + b + " " + attribute1 + " " + attribute2;
     }
 
     /**
