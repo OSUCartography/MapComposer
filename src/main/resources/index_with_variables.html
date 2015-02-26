@@ -3,7 +3,7 @@
 	<head>
 		<title>Leaflet Tile Viewer</title>
 		<meta charset="utf-8" />
-
+		
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<style>
 			body {
@@ -17203,10 +17203,13 @@
 				layers : [osm, new_tiles]
 			});
 			
+			// transparent png 20x20 pixels size, base64 encoding
+			var base64Img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRF////AAAAVcLTfgAAAAF0Uk5TAEDm2GYAAAAQSURBVHjaYmAYBYMdAAQYAAGkAAFD69i/AAAAAElFTkSuQmCC";
+		
 			//Set marker icon options
 			//Makes a transparent (invisible) marker that is located on top of the circle marker
 			var myIcon = L.icon({
-				iconUrl : 'markerClear.png',
+				iconUrl : base64Img, // 'markerClear.png',
 				iconAnchor : [10, 10],
 			});
 
