@@ -30,6 +30,19 @@ public class MapComposerFrame extends javax.swing.JFrame {
     public MapComposerFrame() {
         initComponents();
         mapComposerPanel.registerUndoMenuItems(undoMenuItem, redoMenuItem);
+        /*
+        // FIXME temp hack for developing. Remove for final release.
+        String filePath = "/Users/jennyb/Desktop/local.xml";
+        if (filePath != null) {
+            try {
+                mapComposerPanel.setMap(Map.unmarshal(filePath));
+            } catch (JAXBException | FileNotFoundException ex) {
+                Logger.getLogger(MapComposerFrame.class.getName()).log(Level.SEVERE, null, ex);
+                String msg = "Could not load style file";
+                String title = "Error";
+                ErrorDialog.showErrorDialog(msg, title, ex, rootPane);
+            }
+        }*/
     }
 
     /**

@@ -93,8 +93,7 @@ public class IDWGridTileRenderer implements TileRenderer {
         double weightedSumB = 0;
 
         /* loop over all points. For each point, compute distance */
-        for (int i = 0; i <= points.size() - 1; i++) {
-            IDWPoint point = points.get(i);
+        for (IDWPoint point : points ) {
             double attr1Point = point.getAttribute1();
             double attr2Point = point.getAttribute2();
 

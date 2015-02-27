@@ -42,6 +42,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
+import javafx.concurrent.Worker.State;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -63,6 +64,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.xml.bind.JAXBException;
+import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
 
 public class MapComposerPanel extends javax.swing.JPanel {
@@ -366,19 +368,41 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * settings. To be called from the Swing thread.
      */
     public void reloadHTMLPreviewMap() {
+
+        final String str;
+        if (getSelectedMapLayer() != null) {
+            str = getSelectedMapLayer().getIdwTileRenderer().getColorPointsString();
+        } else {
+            str = null;
+        }
+
         // run in JavaFX thread
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                WebEngine webEngine = webView.getEngine();
+                final WebEngine webEngine = webView.getEngine();
                 // run scripts to retreive current map center and zoom
                 Number centerLat = (Number) webEngine.executeScript("map.getCenter().lat");
                 Number centerLon = (Number) webEngine.executeScript("map.getCenter().lng");
                 Number zoom = (Number) webEngine.executeScript("map.getZoom()");
-                //Array colorMarkers = (Array) webEngine.executeScript ("colorMarkers.getLayers()");
-
                 // create and load new HTML page with same map center and zoom
-                String html = loadHTMLPreviewMap(zoom, centerLon, centerLat /*, colorMarkers*/);
+                String html = loadHTMLPreviewMap(zoom, centerLon, centerLat);
+
+                // hanlder that will add color points to map once the page is loaded
+                ChangeListener listener = new ChangeListener<State>() {
+                    @Override
+                    public void changed(ObservableValue ov, State oldState, State newState) {
+                        if (newState == State.SUCCEEDED) {
+                            // run scripts to set color points in map
+                            webEngine.executeScript("setColors('" + str + "')");
+                        }
+                    }
+                };
+                if (str != null && str.length() > 0) {
+                    webEngine.getLoadWorker().stateProperty().addListener(listener);
+                }
+                
+                // loage page
                 webEngine.loadContent(html);
             }
         });
@@ -2322,7 +2346,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         final Layer layer = getSelectedMapLayer();
         final TileSet tileSet1 = layer.getGrid1TileSet();
         final TileSet tileSet2 = layer.getGrid2TileSet();
-        if (!tileSet1.isURLTemplateValid() || !tileSet2.isURLTemplateValid()){
+        if (!tileSet1.isURLTemplateValid() || !tileSet2.isURLTemplateValid()) {
             String msg = "Tile sets have not been selected.";
             ErrorDialog.showErrorDialog(msg, "MapComposer Error", null, this);
         }
@@ -2331,38 +2355,37 @@ public class MapComposerPanel extends javax.swing.JPanel {
             @Override
             public void run() {
 
-                WebEngine webEngine = webView.getEngine();
-                // run scripts to retreive color points from map
-                JSObject ret = (JSObject) webEngine.executeScript("getColors()");
+                try {
+                    WebEngine webEngine = webView.getEngine();
+                    // run scripts to retreive color points from map
+                    JSObject ret = (JSObject) webEngine.executeScript("getColors()");
 
-                // convert the JavaScript result to IDWPoint objects
-                Object len = ret.getMember("length");
-                int n = ((Number) len).intValue();
+                    // convert the JavaScript result to IDWPoint objects
+                    Object len = ret.getMember("length");
+                    int n = ((Number) len).intValue();
 
-                for (int i = 0; i < n; i += 3) {
-                    double lon = ((Number) ret.getSlot(i)).doubleValue();
-                    double lat = ((Number) ret.getSlot(i + 1)).doubleValue();
+                    for (int i = 0; i < n; i += 3) {
+                        double lon = ((Number) ret.getSlot(i)).doubleValue();
+                        double lat = ((Number) ret.getSlot(i + 1)).doubleValue();
 
-                    // make sure longitude values are within -180..+180
-                    while (lon > 180) {
-                        lon -= 360;
-                    }
-                    while (lon < -180) {
-                        lon += 360;
-                    }
+                        // make sure longitude values are within -180..+180
+                        while (lon > 180) {
+                            lon -= 360;
+                        }
+                        while (lon < -180) {
+                            lon += 360;
+                        }
 
-                    String color = (String) ret.getSlot(i + 2);
-                    IDWPoint p = createIDWPoint(lon, lat, color, tileSet1, tileSet2);
-                    if (p != null) {
-                        System.out.println(p.toString());
+                        String color = (String) ret.getSlot(i + 2);
+                        IDWPoint p = createIDWPoint(lon, lat, color, tileSet1, tileSet2);
                         points.add(p);
-                    } else {
-                        System.err.println("could not create point for " + lon + " " + lat + " " + color);
                     }
-                    
+                } catch (IOException | JSException e) {
+                    // FIXME
+                    e.printStackTrace();
                 }
 
-                // run in Swing EDT thread
+                // run in Swing event dispatching thread
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -2379,7 +2402,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     private void idwApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwApplyButtonActionPerformed
         reloadHTMLPreviewMap();
-        setMapPoints();
     }//GEN-LAST:event_idwApplyButtonActionPerformed
 
     private void idwTileSetsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwTileSetsButtonActionPerformed
@@ -2448,43 +2470,31 @@ public class MapComposerPanel extends javax.swing.JPanel {
         TileSet.pixelsToTopLeftTilePixels(pxy[0], pxy[1], tltxy);
         // get grid value
         Grid grid = (Grid) tile.fetch();
-        return grid.getBilinearInterpol(tltxy[0], tltxy[1]);
+        return grid.getBilinearInterpol(tltxy[0], -tltxy[1]);
     }
 
-    private IDWPoint createIDWPoint(double lon, double lat, String color, TileSet tileSet1, TileSet tileSet2) {
-        try {
-            IDWPoint p = new IDWPoint();
-            p.setLonLat(lon, lat);
+    private IDWPoint createIDWPoint(double lon, double lat, String color, TileSet tileSet1, TileSet tileSet2) throws IOException {
+        IDWPoint p = new IDWPoint();
+        p.setLonLat(lon, lat);
 
-            //Hex to RGB Conversion, convert the hex value from the color picker
-            p.setColor(Color.decode(color));
+        //Hex to RGB Conversion, convert the hex value from the color picker
+        p.setColor(Color.decode(color));
 
-            // TODO
-            int zoom = 10;
+        // TODO
+        int zoom = 10;
 
-            float v1 = getValueFromGridTileSet(zoom, lon, lat, tileSet1);
-            float v2 = getValueFromGridTileSet(zoom, lon, lat, tileSet2);
-            if (Float.isNaN(v1) || Float.isNaN(v2)) {
-                return null;
-            }
-            p.setAttribute1(v1);
-            p.setAttribute2(v2);
-            return p;
-        } catch (Throwable ex) {
-            return null;
+        float v1 = getValueFromGridTileSet(zoom, lon, lat, tileSet1);
+        float v2 = getValueFromGridTileSet(zoom, lon, lat, tileSet2);
+        if (Float.isNaN(v1)) {
+            throw new IllegalArgumentException("no value for " + lon + "/" + lat + " in first tile set");
         }
-    }
+        if (Float.isNaN(v2)) {
+            throw new IllegalArgumentException("no value for " + lon + "/" + lat + " in second tile set");
+        }
 
-    private void setMapPoints() {
-        final String str = getSelectedMapLayer().getIdwTileRenderer().getColorPointsString();
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                WebEngine webEngine = webView.getEngine();
-                // run scripts to set color points in map
-                webEngine.executeScript("setColors('" + str + "')");
-            }
-        });
+        p.setAttribute1(v1);
+        p.setAttribute2(v2);
+        return p;
     }
 
     /**

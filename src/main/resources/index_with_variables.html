@@ -17194,7 +17194,8 @@
 
 			// use custom map protocol to have map tiles rendered on the fly
 			var new_tiles = L.tileLayer('map:{z}/{x}/{y}.png', {
-				maxZoom : 22
+				maxZoom : 22,
+				opacity : 0.5
 			});
 
 			var map = L.map('map', {
@@ -17261,8 +17262,6 @@
 			//if we need to create a new array, it should really be marker id & location, circle id, location, and color. Also, the correct marker (the one immediately preceding) needs to
 			//be changed for the correct circleMarker, and I'm not sure how that would get indicated to setColors except by order.
 			function getColors() {
-				alert("JS getColors called");
-
 				var colorMarkersArray = [];
 				colorMarkersArray = colorMarkers.getLayers();
 				//assigns the array of layers in colorMarkers to a variable
@@ -17346,17 +17345,16 @@
 			}
 
 			function setColors(pointsStr) {
-				
-				var circleMarker, parameters = pointsStr.split(',');
+				var latLng, circleMarker, parameters = pointsStr.split(',');
+				colorMarkers.clearLayers();
 				for ( i = 0; i < parameters.length; i += 3) {
-					alert("new point");
-					alert("$"+parameters[i + 1]+"$");
-					alert("$"+parameters[i]+"$");
-					alert("$"+parameters[i + 2]+"$");
-					latLng = L.latLng(parameters[i + 1], parameters[i]);
+					latLng = L.latLng(parseFloat(parameters[i + 1]), parseFloat(parameters[i]));
 					circleMarker = createPoint(latLng);
-					circleMarker.options.color = parameters[i + 2];
-				}
+					// replace leading 0x and alpha hexadecimal value with #
+					circleMarker.setStyle({
+							color : "#" + parameters[i + 2].trim().substring(4)
+						});
+				}				
 			}
 
 			//Add the colorMarkers Layer Group to the map 
