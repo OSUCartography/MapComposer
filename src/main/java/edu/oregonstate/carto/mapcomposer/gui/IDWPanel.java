@@ -182,9 +182,13 @@ public class IDWPanel extends IDWPreview {
         double attr1 = pixelXToIDWAttr1(mouseX + dragDX);
         attr1 = Math.min(Math.max(0d, attr1), 1d);
         selectedPoint.setAttribute1(attr1);
+        
         double attr2 = pixelYToIDWAttr2(mouseY + dragDY);
         attr2 = Math.min(Math.max(0d, attr2), 1d);
         selectedPoint.setAttribute2(attr2);
+        
+        selectedPoint.setLonLat(Double.NaN, Double.NaN);
+        
         repaint();
         firePropertyChange("colorChanged", null, null);
     }

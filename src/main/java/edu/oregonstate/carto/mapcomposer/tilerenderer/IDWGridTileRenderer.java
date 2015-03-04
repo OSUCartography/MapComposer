@@ -93,7 +93,7 @@ public class IDWGridTileRenderer implements TileRenderer {
         double weightedSumB = 0;
 
         /* loop over all points. For each point, compute distance */
-        for (IDWPoint point : points ) {
+        for (IDWPoint point : points) {
             double attr1Point = point.getAttribute1();
             double attr2Point = point.getAttribute2();
 
@@ -125,12 +125,14 @@ public class IDWGridTileRenderer implements TileRenderer {
     public String getColorPointsString() {
         StringBuilder sb = new StringBuilder();
         for (IDWPoint point : points) {
-            sb.append(point.getLon());
-            sb.append(", ");
-            sb.append(point.getLat());
-            sb.append(", 0x");
-            sb.append(Integer.toHexString(point.getColor().getRGB()));
-            sb.append(", ");
+            if (point.isLonLatDefined()) {
+                sb.append(point.getLon());
+                sb.append(", ");
+                sb.append(point.getLat());
+                sb.append(", 0x");
+                sb.append(Integer.toHexString(point.getColor().getRGB()));
+                sb.append(", ");
+            }
         }
         // remove last coma and trailing empty space
         String str = sb.toString();
@@ -223,8 +225,8 @@ public class IDWGridTileRenderer implements TileRenderer {
             for (int c = 0; c < width; c++) {
                 double x = c / (width - 1d);
                 double y = 1d - r / (height - 1d);
-                int lutCol = (int)Math.round(x * (LUT_SIZE - 1));
-                int lutRow = (int)Math.round(y * (LUT_SIZE - 1));
+                int lutCol = (int) Math.round(x * (LUT_SIZE - 1));
+                int lutRow = (int) Math.round(y * (LUT_SIZE - 1));
                 imageBuffer[r * width + c] = lut[lutRow][lutCol];
             }
         }

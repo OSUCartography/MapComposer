@@ -2346,6 +2346,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
         final Layer layer = getSelectedMapLayer();
         final TileSet tileSet1 = layer.getGrid1TileSet();
         final TileSet tileSet2 = layer.getGrid2TileSet();
+        
+        ArrayList<IDWPoint> oldPoints = layer.getIdwTileRenderer().getPoints();
+        for (IDWPoint p : oldPoints) {
+            if (!p.isLonLatDefined()) {
+                points.add(p);
+            }
+        }
         if (!tileSet1.isURLTemplateValid() || !tileSet2.isURLTemplateValid()) {
             String msg = "Tile sets have not been selected.";
             ErrorDialog.showErrorDialog(msg, "MapComposer Error", null, this);

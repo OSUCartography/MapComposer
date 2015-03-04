@@ -17186,26 +17186,31 @@
 		<script>
 			//Create a Layer Group for the circle and transparent markers
 			var colorMarkers = new L.LayerGroup();
+			alert("Create Layer Group");
 
 			var osm = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 				maxZoom : 22,
 				attribution : 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
 			});
+			alert("Create osm Tile Layer");
 
 			// use custom map protocol to have map tiles rendered on the fly
 			var new_tiles = L.tileLayer('map:{z}/{x}/{y}.png', {
 				maxZoom : 22,
 				opacity : 0.5
 			});
+			alert("Create custom tile layer");
 
 			var map = L.map('map', {
 				center : new L.LatLng($$viewCenterLatitude$$, $$viewCenterLongitude$$),
 				zoom : $$viewZoomlevel$$,
 				layers : [osm, new_tiles]
 			});
+			alert("create map");
 			
 			// transparent png 20x20 pixels size, base64 encoding
 			var base64Img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRF////AAAAVcLTfgAAAAF0Uk5TAEDm2GYAAAAQSURBVHjaYmAYBYMdAAQYAAGkAAFD69i/AAAAAElFTkSuQmCC";
+			alert("create transparent image");
 		
 			//Set marker icon options
 			//Makes a transparent (invisible) marker that is located on top of the circle marker
@@ -17213,18 +17218,21 @@
 				iconUrl : base64Img, // 'markerClear.png',
 				iconAnchor : [10, 10],
 			});
+			alert("set marker icon options");
 
 			//Set marker options
 			var markerOptions = {
 				icon : myIcon,
 				draggable : true
 			};
+			alert("set marker options");
 
 			var circleOptions = {
 				opacity : 1,
 				fillOpacity : 1,
 				color : '000000'
 			};
+			alert("set circle options");
 
 			//Define the color picker (uses spectrum.js)
 			function openColorPicker(circleMarker) {
@@ -17254,6 +17262,7 @@
 				//Delete the things with the desired IDs:
 				colorMarkers.removeLayer(markerID);
 				colorMarkers.removeLayer(circleMarkerID);
+				alert("delete markers function was used");
 			}
 
 			//FINISH ME: Gets each circle object on the map and stores this information in an array
@@ -17264,6 +17273,7 @@
 			function getColors() {
 				var colorMarkersArray = [];
 				colorMarkersArray = colorMarkers.getLayers();
+				alert("color markers array was created");
 				//assigns the array of layers in colorMarkers to a variable
 
 				var res = [];
@@ -17294,44 +17304,54 @@
 			function createPoint(latlng) {
 				//make a draggable marker & add to the colorMarkers Layer Group
 				var marker = new L.marker(latlng, markerOptions).addTo(colorMarkers);
+				alert("Create point function, marker created");
 
 				//make a circle marker & add to Layer Group
 				var circleMarker = new L.circleMarker(latlng, circleOptions).addTo(colorMarkers);
-
+				alert("create point function circle marker created");
+				
 				//define popup content:
 				//initializes the color picker and links it to the jQuery color picker class
 				//provides a button for deleting the marker & circleMarker pair
 				//onClick function calls deleteMarkers, which takes in the leaflet IDs of the layers to be deleted
 				var popupContent = "<input type='text' class='custom'/><br><br><input type='button' value='Delete' onClick='deleteMarkers(" + marker._leaflet_id + "," + circleMarker._leaflet_id + ")' />";
-
+				alert("popup content created");
+				
 				//Set popup options
 				var popupOptions = {
 					maxWidth : 55,
 					offset : [0, 3] //adjusts the anchor position
 				};
+				alert("set popup options");
 
 				//bind a popup to the marker
 				marker.bindPopup(popupContent, popupOptions).openPopup();
-
+				alert("bind popup");
+					
 				marker.on('click', function() {
 					openColorPicker(circleMarker);
+					alert("open color picker on click");
 				});
 
 				//Get the starting position of the marker
 				var startPosition = marker.getLatLng();
+				alert("get starting marker position");
 
 				//Get the marker position on the start of movement
 				//Set the circle marker to the marker position
 				marker.on('movestart', function() {
 					var moveStartPosition = marker.getLatLng();
 					circleMarker.setLatLng(moveStartPosition);
+					alert("Get the marker position on the start of movement, Set the circle marker to the marker position");
 				});
+				
 
 				//Get the marker position during movement
 				//Set the circle marker position to the marker position during movement
 				marker.on('move', function() {
 					var movePosition = marker.getLatLng();
 					circleMarker.setLatLng(movePosition);
+					alert("et the circle marker position to the marker position during movement");
 				});
 
 				//Get the marker position at the end of movement
@@ -17339,6 +17359,7 @@
 				marker.on('moveend', function() {
 					var endPosition = marker.getLatLng();
 					circleMarker.setLatLng(endPosition);
+					alert("Set the circle marker to the marker position when the movement ends");
 				});
 				
 				return circleMarker;
@@ -17347,6 +17368,7 @@
 			function setColors(pointsStr) {
 				var latLng, circleMarker, parameters = pointsStr.split(',');
 				colorMarkers.clearLayers();
+				alert("Set colors function, Color Marker Layers are cleared");
 				for ( i = 0; i < parameters.length; i += 3) {
 					latLng = L.latLng(parseFloat(parameters[i + 1]), parseFloat(parameters[i]));
 					circleMarker = createPoint(latLng);
@@ -17354,18 +17376,21 @@
 					circleMarker.setStyle({
 							color : "#" + parameters[i + 2].trim().substring(4)
 						});
+						alert("SetColors function completed");
 				}				
 			}
 
 			//Add the colorMarkers Layer Group to the map 
 			//(checks associated overlay box when map is loaded)
 			colorMarkers.addTo(map);
+			alert("colormarkers Layer group added to map");
 
 			/*Create a new circle marker (IDW color) and a new marker (drag handler) when the map is clicked at the clicked location,
 			 then add them to their respective Layer Groups*/
 			map.on('click', function(e) {
 				var circleMarker = createPoint(e.latlng);
 				openColorPicker(circleMarker);
+				alert("color marker created on click");
 			});
 
 			var baseMaps = {

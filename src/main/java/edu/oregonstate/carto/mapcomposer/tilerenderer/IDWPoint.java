@@ -20,8 +20,8 @@ public class IDWPoint {
     private double attribute1; //ex: precipitation
     private double attribute2; //ex: elevation
 
-    private double lon;
-    private double lat;
+    private double lon = Double.NaN;
+    private double lat = Double.NaN;
 
     public String toString() {
         return lon + " " + lat + " " + r + " " + g + " " + b + " " + attribute1 + " " + attribute2;
@@ -126,4 +126,7 @@ public class IDWPoint {
         return lat;
     }
 
+    public boolean isLonLatDefined() {
+        return !(Double.isNaN(lon) || Double.isNaN(lat));
+    }
 }
