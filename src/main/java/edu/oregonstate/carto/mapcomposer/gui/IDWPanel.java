@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -107,6 +108,8 @@ public class IDWPanel extends IDWPreview {
         super.paintComponent(g);
         if (getIdw() != null) {
             Graphics2D g2d = (Graphics2D) g;
+            //Antialiasing ON
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             ArrayList<IDWPoint> points = getIdw().getPoints();
             for (IDWPoint point : points) {
                 int px = idwAttr1ToPixelX(point.getAttribute1());
@@ -122,7 +125,11 @@ public class IDWPanel extends IDWPreview {
                         g2d.setColor(Color.WHITE);
                     }
                 }
-                g2d.drawRect(px - RECT_DIM / 2, py - RECT_DIM / 2, RECT_DIM, RECT_DIM);
+                if (point.isLonLatDefined()) {
+                    g2d.drawOval(px - RECT_DIM / 2, py - RECT_DIM / 2, RECT_DIM, RECT_DIM);
+                } else {
+                    g2d.drawRect(px - RECT_DIM / 2, py - RECT_DIM / 2, RECT_DIM, RECT_DIM);
+                }
             }
         }
     }
@@ -182,13 +189,13 @@ public class IDWPanel extends IDWPreview {
         double attr1 = pixelXToIDWAttr1(mouseX + dragDX);
         attr1 = Math.min(Math.max(0d, attr1), 1d);
         selectedPoint.setAttribute1(attr1);
-        
+
         double attr2 = pixelYToIDWAttr2(mouseY + dragDY);
         attr2 = Math.min(Math.max(0d, attr2), 1d);
         selectedPoint.setAttribute2(attr2);
-        
+
         selectedPoint.setLonLat(Double.NaN, Double.NaN);
-        
+
         repaint();
         firePropertyChange("colorChanged", null, null);
     }
