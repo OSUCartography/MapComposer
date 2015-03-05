@@ -2477,6 +2477,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         TileSet.pixelsToTopLeftTilePixels(pxy[0], pxy[1], tltxy);
         // get grid value
         Grid grid = (Grid) tile.fetch();
+        //FIXME
+        grid.setCellSize(1);
         return grid.getBilinearInterpol(tltxy[0], -tltxy[1]);
     }
 
