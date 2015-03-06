@@ -251,6 +251,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 idwVerticalLabel.setText(verLabel);
 
                 idwPanel.setIdw(getSelectedMapLayer().getIdwTileRenderer());
+                readIDWPoints();
                 String title = "IDW Color Interpolation";
                 Object[] options = {"OK"};
                 JOptionPane.showOptionDialog(panel, idwColorPanel, title,
@@ -562,7 +563,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         javax.swing.JPanel idwButtonPanel = new javax.swing.JPanel();
         idwTileSetsButton = new javax.swing.JButton();
         idwApplyButton = new javax.swing.JButton();
-        readIDWPointsButton = new javax.swing.JButton();
         idwTileSetsPanel = new javax.swing.JPanel();
         javax.swing.JLabel grid1URLLabel = new javax.swing.JLabel();
         grid1URLTextField = new javax.swing.JTextField();
@@ -885,14 +885,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
         });
         idwButtonPanel.add(idwApplyButton);
-
-        readIDWPointsButton.setText("Read Points from Map");
-        readIDWPointsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                readIDWPointsButtonActionPerformed(evt);
-            }
-        });
-        idwButtonPanel.add(readIDWPointsButton);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -2063,6 +2055,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private void layerListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_layerListValueChanged
         if (!evt.getValueIsAdjusting()) {
             writeGUI();
+            reloadHTMLPreviewMap();
         }
     }//GEN-LAST:event_layerListValueChanged
 
@@ -2451,10 +2444,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_visibleCheckBoxActionPerformed
 
-    private void readIDWPointsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readIDWPointsButtonActionPerformed
-        readIDWPoints();
-    }//GEN-LAST:event_readIDWPointsButtonActionPerformed
-
     /**
      * extract values from grid TileSet
      *
@@ -2823,11 +2812,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
         String name = "Layer " + (++layerCounter);
         map.addLayer(layerID, new Layer(name));
         updateLayerList();
-        writeGUI();
         layerList.setSelectedIndex(layerID);
+        writeGUI();
         if (focusList) {
             layerList.requestFocus();
         }
+        reloadHTMLPreviewMap();
         addUndo("Add Layer");
     }
 
@@ -2838,9 +2828,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
         map.removeLayer(selectedLayerID);
         updateLayerList();
-        reloadHTMLPreviewMap();
         writeGUI();
         layerList.setSelectedIndex(--selectedLayerID);
+        reloadHTMLPreviewMap();
         addUndo("Remove Layer");
     }
 
@@ -2926,7 +2916,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JFormattedTextField northField;
     private javax.swing.JSlider opacitySlider;
     private javax.swing.JLabel opacityValueLabel;
-    private javax.swing.JButton readIDWPointsButton;
     private javax.swing.JButton removeLayerButton;
     private javax.swing.JButton resetCurveFileButton;
     private javax.swing.JCheckBox shadowCheckBox;

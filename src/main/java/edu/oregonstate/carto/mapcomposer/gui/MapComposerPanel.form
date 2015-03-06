@@ -419,14 +419,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="idwApplyButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="readIDWPointsButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Read Points from Map"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="readIDWPointsButtonActionPerformed"/>
-              </Events>
-            </Component>
           </SubComponents>
         </Container>
       </SubComponents>

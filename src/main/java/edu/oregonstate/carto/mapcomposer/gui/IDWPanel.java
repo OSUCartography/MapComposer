@@ -115,9 +115,17 @@ public class IDWPanel extends IDWPreview {
                 int px = idwAttr1ToPixelX(point.getAttribute1());
                 int py = idwAttr2ToPixelY(point.getAttribute2());
                 g2d.setColor(point.getColor());
-                g2d.fillRect(px - RECT_DIM / 2, py - RECT_DIM / 2, RECT_DIM, RECT_DIM);
+                if (point.isLonLatDefined()) {
+                    g2d.fillOval(px - RECT_DIM / 2, py - RECT_DIM / 2, RECT_DIM, RECT_DIM);
+                } else {
+                    g2d.fillRect(px - RECT_DIM / 2, py - RECT_DIM / 2, RECT_DIM, RECT_DIM);
+                }
                 if (point == selectedPoint) {
-                    g2d.setColor(Color.RED);
+                    if (ColorUtils.difference(Color.RED, point.getColor()) > 100) {
+                        g2d.setColor(Color.RED);
+                    } else {
+                        g2d.setColor(Color.CYAN);
+                    }
                 } else {
                     if (ColorUtils.getBrightness(point.getColor()) > 100) {
                         g2d.setColor(Color.BLACK);
