@@ -229,10 +229,18 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         final JPanel panel = this;
         idwPreview.addMouseListener(new MouseAdapter() {
+            
+            private boolean hasValidIDWTileSets(Layer layer) {
+                TileSet tileSet1 = layer.getGrid1TileSet();
+                TileSet tileSet2 = layer.getGrid2TileSet();
+                return tileSet1.isURLTemplateValid() && tileSet2.isURLTemplateValid();
+            }
+            
             @Override
             public void mouseClicked(MouseEvent e) {
-
-                String horLabel = getSelectedMapLayer().getGrid1TileSet().getUrlTemplate();
+                
+                Layer layer = getSelectedMapLayer();
+                String horLabel = layer.getGrid1TileSet().getUrlTemplate();
                 if (horLabel != null) {
                     String[] tokens = horLabel.split("/");
                     if (tokens.length >= 5) {
@@ -241,7 +249,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 }
                 idwHorizontalLabel.setText(horLabel);
 
-                String verLabel = getSelectedMapLayer().getGrid2TileSet().getUrlTemplate();
+                String verLabel = layer.getGrid2TileSet().getUrlTemplate();
                 if (verLabel != null) {
                     String[] tokens = verLabel.split("/");
                     if (tokens.length >= 4) {
@@ -249,8 +257,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
                     }
                 }
                 idwVerticalLabel.setText(verLabel);
+                idwPanel.setIdw(layer.getIdwTileRenderer());
+                
+                // make sure the tile sets for IDW interpolation are valid
+                if (!hasValidIDWTileSets(layer)) {
+                    selectIDWTileSets();
+                }                
+                if (!hasValidIDWTileSets(layer)) {
+                    return;
+                }
 
-                idwPanel.setIdw(getSelectedMapLayer().getIdwTileRenderer());
                 readIDWPoints();
                 String title = "IDW Color Interpolation";
                 Object[] options = {"OK"};
@@ -402,7 +418,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 if (str != null && str.length() > 0) {
                     webEngine.getLoadWorker().stateProperty().addListener(listener);
                 }
-                
+
                 // loage page
                 webEngine.loadContent(html);
             }
@@ -2339,7 +2355,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         final Layer layer = getSelectedMapLayer();
         final TileSet tileSet1 = layer.getGrid1TileSet();
         final TileSet tileSet2 = layer.getGrid2TileSet();
-        
+
+        // copy color points that don't have a valid geographic location, that is,
+        // they are contained in the diagram, but not in the map.
         ArrayList<IDWPoint> oldPoints = layer.getIdwTileRenderer().getPoints();
         for (IDWPoint p : oldPoints) {
             if (!p.isLonLatDefined()) {
@@ -2404,12 +2422,15 @@ public class MapComposerPanel extends javax.swing.JPanel {
         reloadHTMLPreviewMap();
     }//GEN-LAST:event_idwApplyButtonActionPerformed
 
-    private void idwTileSetsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwTileSetsButtonActionPerformed
+    private void selectIDWTileSets() {
         Object[] options = {"OK"};
         String title = "Tile Sets for IDW Interpolation";
         JOptionPane.showOptionDialog(this, idwTileSetsPanel, title,
                 JOptionPane.YES_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
         readGUI();
+    }
+    private void idwTileSetsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwTileSetsButtonActionPerformed
+        selectIDWTileSets();
     }//GEN-LAST:event_idwTileSetsButtonActionPerformed
 
     private void curvesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_curvesButtonActionPerformed
