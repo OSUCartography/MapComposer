@@ -17184,6 +17184,8 @@
 
 		<!-- custom map script -->
 		<script>
+                        var canAddColorPoints = $$canAddColorPoints$$;
+                        alert("can add color points: " + canAddColorPoints);
 			//Create a Layer Group for the circle and transparent markers
 			var colorMarkers = new L.LayerGroup();
 			alert("Create Layer Group");
@@ -17204,7 +17206,7 @@
 				center : new L.LatLng($$viewCenterLatitude$$, $$viewCenterLongitude$$),
 				zoom : $$viewZoomlevel$$,
 				layers : [osm, new_tiles],
-                                doubleClickZoom : true
+                                doubleClickZoom : false
 			});
 			alert("create map");
 			
@@ -17373,9 +17375,11 @@
 			/*Create a new circle marker (IDW color) and a new marker (drag handler) when the map is clicked at the clicked location,
 			 then add them to their respective Layer Groups*/
 			map.on('click', function(e) {
+                            if (canAddColorPoints) {
 				var circleMarker = createPoint(e.latlng);
 				openColorPicker(circleMarker);
-				alert("color marker created on click");
+                                alert("color marker created on click");
+                            }				
 			});
                       
 			var baseMaps = {

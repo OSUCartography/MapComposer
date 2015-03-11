@@ -197,9 +197,7 @@ public class Layer {
                 break;
 
             case INTERPOLATE:
-                if (idwTileRenderer != null
-                        && grid1TileSet.isURLTemplateValid()
-                        && grid2TileSet.isURLTemplateValid()) {
+                if (idwTileRenderer != null && isIDWGridTileURLTemplatesValid()) {
                     Tile gridTile1 = grid1TileSet.getTile(z, x, y);
                     Tile gridTile2 = grid2TileSet.getTile(z, x, y);
                     image = idwTileRenderer.render(gridTile1, gridTile2);
@@ -645,6 +643,13 @@ public class Layer {
     public void setIDWGridTileURLTemplates(String urlTemplate1, String urlTemplate2) {
         grid1TileSet.setUrlTemplate(urlTemplate1);
         grid2TileSet.setUrlTemplate(urlTemplate2);
+    }
+
+    public boolean isIDWGridTileURLTemplatesValid() {
+        return grid1TileSet != null 
+                && grid2TileSet != null 
+                && grid1TileSet.isURLTemplateValid() 
+                && grid2TileSet.isURLTemplateValid();
     }
 
     /**

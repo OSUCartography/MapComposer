@@ -8,6 +8,7 @@ package edu.oregonstate.carto.mapcomposer.gui;
 import edu.oregonstate.carto.mapcomposer.Curve;
 import edu.oregonstate.carto.mapcomposer.Emboss;
 import edu.oregonstate.carto.mapcomposer.Layer;
+import edu.oregonstate.carto.mapcomposer.Layer.ColorType;
 import edu.oregonstate.carto.mapcomposer.Map;
 import edu.oregonstate.carto.mapcomposer.Shadow;
 import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWPoint;
@@ -229,16 +230,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         final JPanel panel = this;
         idwPreview.addMouseListener(new MouseAdapter() {
-            
+
             private boolean hasValidIDWTileSets(Layer layer) {
                 TileSet tileSet1 = layer.getGrid1TileSet();
                 TileSet tileSet2 = layer.getGrid2TileSet();
                 return tileSet1.isURLTemplateValid() && tileSet2.isURLTemplateValid();
             }
-            
+
             @Override
             public void mouseClicked(MouseEvent e) {
-                
+
                 Layer layer = getSelectedMapLayer();
                 String horLabel = layer.getGrid1TileSet().getUrlTemplate();
                 if (horLabel != null) {
@@ -258,11 +259,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 }
                 idwVerticalLabel.setText(verLabel);
                 idwPanel.setIdw(layer.getIdwTileRenderer());
-                
+
                 // make sure the tile sets for IDW interpolation are valid
                 if (!hasValidIDWTileSets(layer)) {
                     selectIDWTileSets();
-                }                
+                }
                 if (!hasValidIDWTileSets(layer)) {
                     return;
                 }
@@ -295,7 +296,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      */
     private void initMapPreview() {
         final JFXPanel fxPanel = new JFXPanel();
-        exponentLabel.add(fxPanel, BorderLayout.CENTER);
+        mapPanel.add(fxPanel, BorderLayout.CENTER);
         final String html = loadHTMLPreviewMap(2, 0, 0);
 
         // run in the JavaFX thread
@@ -374,6 +375,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
             html = html.replace("$$viewZoomlevel$$", zoom.toString());
             html = html.replace("$$viewCenterLatitude$$", centerLat.toString());
             html = html.replace("$$viewCenterLongitude$$", centerLon.toString());
+            boolean canAddColorPoints = getSelectedMapLayer() != null
+                    && getSelectedMapLayer().getColorType() == ColorType.INTERPOLATE;
+            html = html.replace("$$canAddColorPoints$$", Boolean.toString(canAddColorPoints));
             return html;
         } catch (URISyntaxException | IOException ex) {
             throw new IllegalStateException(ex);
@@ -673,7 +677,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         shadowColorButton = new edu.oregonstate.carto.mapcomposer.gui.ColorButton();
         javax.swing.JLabel DropShadowFuzinessLabel = new javax.swing.JLabel();
         shadowFuziSlider = new javax.swing.JSlider();
-        exponentLabel = new javax.swing.JPanel();
+        mapPanel = new javax.swing.JPanel();
 
         extentPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -1843,8 +1847,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         add(layersPanel, java.awt.BorderLayout.WEST);
 
-        exponentLabel.setLayout(new java.awt.BorderLayout());
-        add(exponentLabel, java.awt.BorderLayout.CENTER);
+        mapPanel.setLayout(new java.awt.BorderLayout());
+        add(mapPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -2308,9 +2312,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 break;
             case 2:
                 cl.show(colorMethodPanel, "interpolatedColorCard");
+
                 break;
         }
         readGUI();
+
+        if (selectedMenuItem == 2 /* interpolated colors */) {
+            if (!getSelectedMapLayer().isIDWGridTileURLTemplatesValid()) {
+                selectIDWTileSets();
+            }
+        }
     }//GEN-LAST:event_colorSelectionComboBoxItemStateChanged
 
     private void idwExponentSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_idwExponentSliderStateChanged
@@ -2893,7 +2904,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel embossPanel;
     private javax.swing.JFormattedTextField embossSoftnessFormattedTextField;
     private javax.swing.JSlider embossSoftnessSlider;
-    private javax.swing.JPanel exponentLabel;
     private javax.swing.JPanel extentPanel;
     private javax.swing.JLabel gaussBlurLabel;
     private javax.swing.JSlider gaussBlurSlider;
@@ -2926,6 +2936,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JButton loadCurveFileButton;
     private javax.swing.JButton loadDirectoryPathButton;
     private javax.swing.JCheckBox lockedCheckBox;
+    private javax.swing.JPanel mapPanel;
     private javax.swing.JSlider maskBlurSlider;
     private javax.swing.JCheckBox maskInvertCheckBox;
     private javax.swing.JButton maskLoadDirectoryPathButton;
