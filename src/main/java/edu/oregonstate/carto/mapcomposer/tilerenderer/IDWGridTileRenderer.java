@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -19,8 +20,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 public class IDWGridTileRenderer implements TileRenderer {
 
     private static final int LUT_SIZE = 256;
-
-    private int[][] lut = new int[LUT_SIZE][LUT_SIZE];
+    
+    @XmlTransient
+    private int[][] lut;
+    
     private ArrayList<IDWPoint> points = new ArrayList<>();
     private double exponentP = 1.3;
 
@@ -32,7 +35,8 @@ public class IDWGridTileRenderer implements TileRenderer {
      * Updates the color look-up table. Needs to be called after any point or
      * the exponent changes.
      */
-    private void updateLUT() {
+    public void updateLUT() {
+        lut = new int[LUT_SIZE][LUT_SIZE];
         for (int r = 0; r < LUT_SIZE; r++) {
             double y = r / (LUT_SIZE - 1d);
             for (int c = 0; c < LUT_SIZE; c++) {

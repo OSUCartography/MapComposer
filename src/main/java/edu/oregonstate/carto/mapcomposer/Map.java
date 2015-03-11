@@ -1,5 +1,6 @@
 package edu.oregonstate.carto.mapcomposer;
 
+import edu.oregonstate.carto.mapcomposer.tilerenderer.IDWGridTileRenderer;
 import edu.oregonstate.carto.tilemanager.Tile;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -19,6 +20,8 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.Unmarshaller.Listener;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -80,19 +83,20 @@ public class Map {
                 Tile.TILE_SIZE,
                 Tile.TILE_SIZE,
                 BufferedImage.TYPE_INT_ARGB);
+        if (hasVisibleLayer()) {
+            Graphics2D g2d = tileImage.createGraphics();
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2d.setColor(Color.WHITE);
+            g2d.fillRect(0, 0, Tile.TILE_SIZE, Tile.TILE_SIZE);
 
-        Graphics2D g2d = tileImage.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2d.setColor(Color.WHITE);
-        g2d.fillRect(0, 0, Tile.TILE_SIZE, Tile.TILE_SIZE);
-
-        for (int i = layers.size() - 1; i >= 0; i--) {
-            Layer layer = layers.get(i);
-            if (!layer.isVisible()) {
-                continue;
+            for (int i = layers.size() - 1; i >= 0; i--) {
+                Layer layer = layers.get(i);
+                if (!layer.isVisible()) {
+                    continue;
+                }
+                layer.renderToTile(g2d, z, x, y);
             }
-            layer.renderToTile(g2d, z, x, y);
         }
         return tileImage;
     }
@@ -121,6 +125,15 @@ public class Map {
         return layers.size();
     }
 
+    public boolean hasVisibleLayer() {
+        for (Layer layer : layers) {
+            if (layer.isVisible()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Layer[] getLayers() {
         return layers.toArray(new Layer[layers.size()]);
     }
@@ -128,14 +141,32 @@ public class Map {
     public void removeAllLayers() {
         layers.clear();
     }
-    
+
     private static JAXBContext getJAXBContext() throws JAXBException {
         String packageName = Map.class.getPackage().getName();
         return JAXBContext.newInstance(packageName, Map.class.getClassLoader());
     }
 
     public static Map unmarshal(InputStream is) throws JAXBException {
-        return (Map) getJAXBContext().createUnmarshaller().unmarshal(is);
+        Unmarshaller unmarshaller = getJAXBContext().createUnmarshaller();
+        unmarshaller.setListener(new Listener() {
+            @Override
+            public void afterUnmarshal(Object target, Object parent) {
+                if (target instanceof Layer) {
+                    try {
+                        ((Layer) target).loadTextureTile();
+                    } catch (IOException ex) {
+                        // FIXME
+                        Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                if (target instanceof IDWGridTileRenderer) {
+                    ((IDWGridTileRenderer) target).updateLUT();
+                }
+            }
+        });
+        return (Map) unmarshaller.unmarshal(is);
     }
 
     public static Map unmarshal(byte[] buf) throws JAXBException {

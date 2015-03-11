@@ -73,6 +73,9 @@ public class Layer {
 
     private String textureTileFilePath;
 
+    @XmlTransient
+    private BufferedImage textureTile;
+
     private BlendType blending = BlendType.NORMAL;
 
     private float opacity = 1;
@@ -134,28 +137,31 @@ public class Layer {
 
         BufferedImage image = null;
         if (textureTileFilePath != null) {
-            try {
-                BufferedImage textureTile = ImageIO.read(new File(textureTileFilePath));
-                textureTile = ImageUtils.convertImageToARGB(textureTile);
+            //try {
+            // FIXME a hack to load texture tiles after unmarshaling from XML
+            // with transient textureTile.
+            //if (textureTile == null) {
+            //    loadTextureTile();
+            //}
 
-                // scale texture patch if needed
-                if (textureScale != 1f) {
-                    int textureW = (int) (textureTile.getWidth() * this.textureScale);
-                    int textureH = (int) (textureTile.getHeight() * this.textureScale);
-                    BicubicScaleFilter scaleFilter = new BicubicScaleFilter(textureW, textureH);
-                    textureTile = scaleFilter.filter(textureTile, null);
-                }
-
-                TileImageFilter tiler = new TileImageFilter();
-                tiler.setHeight(Tile.TILE_SIZE * 3);
-                tiler.setWidth(Tile.TILE_SIZE * 3);
-                BufferedImage dst = new BufferedImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
-                image = tiler.filter(textureTile, dst);
-            } catch (IOException ex) {
-                image = null;
-                // FIXME
-                System.err.println("could not load texture image");
+            // scale texture patch if needed
+            if (textureScale != 1f) {
+                int textureW = (int) (textureTile.getWidth() * this.textureScale);
+                int textureH = (int) (textureTile.getHeight() * this.textureScale);
+                BicubicScaleFilter scaleFilter = new BicubicScaleFilter(textureW, textureH);
+                textureTile = scaleFilter.filter(textureTile, null);
             }
+
+            TileImageFilter tiler = new TileImageFilter();
+            tiler.setHeight(Tile.TILE_SIZE * 3);
+            tiler.setWidth(Tile.TILE_SIZE * 3);
+            BufferedImage dst = new BufferedImage(Tile.TILE_SIZE * 3, Tile.TILE_SIZE * 3, BufferedImage.TYPE_INT_ARGB);
+            image = tiler.filter(textureTile, dst);
+            /*} catch (IOException ex) {
+             image = null;
+             // FIXME
+             System.err.println("could not load texture image");
+             }*/
         }
 
         // load tile image
@@ -420,8 +426,25 @@ public class Layer {
      * @param textureTileFilePath File path for a single tile that is used to
      * texture the layer.
      */
-    public void setTextureTileFilePath(String textureTileFilePath) {
+    public void setTextureTileFilePath(String textureTileFilePath) throws IOException {
         this.textureTileFilePath = textureTileFilePath;
+        if (textureTileFilePath == null) {
+            textureTile = null;
+        } else {
+            loadTextureTile();
+        }
+    }
+
+    public boolean isTextureTileFilePathValid() {
+        return textureTileFilePath != null && new File(textureTileFilePath).isFile();
+        // FIXME should test for valid image file here
+    }
+
+    protected void loadTextureTile() throws IOException {
+        if (isTextureTileFilePathValid()) {
+            textureTile = ImageIO.read(new File(textureTileFilePath));
+            textureTile = ImageUtils.convertImageToARGB(textureTile);
+        }
     }
 
     /**
@@ -498,7 +521,7 @@ public class Layer {
     public void setCurve(Curve curve) {
         curves = new Curve[]{curve};
     }
-    
+
     public void setCurves(Curve[] curves) {
         this.curves = curves;
     }

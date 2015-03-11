@@ -17189,7 +17189,7 @@
 			alert("Create Layer Group");
 
 			var osm = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				maxZoom : 22,
+                                maxZoom : 22,
 				attribution : 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
 			});
 			alert("Create osm Tile Layer");
@@ -17203,7 +17203,8 @@
 			var map = L.map('map', {
 				center : new L.LatLng($$viewCenterLatitude$$, $$viewCenterLongitude$$),
 				zoom : $$viewZoomlevel$$,
-				layers : [osm, new_tiles]
+				layers : [osm, new_tiles],
+                                doubleClickZoom : true
 			});
 			alert("create map");
 			
@@ -17264,16 +17265,12 @@
 				alert("delete markers function was used");
 			}
 
-			//FINISH ME: Gets each circle object on the map and stores this information in an array
-			//I think this really also needs to get the marker leaflet IDs though, since those locations have to be changed too, so instead of using a new array, maybe it's best to just
-			//use the colorMarkers.getLayers() array and pull info from there? can ID circles b/c they have options.color, and markers don't.
-			//if we need to create a new array, it should really be marker id & location, circle id, location, and color. Also, the correct marker (the one immediately preceding) needs to
-			//be changed for the correct circleMarker, and I'm not sure how that would get indicated to setColors except by order.
+			// returns all color points on the map. The result
+                        // is an array with [lon, lat, color] repeated.
 			function getColors() {
 				var colorMarkersArray = [];
 				colorMarkersArray = colorMarkers.getLayers();
 				alert("color markers array was created");
-				//assigns the array of layers in colorMarkers to a variable
 
 				var res = [];
 				//a new array to hold only the circle layers
@@ -17286,17 +17283,6 @@
 						res.push(circle.options.color);
 					}
 				}
-
-				//from here, we need can then access the lat/long (xy) and color options for each member of the array, ie:
-				// circleArray[0].options.color     and      circleArray[0]._latlng
-				//What about the leaflet ID? circleArray[0]._leaflet_id
-				/*
-				 console.log(circleArray[0].options.color);
-				 console.log(circleArray[0]._latlng.lat);
-				 console.log(circleArray[0]._latlng.lng);
-				 console.log(circleArray[0]._leaflet_id);
-				 */
-
 				return res;
 			}
 
@@ -17391,7 +17377,7 @@
 				openColorPicker(circleMarker);
 				alert("color marker created on click");
 			});
-
+                      
 			var baseMaps = {
 				"OpenStreet Map" : osm
 			};

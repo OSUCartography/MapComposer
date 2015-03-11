@@ -296,7 +296,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private void initMapPreview() {
         final JFXPanel fxPanel = new JFXPanel();
         exponentLabel.add(fxPanel, BorderLayout.CENTER);
-        final String html = loadHTMLPreviewMap(0, 0, 0);
+        final String html = loadHTMLPreviewMap(2, 0, 0);
 
         // run in the JavaFX thread
         Platform.runLater(new Runnable() {
@@ -2142,7 +2142,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private void textureClearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textureClearButtonActionPerformed
         Layer layer = getSelectedMapLayer();
         if (layer != null) {
-            layer.setTextureTileFilePath(null);
+            try {
+                layer.setTextureTileFilePath(null);
+            } catch (IOException ex) {
+                // setting texture tile to null will not throw an IOException.
+            }
         }
         writeGUI();
         addUndo("Clear Texture");
