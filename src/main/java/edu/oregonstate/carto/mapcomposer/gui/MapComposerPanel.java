@@ -83,6 +83,22 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private Map map = new Map();
 
     /**
+     * HTML template for map
+     */
+    private static final String HTML_MAP_TEMPLATE = loadHtmlMapTemplate();
+    
+    private static String loadHtmlMapTemplate() {
+        URL inputUrl = MapComposerPanel.class.getResource("/index_with_variables.html");
+        try {
+            File file = new File(inputUrl.toURI());
+            return org.apache.commons.io.FileUtils.readFileToString(file);
+        } catch (URISyntaxException | IOException ex) {
+            Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
+    /**
      * updating is true while any code in this class is modifying the GUI. While
      * this flag is true, event handlers should not modify the GUI to avoid
      * recursive calls to event handlers.
@@ -163,6 +179,24 @@ public class MapComposerPanel extends javax.swing.JPanel {
             DnDListModel m = (DnDListModel) model;
             Layer layer = (Layer) m.get(row);
             layer.setName(value);
+            // TODO not complete
+        }
+    }
+    
+    /**
+     * JavaScript-to-Java communication
+     */
+    public class JavaScriptBridge {
+        // this is supposedly run in the JavaFX thread
+        public void colorPointChanged() {
+            System.out.println("JavaScript changed color points");
+            // run in Swing event dispatching thread
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    //readIDWPoints(true);
+                }
+            });
         }
     }
 
@@ -172,7 +206,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param textField
      */
     private static void adjustURLTextFieldColor(JTextField textField) {
-
         String tileSetURL = textField.getText();
         boolean urlTemplateIsValid = TileSet.isURLTemplateValid(tileSetURL);
         Color okColor = UIManager.getDefaults().getColor("TextField.foreground");
@@ -203,7 +236,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 adjustURLTextFieldColor(urlTextField);
                 layer.setTileSetURLTemplate(urlTextField.getText());
                 // re-render map preview
-                reloadHTMLPreviewMap();
+                reloadHTMLMap();
             }
         });
 
@@ -214,7 +247,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 adjustURLTextFieldColor(maskUrlTextField);
                 layer.setMaskTileSetURLTemplate(maskUrlTextField.getText());
                 // re-render map preview
-                reloadHTMLPreviewMap();
+                reloadHTMLMap();
             }
         });
 
@@ -224,7 +257,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             protected void textChanged(Layer layer, DocumentEvent e) {
                 layer.setMaskValues(maskValuesTextField.getText().trim());
                 // re-render map preview
-                reloadHTMLPreviewMap();
+                reloadHTMLMap();
             }
         });
 
@@ -268,14 +301,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
                     return;
                 }
 
-                readIDWPoints();
+                readIDWPoints(false);
                 String title = "IDW Color Interpolation";
                 Object[] options = {"OK"};
                 JOptionPane.showOptionDialog(panel, idwColorPanel, title,
                         JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
                 // re-render map preview
-                reloadHTMLPreviewMap();
+                reloadHTMLMap();
                 addUndo("IDW Color Points");
             }
         });
@@ -288,7 +321,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
         });
 
-        writeGUI();
+        writeGUI(false);
     }
 
     /**
@@ -297,7 +330,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private void initMapPreview() {
         final JFXPanel fxPanel = new JFXPanel();
         mapPanel.add(fxPanel, BorderLayout.CENTER);
-        final String html = loadHTMLPreviewMap(2, 0, 0);
+        final String html = loadHTMLMap(canAddColorPoints(), 2, 0, 0);
 
         // run in the JavaFX thread
         Platform.runLater(new Runnable() {
@@ -308,13 +341,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 fxPanel.setScene(scene);
                 webView = new WebView();
                 group.getChildren().add(webView);
-                webView.getEngine().setOnAlert(new EventHandler<WebEvent<String>>() {
 
+                // pipe JavaScript alert() calls to the standard output
+                webView.getEngine().setOnAlert(new EventHandler<WebEvent<String>>() {
                     @Override
                     public void handle(WebEvent<String> t) {
                         System.out.println(t);
                     }
                 });
+
+                // load the HTML page
                 webView.getEngine().loadContent(html);
 
                 final Worker<Void> worker = webView.getEngine().getLoadWorker();
@@ -325,6 +361,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                     }
                 });
             }
+
         });
 
         // add resize event handler to the JavaFX panel to
@@ -359,72 +396,81 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Loads HTML map file and fills placeholders for map center and zoom
+     * Loads HTML map file and fills placeholders for map center and zoom. 
      *
      * @param zoom Zoom level of map.
      * @param centerLon Central longitude of map.
      * @param centerLat Central latitude of map.
      * @return HTML document wit map preview.
      */
-    private String loadHTMLPreviewMap(Number zoom, Number centerLon, Number centerLat) {
-        try {
-            URL inputUrl = getClass().getResource("/index_with_variables.html");
-            File file = new File(inputUrl.toURI());
-            String html = org.apache.commons.io.FileUtils.readFileToString(file);
-            // replace placeholders with zoom and central location of map
-            html = html.replace("$$viewZoomlevel$$", zoom.toString());
-            html = html.replace("$$viewCenterLatitude$$", centerLat.toString());
-            html = html.replace("$$viewCenterLongitude$$", centerLon.toString());
-            boolean canAddColorPoints = getSelectedMapLayer() != null
-                    && getSelectedMapLayer().getColorType() == ColorType.INTERPOLATE;
-            html = html.replace("$$canAddColorPoints$$", Boolean.toString(canAddColorPoints));
-            return html;
-        } catch (URISyntaxException | IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+    private static String loadHTMLMap(boolean canAddColorPoints, Number zoom, Number centerLon, Number centerLat) {
+        // replace placeholders with zoom and central location of map
+        String html = HTML_MAP_TEMPLATE.replace("$$viewZoomlevel$$", zoom.toString());
+        html = html.replace("$$viewCenterLatitude$$", centerLat.toString());
+        html = html.replace("$$viewCenterLongitude$$", centerLon.toString());
+        return html.replace("$$canAddColorPoints$$", Boolean.toString(canAddColorPoints));
     }
 
     /**
-     * Reloads the tiles of the preview map. Call this method after changing map
-     * settings. To be called from the Swing thread.
+     * Reads current zoom and panning settings of map, reloads HTML and applies
+     * previous zoom and panning setting. Must be called from JavaFX thread.
+     *
+     * @param canAddColorPoints Whether user can add color points to the map.
+     * @param colorPointsStr A string with encoded color points.
      */
-    public void reloadHTMLPreviewMap() {
+    private void reloadHTMLMap(boolean canAddColorPoints, final String colorPointsStr) {
+        assert Platform.isFxApplicationThread();
 
-        final String str;
-        if (getSelectedMapLayer() != null) {
-            str = getSelectedMapLayer().getIdwTileRenderer().getColorPointsString();
-        } else {
-            str = null;
+        final WebEngine webEngine = webView.getEngine();
+        // run scripts to retreive current map center and zoom
+        Number centerLat = (Number) webEngine.executeScript("map.getCenter().lat");
+        Number centerLon = (Number) webEngine.executeScript("map.getCenter().lng");
+        Number zoom = (Number) webEngine.executeScript("map.getZoom()");
+        // create and load new HTML page with same map center and zoom
+        String html = loadHTMLMap(canAddColorPoints, zoom, centerLon, centerLat);
+
+        // handler that will add color points to map once the page is loaded
+        ChangeListener listener = new ChangeListener<State>() {
+            @Override
+            public void changed(ObservableValue ov, State oldState, State newState) {
+                if (newState == State.SUCCEEDED) {
+                    // register JavaScript-to-Java bridge that will receive calls from JavaScript
+                    JSObject w = (JSObject) webEngine.executeScript("window");
+                    w.setMember("java", new JavaScriptBridge());
+
+                    // run scripts to set color points in map
+                    webEngine.executeScript("setColors('" + colorPointsStr + "')");
+                }
+            }
+        };
+        if (colorPointsStr != null) {
+            webEngine.getLoadWorker().stateProperty().addListener(listener);
         }
 
+        webEngine.loadContent(html);
+    }
+
+    /**
+     * Reloads the HTML map and its tiles. Call this method after changing map
+     * settings. To be called from the Swing thread.
+     */
+    public void reloadHTMLMap() {
+        assert SwingUtilities.isEventDispatchThread();
+
+        final String colorPointsStr;
+        final Layer selectedLayer = getSelectedMapLayer();
+        if (selectedLayer != null) {
+            colorPointsStr = selectedLayer.getIdwTileRenderer().getColorPointsString();
+        } else {
+            colorPointsStr = null;
+        }
+        final boolean canAddColorPoints = canAddColorPoints();
+        
         // run in JavaFX thread
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                final WebEngine webEngine = webView.getEngine();
-                // run scripts to retreive current map center and zoom
-                Number centerLat = (Number) webEngine.executeScript("map.getCenter().lat");
-                Number centerLon = (Number) webEngine.executeScript("map.getCenter().lng");
-                Number zoom = (Number) webEngine.executeScript("map.getZoom()");
-                // create and load new HTML page with same map center and zoom
-                String html = loadHTMLPreviewMap(zoom, centerLon, centerLat);
-
-                // hanlder that will add color points to map once the page is loaded
-                ChangeListener listener = new ChangeListener<State>() {
-                    @Override
-                    public void changed(ObservableValue ov, State oldState, State newState) {
-                        if (newState == State.SUCCEEDED) {
-                            // run scripts to set color points in map
-                            webEngine.executeScript("setColors('" + str + "')");
-                        }
-                    }
-                };
-                if (str != null && str.length() > 0) {
-                    webEngine.getLoadWorker().stateProperty().addListener(listener);
-                }
-
-                // loage page
-                webEngine.loadContent(html);
+                reloadHTMLMap(canAddColorPoints, colorPointsStr);
             }
         });
     }
@@ -437,13 +483,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param lat Latitudes of central point.
      */
     public void panAndZoom(final int zoom, final double lon, final double lat) {
+        final boolean canAddColorPoints = canAddColorPoints();
         // run in JavaFX thread
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 WebEngine webEngine = webView.getEngine();
                 // create and load new HTML page with same map center and zoom
-                String html = loadHTMLPreviewMap(zoom, lon, lat);
+                String html = loadHTMLMap(canAddColorPoints, zoom, lon, lat);
                 webEngine.loadContent(html);
             }
         });
@@ -452,11 +499,22 @@ public class MapComposerPanel extends javax.swing.JPanel {
     /**
      * Returns the MapLayer currently selected by the user.
      *
-     * @return The selected map layer.
+     * @return The selected map layer or null if none is selected.
      */
     private Layer getSelectedMapLayer() {
+        assert SwingUtilities.isEventDispatchThread();
         int index = layerList.getSelectedIndex();
         return index == -1 ? null : map.getLayer(index);
+    }
+    
+    /**
+     * Returns true if the user is allowed to add color points to the map.
+     * @return 
+     */
+    private boolean canAddColorPoints() {
+        assert SwingUtilities.isEventDispatchThread();
+        Layer selectedLayer = getSelectedMapLayer();
+        return selectedLayer != null && selectedLayer.getColorType() == ColorType.INTERPOLATE;
     }
 
     private void byteArrayToMap(byte[] buf) {
@@ -465,7 +523,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
         try {
             setMap(Map.unmarshal(buf));
-            reloadHTMLPreviewMap();
+            reloadHTMLMap();
         } catch (JAXBException ex) {
             Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -914,7 +972,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         idwTileSetsPanel.setLayout(new java.awt.GridBagLayout());
 
-        grid1URLLabel.setText("Grid 1 URL (Horizontal Axis)");
+        grid1URLLabel.setText("Grid 1 URL: Horizontal Axis");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -924,7 +982,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         grid1URLTextField.setFont(grid1URLTextField.getFont().deriveFont(grid1URLTextField.getFont().getSize()-2f));
         grid1URLTextField.setText("http://tile.stamen.com/watercolor/{z}/{x}/{y}.png");
-        grid1URLTextField.setPreferredSize(new java.awt.Dimension(200, 28));
+        grid1URLTextField.setPreferredSize(new java.awt.Dimension(600, 28));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -959,12 +1017,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         idwTileSetsPanel.add(grid1LoadDirectoryPathButton, gridBagConstraints);
 
-        grid2URLLabel.setText("Grid 2 URL (Vertical Axis)");
+        grid2URLLabel.setText("Grid 2 URL: Vertical Axis");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(30, 0, 0, 0);
         idwTileSetsPanel.add(grid2URLLabel, gridBagConstraints);
 
         grid2URLTextField.setFont(grid2URLTextField.getFont().deriveFont(grid2URLTextField.getFont().getSize()-2f));
@@ -1878,7 +1937,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             }
 
             private void documentChanged() {
-                readGUI();
+                readGUIAndRenderMap();
                 try {
                     updating = true;
                     updateLayerList();
@@ -1902,9 +1961,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         Layer layer = map.removeLayer(selectedLayerID);
         map.addLayer(++selectedLayerID, layer);
         updateLayerList();
-        reloadHTMLPreviewMap();
         layerList.setSelectedIndex(selectedLayerID);
-        writeGUI();
+        writeGUI(true);
         addUndo("Move Layer Down");
     }//GEN-LAST:event_moveDownLayerButtonActionPerformed
 
@@ -1921,9 +1979,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         Layer layer = map.removeLayer(selectedLayerID);
         map.addLayer(--selectedLayerID, layer);
         updateLayerList();
-        reloadHTMLPreviewMap();
-        this.layerList.setSelectedIndex(selectedLayerID);
-        this.writeGUI();
+        layerList.setSelectedIndex(selectedLayerID);
+        writeGUI(true);
         addUndo("Move Layer Up");
     }//GEN-LAST:event_moveUpLayerButtonActionPerformed
 
@@ -1948,7 +2005,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private URL generateHTMLMapViewer(File directory,
             int zoom, double centerLat, double centerLon)
             throws IOException, URISyntaxException {
-        String html = loadHTMLPreviewMap(zoom, centerLon, centerLat);
+        String html = loadHTMLMap(canAddColorPoints(), zoom, centerLon, centerLat);
         String path = directory.getAbsolutePath();
         File dest = new File(path + File.separator + "index.html");
         org.apache.commons.io.FileUtils.writeStringToFile(dest, html);
@@ -1961,6 +2018,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param directory
      */
     protected void renderTilesWithProgressDialog(final File directory) {
+        assert SwingUtilities.isEventDispatchThread();
+
         final TileGenerator tileGenerator = new TileGenerator(directory);
         String dialogTitle = "Rendering Tiles";
         Frame frame = GUIUtil.getOwnerFrame(this);
@@ -2051,7 +2110,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
 
         if (((JSlider) evt.getSource()).getValueIsAdjusting() == false) {
-            readGUI();
+            readGUIAndRenderMap();
             addUndoFromNamedComponent((JComponent) (evt.getSource()));
         }
     }//GEN-LAST:event_sliderStateChanged
@@ -2063,7 +2122,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void actionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionPerformed
-        readGUI();
+        readGUIAndRenderMap();
         addUndoFromNamedComponent((JComponent) (evt.getSource()));
     }//GEN-LAST:event_actionPerformed
 
@@ -2074,8 +2133,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      */
     private void layerListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_layerListValueChanged
         if (!evt.getValueIsAdjusting()) {
-            writeGUI();
-            reloadHTMLPreviewMap();
+            writeGUI(true);
         }
     }//GEN-LAST:event_layerListValueChanged
 
@@ -2128,7 +2186,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 if (layer != null) {
                     layer.setTextureTileFilePath(path);
                 }
-                writeGUI();
+                writeGUI(true);
                 addUndo("Select Texture");
             }
         } catch (Exception ex) {
@@ -2152,7 +2210,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 // setting texture tile to null will not throw an IOException.
             }
         }
-        writeGUI();
+        writeGUI(true);
         addUndo("Clear Texture");
     }//GEN-LAST:event_textureClearButtonActionPerformed
 
@@ -2205,7 +2263,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         String fileURL = "file:///" + filePath;
         getSelectedMapLayer().loadCurve(fileURL);
         gradationGraph.setCurves(getSelectedMapLayer().getCurves());
-        reloadHTMLPreviewMap();
+        reloadHTMLMap();
         addUndo("Load Curve");
     }//GEN-LAST:event_loadCurveFileButtonActionPerformed
 
@@ -2242,11 +2300,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
         Curve curve = new Curve();
         getSelectedMapLayer().setCurve(curve);
         gradationGraph.setCurve(curve);
-        reloadHTMLPreviewMap();
+        reloadHTMLMap();
         addUndo("Reset Curve");
     }//GEN-LAST:event_resetCurveFileButtonActionPerformed
 
     private String askTilesDirectory(String msg) {
+        assert SwingUtilities.isEventDispatchThread();
+
         String directoryPath;
         try {
             directoryPath = FileUtils.askDirectory(GUIUtil.getOwnerFrame(this), msg, true, null);
@@ -2258,6 +2318,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     private boolean askIsImageTileSet() {
+        assert SwingUtilities.isEventDispatchThread();
+
         String msg = "Is this an image or grid tile set?";
         String title = "Tile Set Type";
         Object[] selectionValues = {"Image", "Grid"};
@@ -2270,7 +2332,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         if (directoryPath != null) {
             String extension = askIsImageTileSet() ? "png" : "bil";
             urlTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}." + extension);
-            readGUI();
+            readGUIAndRenderMap();
             addUndo("Load Tiles Directory");
         }
     }//GEN-LAST:event_loadDirectoryPathButtonActionPerformed
@@ -2280,7 +2342,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         if (directoryPath != null) {
             String extension = askIsImageTileSet() ? "png" : "bil";
             maskUrlTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}." + extension);
-            this.readGUI();
+            readGUIAndRenderMap();
             addUndo("Load Mask Tiles Directory");
         }
     }//GEN-LAST:event_maskLoadDirectoryPathButtonActionPerformed
@@ -2292,7 +2354,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.updating = true;
             try {
                 layer.setLocked(locked);
-                writeGUI();
+                writeGUI(false);
                 addUndoFromNamedComponent((JComponent) (evt.getSource()));
             } finally {
                 this.updating = false;
@@ -2312,11 +2374,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 break;
             case 2:
                 cl.show(colorMethodPanel, "interpolatedColorCard");
-
                 break;
         }
-        readGUI();
+        readGUIAndRenderMap();
 
+        // show dialog to select IDW tile sets if they have not been defined.
         if (selectedMenuItem == 2 /* interpolated colors */) {
             if (!getSelectedMapLayer().isIDWGridTileURLTemplatesValid()) {
                 selectIDWTileSets();
@@ -2336,7 +2398,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         String directoryPath = askTilesDirectory("Select Grid Tiles Directory");
         if (directoryPath != null) {
             grid1URLTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}.bil");
-            readGUI();
+            readGUIAndRenderMap();
             addUndo("Load Grid Tiles Directory");
         }
     }//GEN-LAST:event_grid1LoadDirectoryPathButtonActionPerformed
@@ -2345,7 +2407,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         String directoryPath = askTilesDirectory("Select Grid Tiles Directory");
         if (directoryPath != null) {
             grid2URLTextField.setText("file:///" + directoryPath + "/{z}/{x}/{y}.bil");
-            readGUI();
+            readGUIAndRenderMap();
             addUndo("Load Grid Tiles Directory");
         }
     }//GEN-LAST:event_grid2LoadDirectoryPathButtonActionPerformed
@@ -2365,15 +2427,20 @@ public class MapComposerPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_idwPanelPropertyChange
 
-    private void readIDWPoints() {
+    private void readIDWPoints(final boolean reloadMap) {
+        final Layer selectedLayer = getSelectedMapLayer();
+        if (selectedLayer == null) {
+            return;
+        }
+        final boolean canAddColorPoints = canAddColorPoints();
+        final String colorPointsStr = selectedLayer.getIdwTileRenderer().getColorPointsString();
+        final TileSet tileSet1 = selectedLayer.getGrid1TileSet();
+        final TileSet tileSet2 = selectedLayer.getGrid2TileSet();
         final ArrayList<IDWPoint> points = new ArrayList<>();
-        final Layer layer = getSelectedMapLayer();
-        final TileSet tileSet1 = layer.getGrid1TileSet();
-        final TileSet tileSet2 = layer.getGrid2TileSet();
 
         // copy color points that don't have a valid geographic location, that is,
         // they are contained in the diagram, but not in the map.
-        ArrayList<IDWPoint> oldPoints = layer.getIdwTileRenderer().getPoints();
+        ArrayList<IDWPoint> oldPoints = selectedLayer.getIdwTileRenderer().getPoints();
         for (IDWPoint p : oldPoints) {
             if (!p.isLonLatDefined()) {
                 points.add(p);
@@ -2383,6 +2450,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             String msg = "Tile sets have not been selected.";
             ErrorDialog.showErrorDialog(msg, "MapComposer Error", null, this);
         }
+
         // run in JavaFX thread
         Platform.runLater(new Runnable() {
             @Override
@@ -2413,6 +2481,10 @@ public class MapComposerPanel extends javax.swing.JPanel {
                         IDWPoint p = createIDWPoint(lon, lat, color, tileSet1, tileSet2);
                         points.add(p);
                     }
+
+                    if (reloadMap) {
+                        reloadHTMLMap(canAddColorPoints, colorPointsStr);
+                    }
                 } catch (IOException | JSException e) {
                     // FIXME
                     e.printStackTrace();
@@ -2434,15 +2506,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     private void idwApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwApplyButtonActionPerformed
-        reloadHTMLPreviewMap();
+        reloadHTMLMap();
     }//GEN-LAST:event_idwApplyButtonActionPerformed
 
     private void selectIDWTileSets() {
+        assert SwingUtilities.isEventDispatchThread();
         Object[] options = {"OK"};
         String title = "Tile Sets for IDW Interpolation";
         JOptionPane.showOptionDialog(this, idwTileSetsPanel, title,
                 JOptionPane.YES_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-        readGUI();
+        readGUIAndRenderMap();
     }
     private void idwTileSetsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwTileSetsButtonActionPerformed
         selectIDWTileSets();
@@ -2454,12 +2527,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gradationGraph.setCurves(getSelectedMapLayer().getCurves());
         JOptionPane.showOptionDialog(this, curvesPanel, title,
                 JOptionPane.YES_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-        readGUI();
+        readGUIAndRenderMap();
     }//GEN-LAST:event_curvesButtonActionPerformed
 
     private void gradationGraphPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_gradationGraphPropertyChange
         if ("GradationGraph curve changed".equals(evt.getPropertyName())) {
-            reloadHTMLPreviewMap();
+            reloadHTMLMap();
         }
     }//GEN-LAST:event_gradationGraphPropertyChange
 
@@ -2470,8 +2543,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.updating = true;
             try {
                 layer.setVisible(visible);
-                writeGUI();
-                reloadHTMLPreviewMap();
+                writeGUI(true);
                 addUndoFromNamedComponent((JComponent) (evt.getSource()));
             } finally {
                 this.updating = false;
@@ -2537,6 +2609,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @param textureScale
      */
     private void writeTextureScale(float textureScale) {
+        assert SwingUtilities.isEventDispatchThread();
         if (textureScale > 1) {
             textureScale = -100f + textureScale * 100f;
         } else {
@@ -2551,6 +2624,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * @return
      */
     private float readTextureScale() {
+        assert SwingUtilities.isEventDispatchThread();
         // scale from [-100, +100] to [0.5, 2]
         float textureScale = this.textureScaleSlider.getValue();
         if (textureScale > 0) {
@@ -2562,6 +2636,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     private void updateLayerList() {
+        assert SwingUtilities.isEventDispatchThread();
         int selectedID = layerList.getSelectedIndex();
         layerList.setListData(map.getLayers());
         layerList.setSelectedIndex(selectedID);
@@ -2570,7 +2645,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
     /**
      * Writes settings of the currently selected layer to the GUI.
      */
-    private void writeGUI() {
+    private void writeGUI(boolean renderMap) {
+        assert SwingUtilities.isEventDispatchThread();
+
         int selectedLayerID = layerList.getSelectedIndex();
         Layer selectedLayer = getSelectedMapLayer();
 
@@ -2740,6 +2817,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
             // gaussian blur
             this.gaussBlurSlider.setValue((int) (selectedLayer.getGaussBlur()));
 
+            if (renderMap) {
+                reloadHTMLMap();
+            }
         } finally {
             this.updating = false;
         }
@@ -2749,7 +2829,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
      * Reads user settings from the GUI and passes the settings to the currently
      * selected layer.
      */
-    protected void readGUI() {
+    protected void readGUIAndRenderMap() {
+        assert SwingUtilities.isEventDispatchThread();
+
         if (this.updating) {
             return;
         }
@@ -2829,52 +2911,54 @@ public class MapComposerPanel extends javax.swing.JPanel {
         layer.setGaussBlur(this.gaussBlurSlider.getValue());
 
         // re-render map preview
-        reloadHTMLPreviewMap();
+        reloadHTMLMap();
     }
+
 
     public Map getMap() {
         return map;
     }
 
     public void setMap(Map map) {
+        assert SwingUtilities.isEventDispatchThread();
         this.map = map;
         updateLayerList();
         layerList.setSelectedIndex(layerList.getFirstVisibleIndex());
-        this.writeGUI();
+        writeGUI(false);
     }
 
     void addLayer(boolean focusList) {
+        assert SwingUtilities.isEventDispatchThread();
         int layerID = this.layerList.getSelectedIndex() + 1;
         String name = "Layer " + (++layerCounter);
         map.addLayer(layerID, new Layer(name));
         updateLayerList();
         layerList.setSelectedIndex(layerID);
-        writeGUI();
+        writeGUI(true);
         if (focusList) {
             layerList.requestFocus();
         }
-        reloadHTMLPreviewMap();
         addUndo("Add Layer");
     }
 
     void removeLayer() {
+        assert SwingUtilities.isEventDispatchThread();
         int selectedLayerID = layerList.getSelectedIndex();
         if (selectedLayerID < 0) {
             return;
         }
         map.removeLayer(selectedLayerID);
         updateLayerList();
-        writeGUI();
+        writeGUI(true);
         layerList.setSelectedIndex(--selectedLayerID);
-        reloadHTMLPreviewMap();
         addUndo("Remove Layer");
     }
 
     void removeAllLayers() {
+        assert SwingUtilities.isEventDispatchThread();
         map.removeAllLayers();
         updateLayerList();
-        reloadHTMLPreviewMap();
-        writeGUI();
+        writeGUI(true);
         addUndo("Remove All Layer");
     }
 

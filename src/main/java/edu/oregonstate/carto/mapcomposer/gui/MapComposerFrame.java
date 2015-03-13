@@ -82,6 +82,8 @@ public class MapComposerFrame extends javax.swing.JFrame {
         reloadMapPreviewMenuItem = new javax.swing.JMenuItem();
         javax.swing.JPopupMenu.Separator jSeparator5 = new javax.swing.JPopupMenu.Separator();
         zoomAndPanMenuItem = new javax.swing.JMenuItem();
+        debugMenu = new javax.swing.JMenu();
+        printXMLMenuItem = new javax.swing.JMenuItem();
 
         zoomAndPanPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -239,6 +241,18 @@ public class MapComposerFrame extends javax.swing.JFrame {
 
         menuBar.add(mapMenu);
 
+        debugMenu.setText("Debug");
+
+        printXMLMenuItem.setText("Print XML");
+        printXMLMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printXMLMenuItemActionPerformed(evt);
+            }
+        });
+        debugMenu.add(printXMLMenuItem);
+
+        menuBar.add(debugMenu);
+
         setJMenuBar(menuBar);
 
         pack();
@@ -265,7 +279,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
                 // user canceled
                 return;
             }
-            mapComposerPanel.readGUI();
+            mapComposerPanel.readGUIAndRenderMap();
             mapComposerPanel.renderTilesWithProgressDialog(new File(directoryPath));
         } catch (IOException ex) {
             Logger.getLogger(MapComposerFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -298,7 +312,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_removeLayerMenuItemActionPerformed
 
     private void reloadMapPreviewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadMapPreviewMenuItemActionPerformed
-        mapComposerPanel.reloadHTMLPreviewMap();
+        mapComposerPanel.reloadHTMLMap();
     }//GEN-LAST:event_reloadMapPreviewMenuItemActionPerformed
 
     private void mapExtentMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mapExtentMenuItemActionPerformed
@@ -329,8 +343,13 @@ public class MapComposerFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_zoomAndPanMenuItemActionPerformed
 
+    private void printXMLMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printXMLMenuItemActionPerformed
+        System.out.println(mapComposerPanel.getMap().toString());
+    }//GEN-LAST:event_printXMLMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addLayerMenuItem;
+    private javax.swing.JMenu debugMenu;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -341,6 +360,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
     private javax.swing.JMenu mapMenu;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openStyleMenuItem;
+    private javax.swing.JMenuItem printXMLMenuItem;
     private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JMenuItem reloadMapPreviewMenuItem;
     private javax.swing.JMenuItem removeAllLayersMenuItem;

@@ -21,12 +21,15 @@ public class IDWGridTileRenderer implements TileRenderer {
 
     private static final int LUT_SIZE = 256;
     
-    @XmlTransient
-    private int[][] lut;
-    
     private ArrayList<IDWPoint> points = new ArrayList<>();
     private double exponentP = 1.3;
 
+    @XmlTransient
+    private int[][] lut;
+    {
+        updateLUT();
+    }
+    
     public IDWGridTileRenderer() {
         initPoints();
     }

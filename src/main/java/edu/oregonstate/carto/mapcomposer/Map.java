@@ -14,6 +14,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -195,6 +197,13 @@ public class Map {
         m.marshal(this, os);
     }
 
+    public void marshal(Writer w) throws JAXBException {
+        Marshaller m = getJAXBContext().createMarshaller();
+        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        m.marshal(this, w);
+    }
+
     public byte[] marshal() throws JAXBException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         marshal(baos);
@@ -215,6 +224,17 @@ public class Map {
                 Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        StringWriter sw = new StringWriter();
+        try {
+            marshal(sw);
+            return sw.toString();
+        } catch (JAXBException ex) {
+            return "Could not marshal map";
+        }        
     }
 
 }
