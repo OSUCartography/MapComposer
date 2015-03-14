@@ -312,7 +312,7 @@ public class MapComposerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_removeLayerMenuItemActionPerformed
 
     private void reloadMapPreviewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadMapPreviewMenuItemActionPerformed
-        mapComposerPanel.reloadHTMLMap();
+        mapComposerPanel.loadHTMLMap();
     }//GEN-LAST:event_reloadMapPreviewMenuItemActionPerformed
 
     private void mapExtentMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mapExtentMenuItemActionPerformed

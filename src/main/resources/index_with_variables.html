@@ -17302,6 +17302,10 @@
                                 }                                
 			}
                         
+                        function reloadTiles() {
+                            map._resetView(map.getCenter(), map.getZoom(), true);
+                        }
+
                         var canAddColorPoints = $$canAddColorPoints$$;
                         
                         //Create a Layer Group for the circle and transparent markers
