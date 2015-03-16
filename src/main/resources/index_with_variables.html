@@ -17284,10 +17284,17 @@
 				});
 				return circleMarker;
 			}
-
+                        
+                        function clearColorPoints() {
+                            colorMarkers.clearLayers();
+                            canAddColorPoints = false;
+                            alert("cleared color points");
+                        }
+                        
 			function setColors(pointsStr) {
+                                clearColorPoints();
+                                canAddColorPoints = true;
 				var latLng, circleMarker, parameters = pointsStr.split(',');
-				colorMarkers.clearLayers();
 				for ( i = 0; i < parameters.length; i += 3) {
                                     var lat = parseFloat(parameters[i + 1]);
                                     var lon = parseFloat(parameters[i]);

@@ -349,12 +349,15 @@ public class MapComposerPanel extends javax.swing.JPanel {
     int reloadTilesCounter = 0;
     public void reloadMapTiles() {
         assert SwingUtilities.isEventDispatchThread();
-        System.out.println("Tiles reload " + ++reloadTilesCounter);
+        
+        final String colorPointsStr = canAddColorPoints() ? getColorPointsOfSelectedLayer() : null;
+        System.out.println("Tiles reload " + ++reloadTilesCounter + " " + colorPointsStr);
+
         // run in JavaFX thread
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                javaFXMap.reloadTiles();
+                javaFXMap.reloadTiles(colorPointsStr);
             }
         });
     }

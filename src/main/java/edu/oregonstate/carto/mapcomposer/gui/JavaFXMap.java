@@ -32,8 +32,8 @@ import netscape.javascript.JSObject;
 public class JavaFXMap {
 
     /**
-     * JavaScript-to-Java communication
-     * FIXME call to event dispatch thread should not be in this class
+     * JavaScript-to-Java communication FIXME call to event dispatch thread
+     * should not be in this class
      */
     public class JavaScriptBridge {
 
@@ -74,7 +74,8 @@ public class JavaFXMap {
     private WebView webView;
 
     /**
-     * Initialize the map and add it to the passed JFXPanel. Must be called from JavaFX thread.
+     * Initialize the map and add it to the passed JFXPanel. Must be called from
+     * JavaFX thread.
      *
      * @param fxPanel The panel to add the map to.
      * @param html HTML content to load
@@ -129,9 +130,9 @@ public class JavaFXMap {
      * @param centerLat Central latitude of map.
      * @return HTML document wit map preview.
      */
-    public static String fillHTMLMapTemplate(boolean canAddColorPoints, 
-            Number zoom, 
-            Number centerLon, 
+    public static String fillHTMLMapTemplate(boolean canAddColorPoints,
+            Number zoom,
+            Number centerLon,
             Number centerLat) {
         if (zoom == null) {
             zoom = 2;
@@ -149,20 +150,21 @@ public class JavaFXMap {
         return html.replace("$$canAddColorPoints$$", Boolean.toString(canAddColorPoints));
     }
 
-    public void reloadTiles() {
+    public void reloadTiles(String colorPointsStr) {
         WebEngine webEngine = webView.getEngine();
         webEngine.executeScript("reloadTiles()");
+        setColorPoints(colorPointsStr);
     }
-    
+
     /**
      * Loads the map and optionally applies previous zoom, panning and color
      * points to the map. Must be called from JavaFX thread.
      *
      * @param colorPointsStr A string with encoded color points. Can be null, in
      * which case the user is not allowed to add color points to the map.
-     * @param centerLon Longitude of the center of the map. If null, the current 
+     * @param centerLon Longitude of the center of the map. If null, the current
      * value is used.
-     * @param centerLat Latitude of the center of the map. If null, the current 
+     * @param centerLat Latitude of the center of the map. If null, the current
      * value is used.
      * @param zoom Zoom level of the map. If null, the current value is used.
      */
@@ -189,19 +191,18 @@ public class JavaFXMap {
         ChangeListener listener = new ChangeListener<Worker.State>() {
             @Override
             public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
-                if (newState == Worker.State.SUCCEEDED) {
-                    System.out.println(ov);
-                    System.out.println(oldState);
-                    System.out.println(newState);
-                    // register JavaScript-to-Java bridge that will receive calls from JavaScript
-                    JSObject w = (JSObject) webEngine.executeScript("window");
-                    System.out.println(w.getMember("java"));
-                    w.setMember("java", new JavaScriptBridge());
 
-                    // run scripts to set color points in map
-                    if (colorPointsStr != null && colorPointsStr.length() > 0) {
-                        webEngine.executeScript("setColors('" + colorPointsStr + "')");
-                    }
+                if (newState == Worker.State.SUCCEEDED) {
+                    /* FIXME 
+                     System.out.println(ov);
+                     System.out.println(oldState);
+                     System.out.println(newState);
+                     // register JavaScript-to-Java bridge that will receive calls from JavaScript
+                     JSObject w = (JSObject) webEngine.executeScript("window");
+                     System.out.println(w.getMember("java"));
+                     w.setMember("java", new JavaScriptBridge());
+                     */
+                    setColorPoints(colorPointsStr);
                 }
             }
         };
@@ -251,6 +252,15 @@ public class JavaFXMap {
             points.add(p);
         }
         return points;
+    }
+
+    private void setColorPoints(String colorPointsStr) {
+        WebEngine webEngine = webView.getEngine();
+        if (colorPointsStr == null) {
+            webEngine.executeScript("clearColorPoints()");
+        } else {
+            webEngine.executeScript("setColors('" + colorPointsStr + "')");
+        }
     }
 
 }
