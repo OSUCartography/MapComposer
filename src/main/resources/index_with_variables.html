@@ -17201,7 +17201,9 @@
 						circleMarker.setStyle({
 							color : selectedColor
 						});
-                                                java.colorPointChanged();
+                                                if (typeof java !== 'undefined') {
+                                                    java.colorPointChanged();
+                                                }
 					}
 				});
 			}
@@ -17212,7 +17214,9 @@
 				//Delete the things with the desired IDs:
 				colorMarkers.removeLayer(markerID);
 				colorMarkers.removeLayer(circleMarkerID);
-                                java.colorPointChanged();
+                                if (typeof java !== 'undefined') {
+                                    java.colorPointChanged();
+                                }
 			}
 
 			// returns all color points on the map. The result
@@ -17280,7 +17284,9 @@
 				marker.on('moveend', function() {
 					var endPosition = marker.getLatLng();
 					circleMarker.setLatLng(endPosition);
-                                        java.colorPointChanged();
+                                        if (typeof java !== 'undefined') {
+                                            java.colorPointChanged();
+                                        }
 				});
 				return circleMarker;
 			}
@@ -17367,7 +17373,9 @@
                             if (canAddColorPoints) {
 				var circleMarker = createPoint(e.latlng);
 				openColorPicker(circleMarker);
-                                java.colorPointChanged();
+                                if (typeof java !== 'undefined') {
+                                    java.colorPointChanged();
+                                }
                             }				
 			});
                       

@@ -32,25 +32,6 @@ import netscape.javascript.JSObject;
 public class JavaFXMap {
 
     /**
-     * JavaScript-to-Java communication FIXME call to event dispatch thread
-     * should not be in this class
-     */
-    public class JavaScriptBridge {
-
-        // this is supposedly run in the JavaFX thread
-        public void colorPointChanged() {
-            System.out.println("JavaScript changed color points");
-            // run in Swing event dispatching thread
-            /*SwingUtilities.invokeLater(new Runnable() {
-             @Override
-             public void run() {
-             readIDWPoints(true);
-             }
-             });*/
-        }
-    }
-
-    /**
      * HTML template for map
      */
     private static final String HTML_MAP_TEMPLATE = loadHtmlMapTemplate();
@@ -150,6 +131,10 @@ public class JavaFXMap {
         return html.replace("$$canAddColorPoints$$", Boolean.toString(canAddColorPoints));
     }
 
+    /**
+     * Reloads all map tiles, but not the entire HTML page.
+     * @param colorPointsStr Color points to add to the map.
+     */
     public void reloadTiles(String colorPointsStr) {
         WebEngine webEngine = webView.getEngine();
         webEngine.executeScript("reloadTiles()");
@@ -167,11 +152,13 @@ public class JavaFXMap {
      * @param centerLat Latitude of the center of the map. If null, the current
      * value is used.
      * @param zoom Zoom level of the map. If null, the current value is used.
+     * @param javaScriptToJavaBridge An object to be registered with JS Window object.
      */
     public void loadHTMLMap(final String colorPointsStr,
             Number centerLon,
             Number centerLat,
-            Number zoom) {
+            Number zoom,
+            final Object javaScriptToJavaBridge) {
         assert Platform.isFxApplicationThread();
 
         final WebEngine webEngine = webView.getEngine();
@@ -193,16 +180,12 @@ public class JavaFXMap {
             public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
 
                 if (newState == Worker.State.SUCCEEDED) {
-                    /* FIXME 
-                     System.out.println(ov);
-                     System.out.println(oldState);
-                     System.out.println(newState);
-                     // register JavaScript-to-Java bridge that will receive calls from JavaScript
-                     JSObject w = (JSObject) webEngine.executeScript("window");
-                     System.out.println(w.getMember("java"));
-                     w.setMember("java", new JavaScriptBridge());
-                     */
+                    // register JavaScript-to-Java bridge that will receive calls from JavaScript
+                    JSObject w = (JSObject) webEngine.executeScript("window");
+                    w.setMember("java", javaScriptToJavaBridge);
                     setColorPoints(colorPointsStr);
+                    // FIXME not called when the page loads initially
+                    System.out.println(w.getMember("registered JavaScript-to-Java bridge"));
                 }
             }
         };

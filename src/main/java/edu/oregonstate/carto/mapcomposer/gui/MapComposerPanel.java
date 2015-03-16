@@ -43,7 +43,6 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.web.WebEngine;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -154,6 +153,26 @@ public class MapComposerPanel extends javax.swing.JPanel {
             Layer layer = (Layer) m.get(row);
             layer.setName(value);
             // TODO not complete
+        }
+    }
+
+    /**
+     * JavaScript-to-Java communication FIXME call to event dispatch thread
+     * should not be in this class
+     */
+    public class JavaScriptBridge {
+
+        // this is supposedly run in the JavaFX thread
+        public void colorPointChanged() {
+            System.out.println("JavaScript changed color points");
+            // run in Swing event dispatching thread
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    //readIDWPoints();
+                    //reloadMapTiles();
+                }
+            });
         }
     }
 
@@ -326,8 +345,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Reloads the HTML map and its tiles. Call this method after changing map
-     * settings. To be called from the Swing thread.
+     * Loads the HTML map. To be called from the Swing thread.
      */
     // FIXME remove
     int loadHTMLCounter = 0;
@@ -341,15 +359,16 @@ public class MapComposerPanel extends javax.swing.JPanel {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                javaFXMap.loadHTMLMap(colorPointsStr, null, null, null);
+                javaFXMap.loadHTMLMap(colorPointsStr, null, null, null, new JavaScriptBridge());
             }
         });
     }
-    
+
     int reloadTilesCounter = 0;
+
     public void reloadMapTiles() {
         assert SwingUtilities.isEventDispatchThread();
-        
+
         final String colorPointsStr = canAddColorPoints() ? getColorPointsOfSelectedLayer() : null;
         System.out.println("Tiles reload " + ++reloadTilesCounter + " " + colorPointsStr);
 
@@ -378,7 +397,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                javaFXMap.loadHTMLMap(colorPointsStr, lon, lat, zoom);
+                javaFXMap.loadHTMLMap(colorPointsStr, lon, lat, zoom, new JavaScriptBridge());
             }
         });
     }
@@ -1810,44 +1829,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
         mapPanel.setLayout(new java.awt.BorderLayout());
         add(mapPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Add a listener for changes to text fields. The listener calls readGUI()
-     * whenever the text changes.
-     *
-     * @param textField
-     */
-    private void addDocumentListener(JTextField textField) {
-        textField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                // text was changed
-                documentChanged();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                // text was deleted
-                documentChanged();
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                // text was inserted
-                documentChanged();
-            }
-
-            private void documentChanged() {
-                readGUIAndRenderMap();
-                try {
-                    updating = true;
-                    updateLayerList();
-                } finally {
-                    updating = false;
-                }
-            }
-        });
-    }
 
     /**
      * Event handler for moving a layer downwards in the layers hierarchy.
