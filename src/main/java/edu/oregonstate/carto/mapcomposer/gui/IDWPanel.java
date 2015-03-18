@@ -33,6 +33,11 @@ public class IDWPanel extends IDWPreview {
     private IDWPoint selectedPoint = null;
 
     /**
+     * True while point is being dragged, false otherwise.
+     */
+    private boolean draggingPoint = false;
+
+    /**
      * horizontal distance between the last mouse click and the center of the
      * selected point.
      */
@@ -61,9 +66,19 @@ public class IDWPanel extends IDWPreview {
             public void mouseClicked(MouseEvent e) {
                 IDWPoint pt = findIDWPoint(e.getX(), e.getY());
                 if (pt == null) {
-                    selectPoint(addIDWPoint(e.getX(), e.getY()));
+                    pt = addIDWPoint(e.getX(), e.getY());
                 }
+                selectPoint(pt);
                 repaint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (draggingPoint) {
+                    moveIDWPoint(e.getX(), e.getY());
+                }
+                draggingPoint = false;
+                firePropertyChange("colorChanged", null, null);
             }
         });
 
@@ -71,16 +86,10 @@ public class IDWPanel extends IDWPreview {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (getSelectedPoint() != null) {
+                    draggingPoint = true;
                     moveIDWPoint(e.getX(), e.getY());
+                    firePropertyChange("colorChanged", null, null);
                 }
-            }
-        });
-
-        addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                moveIDWPoint(e.getX(), e.getY());
-                selectPoint(null);
             }
         });
 
@@ -91,16 +100,12 @@ public class IDWPanel extends IDWPreview {
         getActionMap().put("deletePoint", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeSelectedPoint();
+                getIdw().getPoints().remove(selectedPoint);
+                selectPoint(null);
                 repaint();
+                firePropertyChange("colorDeleted", null, null);
             }
         });
-    }
-
-    private void removeSelectedPoint() {
-        getIdw().getPoints().remove(selectedPoint);
-        firePropertyChange("colorChanged", null, null);
-        selectPoint(null);
     }
 
     @Override
@@ -205,7 +210,6 @@ public class IDWPanel extends IDWPreview {
         selectedPoint.setLonLat(Double.NaN, Double.NaN);
 
         repaint();
-        firePropertyChange("colorChanged", null, null);
     }
 
     /**
@@ -232,5 +236,14 @@ public class IDWPanel extends IDWPreview {
             repaint();
             firePropertyChange("colorChanged", null, null);
         }
+    }
+
+    /**
+     * Returns whether the user drags a point.
+     *
+     * @return True if point is dragged, false otherwise.
+     */
+    public boolean isValueAdjusting() {
+        return draggingPoint;
     }
 }

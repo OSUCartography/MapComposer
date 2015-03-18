@@ -2283,8 +2283,12 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         // show dialog to select IDW tile sets if they have not been defined.
         if (selectedMenuItem == 2 /* interpolated colors */) {
-            if (!getSelectedMapLayer().isIDWGridTileURLTemplatesValid()) {
+            if (getSelectedMapLayer().isIDWGridTileURLTemplatesValid() == false) {
                 selectIDWTileSets();
+                // if user did not select tiles sets, switch back to solid color
+                if (getSelectedMapLayer().isIDWGridTileURLTemplatesValid() == false) {
+                    colorSelectionComboBox.setSelectedIndex(0);
+                }
             }
         }
     }//GEN-LAST:event_colorSelectionComboBoxItemStateChanged
@@ -2295,6 +2299,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
         idwExponentValueLabel.setText(Double.toString(exp));
         idwPanel.repaint();
         idwPreview.repaint();
+        if (idwExponentSlider.getValueIsAdjusting() == false) {
+            reloadMapTiles();
+        }
     }//GEN-LAST:event_idwExponentSliderStateChanged
 
     private void grid1LoadDirectoryPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grid1LoadDirectoryPathButtonActionPerformed
@@ -2316,17 +2323,28 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_grid2LoadDirectoryPathButtonActionPerformed
 
     private void idwPanelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_idwPanelPropertyChange
+        System.out.println("Property changed: " + evt.getPropertyName());
+        System.out.println(idwPanel.isValueAdjusting());
         if ("selectedPoint".equals(evt.getPropertyName())) {
+            
+            // update color of color chooser after click on a color point
             if (evt.getNewValue() == null) {
+                // a new point was added
                 idwColorChooser.setColor(Color.BLACK);
             } else {
+                // clicked on existing point
                 IDWPoint pt = (IDWPoint) (evt.getNewValue());
                 idwColorChooser.setColor(pt.getColor());
             }
         }
-        if ("colorChanged".equals(evt.getPropertyName())) {
+        
+        // color changed or point was moved
+        if ("colorChanged".equals(evt.getPropertyName()) || "colorDeleted".equals(evt.getPropertyName())) {
             idwPanel.getIdw().colorPointsChanged();
             idwPreview.repaint();
+            if (idwPanel.isValueAdjusting() == false || "colorDeleted".equals(evt.getPropertyName())) {
+                reloadMapTiles();
+            }
         }
     }//GEN-LAST:event_idwPanelPropertyChange
 
