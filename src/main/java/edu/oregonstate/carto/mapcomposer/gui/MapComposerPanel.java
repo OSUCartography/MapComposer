@@ -349,6 +349,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
      */
     // FIXME remove
     int loadHTMLCounter = 0;
+
     public void loadHTMLMap() {
         assert SwingUtilities.isEventDispatchThread();
         System.out.println("Map load " + ++loadHTMLCounter);
@@ -2374,48 +2375,50 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         // run in JavaFX thread
         Platform.runLater(new Runnable() {
+
+            ArrayList<IDWPoint> pointsOnMap;
+
             @Override
             public void run() {
+
                 try {
-                    ArrayList<IDWPoint> pointsOnMap = javaFXMap.getColorPoints();
-                    for (IDWPoint p : pointsOnMap) {
-                        // TODO
-                        int zoom = 10;
-
-                        float v1 = getValueFromGridTileSet(zoom, p.getLon(), p.getLat(), tileSet1);
-                        float v2 = getValueFromGridTileSet(zoom, p.getLon(), p.getLat(), tileSet2);
-                        if (Float.isNaN(v1)) {
-                            throw new IllegalArgumentException("no value for " + p.getLon() + "/" + p.getLat() + " in first tile set");
-                        }
-                        if (Float.isNaN(v2)) {
-                            throw new IllegalArgumentException("no value for " + p.getLon() + "/" + p.getLat() + " in second tile set");
-                        }
-
-                        p.setAttribute1(v1);
-                        p.setAttribute2(v2);
-                        points.add(p);
-                    }
+                    pointsOnMap = javaFXMap.getColorPoints();
                 } catch (Exception ex) {
-                    Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    pointsOnMap = new ArrayList<>();
                 }
 
-                // run in Swing event dispatching thread
+                // run in Swing event dispatch thread
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        idwRenderer.setColorPoints(points);
-                        idwPanel.repaint();
-                        idwPreview.repaint();
+                        try {
+                            for (IDWPoint p : pointsOnMap) {
+                                // FIXME TODO
+                                int z = 10;
+                                
+                                double lon = p.getLon();
+                                double lat = p.getLat();
+                                float v1 = getValueFromGridTileSet(z, lon, lat, tileSet1);
+                                float v2 = getValueFromGridTileSet(z, lon, lat, tileSet2);
+                                if (Float.isNaN(v1) || Float.isNaN(v2)) {
+                                    v1 = v2 = Float.NaN;
+                                }
+                                p.setAttribute1(v1);
+                                p.setAttribute2(v2);
+                                points.add(p);
+                            }
+                            idwRenderer.setColorPoints(points);
+                            idwPanel.repaint();
+                            idwPreview.repaint();
+                        } catch (Exception ex) {
+                            Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 });
 
             }
         });
     }
-
-    private void idwApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwApplyButtonActionPerformed
-        reloadMapTiles();
-    }//GEN-LAST:event_idwApplyButtonActionPerformed
 
     private void selectIDWTileSets() {
         assert SwingUtilities.isEventDispatchThread();
@@ -2425,6 +2428,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 JOptionPane.YES_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
         readGUIAndRenderMap();
     }
+
+    private void idwApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwApplyButtonActionPerformed
+        reloadMapTiles();
+    }//GEN-LAST:event_idwApplyButtonActionPerformed
+
     private void idwTileSetsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwTileSetsButtonActionPerformed
         selectIDWTileSets();
     }//GEN-LAST:event_idwTileSetsButtonActionPerformed
