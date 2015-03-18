@@ -169,8 +169,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    //readIDWPoints();
-                    //reloadMapTiles();
+                    readIDWPoints(true);
+                    reloadMapTiles();
                 }
             });
         }
@@ -272,7 +272,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 }
 
                 // read current color points from map
-                readIDWPoints();
+                readIDWPoints(false);
 
                 // open dialog to adjust color points
                 String title = "IDW Color Interpolation";
@@ -2350,29 +2350,36 @@ public class MapComposerPanel extends javax.swing.JPanel {
         return grid.getBilinearInterpol(tltxy[0], -tltxy[1]);
     }
 
-    private void readIDWPoints() {
+    /**
+     * Reads IDW color points from the map and passes them to the IDWGridTileRenderer
+     * of the currently selected layer. Retains color points that are not georeferenced.
+     */
+    private void readIDWPoints(final boolean reloadMapTiles) {
         final Layer selectedLayer = getSelectedMapLayer();
         if (selectedLayer == null) {
             return;
         }
-        final IDWGridTileRenderer idwRenderer = selectedLayer.getIdwTileRenderer();
         final TileSet tileSet1 = selectedLayer.getGrid1TileSet();
         final TileSet tileSet2 = selectedLayer.getGrid2TileSet();
+        if (!tileSet1.isURLTemplateValid() || !tileSet2.isURLTemplateValid()) {
+            String msg = "Tile sets have not been selected.";
+            ErrorDialog.showErrorDialog(msg, "MapComposer Error", null, this);
+        }
+        
+        // array with final points
         final ArrayList<IDWPoint> points = new ArrayList<>();
 
         // copy color points that don't have a valid geographic location, that is,
         // they are contained in the diagram, but not in the map.
+        final IDWGridTileRenderer idwRenderer = selectedLayer.getIdwTileRenderer();
         ArrayList<IDWPoint> oldPoints = idwRenderer.getPoints();
         for (IDWPoint p : oldPoints) {
             if (!p.isLonLatDefined()) {
                 points.add(p);
             }
-        }
-        if (!tileSet1.isURLTemplateValid() || !tileSet2.isURLTemplateValid()) {
-            String msg = "Tile sets have not been selected.";
-            ErrorDialog.showErrorDialog(msg, "MapComposer Error", null, this);
-        }
+        }        
 
+        // read points from map and extract values for each point from grid tile sets
         // run in JavaFX thread
         Platform.runLater(new Runnable() {
 
@@ -2380,13 +2387,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
             @Override
             public void run() {
-
+                // run JavaScript code and parse the result
                 try {
                     pointsOnMap = javaFXMap.getColorPoints();
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     pointsOnMap = new ArrayList<>();
                 }
 
+                // for each point on the map, read values from grid tile sets
                 // run in Swing event dispatch thread
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
@@ -2395,27 +2403,28 @@ public class MapComposerPanel extends javax.swing.JPanel {
                             for (IDWPoint p : pointsOnMap) {
                                 // FIXME TODO
                                 int z = 10;
-                                
+
                                 double lon = p.getLon();
                                 double lat = p.getLat();
                                 float v1 = getValueFromGridTileSet(z, lon, lat, tileSet1);
                                 float v2 = getValueFromGridTileSet(z, lon, lat, tileSet2);
-                                if (Float.isNaN(v1) || Float.isNaN(v2)) {
-                                    v1 = v2 = Float.NaN;
+                                if (!Float.isNaN(v1) && !Float.isNaN(v2)) {
+                                    p.setAttribute1(v1);
+                                    p.setAttribute2(v2);
+                                    points.add(p);
                                 }
-                                p.setAttribute1(v1);
-                                p.setAttribute2(v2);
-                                points.add(p);
                             }
                             idwRenderer.setColorPoints(points);
                             idwPanel.repaint();
                             idwPreview.repaint();
-                        } catch (Exception ex) {
+                            if (reloadMapTiles) {
+                                reloadMapTiles();
+                            }
+                        } catch (Throwable ex) {
                             Logger.getLogger(MapComposerPanel.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 });
-
             }
         });
     }
