@@ -170,7 +170,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 @Override
                 public void run() {
                     readIDWPoints(true);
-                    reloadMapTiles();
                 }
             });
         }
@@ -310,6 +309,13 @@ public class MapComposerPanel extends javax.swing.JPanel {
             @Override
             public void run() {
                 javaFXMap.init(fxPanel, html);
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadHTMLMap();
+                    }
+                });
             }
         });
 
@@ -365,13 +371,14 @@ public class MapComposerPanel extends javax.swing.JPanel {
         });
     }
 
+    // FIXME remove
     int reloadTilesCounter = 0;
 
     public void reloadMapTiles() {
         assert SwingUtilities.isEventDispatchThread();
 
         final String colorPointsStr = canAddColorPoints() ? getColorPointsOfSelectedLayer() : null;
-        System.out.println("Tiles reload " + ++reloadTilesCounter + " " + colorPointsStr);
+        System.out.println("Tiles reload " + ++reloadTilesCounter + " " + colorPointsStr != null ? colorPointsStr : "");
 
         // run in JavaFX thread
         Platform.runLater(new Runnable() {
@@ -2351,8 +2358,9 @@ public class MapComposerPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Reads IDW color points from the map and passes them to the IDWGridTileRenderer
-     * of the currently selected layer. Retains color points that are not georeferenced.
+     * Reads IDW color points from the map and passes them to the
+     * IDWGridTileRenderer of the currently selected layer. Retains color points
+     * that are not georeferenced.
      */
     private void readIDWPoints(final boolean reloadMapTiles) {
         final Layer selectedLayer = getSelectedMapLayer();
@@ -2365,7 +2373,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             String msg = "Tile sets have not been selected.";
             ErrorDialog.showErrorDialog(msg, "MapComposer Error", null, this);
         }
-        
+
         // array with final points
         final ArrayList<IDWPoint> points = new ArrayList<>();
 
@@ -2377,7 +2385,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             if (!p.isLonLatDefined()) {
                 points.add(p);
             }
-        }        
+        }
 
         // read points from map and extract values for each point from grid tile sets
         // run in JavaFX thread

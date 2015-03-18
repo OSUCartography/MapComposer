@@ -65,6 +65,7 @@ public class JavaFXMap {
         assert Platform.isFxApplicationThread();
 
         webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
         Group group = new Group();
         group.getChildren().add(webView);
         Scene scene = new Scene(group);
@@ -72,23 +73,20 @@ public class JavaFXMap {
         fxPanel.setScene(scene);
 
         // pipe JavaScript alert() calls to the standard output
-        webView.getEngine().setOnAlert(new EventHandler<WebEvent<String>>() {
+        webEngine.setOnAlert(new EventHandler<WebEvent<String>>() {
             @Override
             public void handle(WebEvent<String> t) {
-                System.out.println(t);
+                System.out.println("JavaScript Alert: " + t.getData());
             }
         });
 
-        final Worker<Void> worker = webView.getEngine().getLoadWorker();
+        final Worker<Void> worker = webEngine.getLoadWorker();
         worker.exceptionProperty().addListener(new ChangeListener<Throwable>() {
             @Override
             public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue, Throwable newValue) {
                 System.err.println("WebView exception: " + newValue.getMessage());
             }
         });
-
-        // load the HTML page
-        webView.getEngine().loadContent(html);
     }
 
     /**
@@ -133,6 +131,7 @@ public class JavaFXMap {
 
     /**
      * Reloads all map tiles, but not the entire HTML page.
+     *
      * @param colorPointsStr Color points to add to the map.
      */
     public void reloadTiles(String colorPointsStr) {
@@ -152,7 +151,8 @@ public class JavaFXMap {
      * @param centerLat Latitude of the center of the map. If null, the current
      * value is used.
      * @param zoom Zoom level of the map. If null, the current value is used.
-     * @param javaScriptToJavaBridge An object to be registered with JS Window object.
+     * @param javaScriptToJavaBridge An object to be registered with JS Window
+     * object.
      */
     public void loadHTMLMap(final String colorPointsStr,
             Number centerLon,
@@ -163,16 +163,24 @@ public class JavaFXMap {
 
         final WebEngine webEngine = webView.getEngine();
         // run scripts to retreive current map center and zoom
-        if (centerLat == null) {
-            centerLat = (Number) webEngine.executeScript("map.getCenter().lat");
+        // if the HTML document has never been loaded before, the map object
+        // is not defined and window.map is "undefined" (string) 
+        JSObject jsWindow = (JSObject) webEngine.executeScript("window");
+        Object jsMap = jsWindow.getMember("map");
+        boolean hasJSMap = !(jsMap instanceof String);
+        if (hasJSMap) {
+            if (centerLat == null) {
+                centerLat = (Number) webEngine.executeScript("map.getCenter().lat");
+            }
+            if (centerLon == null) {
+                centerLon = (Number) webEngine.executeScript("map.getCenter().lng");
+            }
+            if (zoom == null) {
+                zoom = (Number) webEngine.executeScript("map.getZoom()");
+            }
         }
-        if (centerLon == null) {
-            centerLon = (Number) webEngine.executeScript("map.getCenter().lng");
-        }
-        if (zoom == null) {
-            zoom = (Number) webEngine.executeScript("map.getZoom()");
-        }
-        // create and load new HTML page with same map center and zoom
+        
+        // fill template of HTML document with color points, zoom and map center
         String html = fillHTMLMapTemplate(colorPointsStr != null, zoom, centerLon, centerLat);
 
         ChangeListener listener = new ChangeListener<Worker.State>() {
@@ -184,15 +192,11 @@ public class JavaFXMap {
                     JSObject w = (JSObject) webEngine.executeScript("window");
                     w.setMember("java", javaScriptToJavaBridge);
                     setColorPoints(colorPointsStr);
-                    // FIXME not called when the page loads initially
-                    System.out.println(w.getMember("registered JavaScript-to-Java bridge"));
+                    System.out.println("registered JavaScript-to-Java bridge");
                 }
             }
         };
-        if (colorPointsStr != null) {
-            webEngine.getLoadWorker().stateProperty().addListener(listener);
-        }
-
+        webEngine.getLoadWorker().stateProperty().addListener(listener);
         webEngine.loadContent(html);
     }
 
