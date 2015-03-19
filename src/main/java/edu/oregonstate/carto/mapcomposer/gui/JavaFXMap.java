@@ -191,8 +191,9 @@ public class JavaFXMap {
                     // register JavaScript-to-Java bridge that will receive calls from JavaScript
                     JSObject w = (JSObject) webEngine.executeScript("window");
                     w.setMember("java", javaScriptToJavaBridge);
-                    setColorPoints(colorPointsStr);
                     System.out.println("registered JavaScript-to-Java bridge");
+                    
+                    setColorPoints(colorPointsStr);
                 }
             }
         };

@@ -359,7 +359,6 @@ public class MapComposerPanel extends javax.swing.JPanel {
     public void loadHTMLMap() {
         assert SwingUtilities.isEventDispatchThread();
         System.out.println("Map load " + ++loadHTMLCounter);
-        //Thread.dumpStack();
         final String colorPointsStr = canAddColorPoints() ? getColorPointsOfSelectedLayer() : null;
 
         // run in JavaFX thread

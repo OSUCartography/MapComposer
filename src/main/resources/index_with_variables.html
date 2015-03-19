@@ -17192,9 +17192,9 @@
 					showButtons : false,
 					showInitial : true,
 					showInput : true,
-					hideAfterPaletteSelect : true,
-					showPalette : true,
-					palette : [["rgb(0, 0, 0)", "rgb(67, 67, 67)", "rgb(102, 102, 102)", "rgb(204, 204, 204)", "rgb(217, 217, 217)", "rgb(255, 255, 255)"], ["rgb(152, 0, 0)", "rgb(255, 0, 0)", "rgb(255, 153, 0)", "rgb(255, 255, 0)", "rgb(0, 255, 0)", "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"], ["rgb(230, 184, 175)", "rgb(244, 204, 204)", "rgb(252, 229, 205)", "rgb(255, 242, 204)", "rgb(217, 234, 211)", "rgb(208, 224, 227)", "rgb(201, 218, 248)", "rgb(207, 226, 243)", "rgb(217, 210, 233)", "rgb(234, 209, 220)", "rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(255, 229, 153)", "rgb(182, 215, 168)", "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)", "rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(255, 217, 102)", "rgb(147, 196, 125)", "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)", "rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(241, 194, 50)", "rgb(106, 168, 79)", "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)", "rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)", "rgb(127, 96, 0)", "rgb(39, 78, 19)", "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]],
+					//hideAfterPaletteSelect : true,
+					//showPalette : true,
+					//palette : [["rgb(0, 0, 0)", "rgb(67, 67, 67)", "rgb(102, 102, 102)", "rgb(204, 204, 204)", "rgb(217, 217, 217)", "rgb(255, 255, 255)"], ["rgb(152, 0, 0)", "rgb(255, 0, 0)", "rgb(255, 153, 0)", "rgb(255, 255, 0)", "rgb(0, 255, 0)", "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"], ["rgb(230, 184, 175)", "rgb(244, 204, 204)", "rgb(252, 229, 205)", "rgb(255, 242, 204)", "rgb(217, 234, 211)", "rgb(208, 224, 227)", "rgb(201, 218, 248)", "rgb(207, 226, 243)", "rgb(217, 210, 233)", "rgb(234, 209, 220)", "rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(255, 229, 153)", "rgb(182, 215, 168)", "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)", "rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(255, 217, 102)", "rgb(147, 196, 125)", "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)", "rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(241, 194, 50)", "rgb(106, 168, 79)", "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)", "rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)", "rgb(127, 96, 0)", "rgb(39, 78, 19)", "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]],
 					//Gets the selected color as a hex string and sets the circle marker color
 					change : function(color) {
 						var selectedColor = color.toHexString();
@@ -17222,14 +17222,13 @@
 			// returns all color points on the map. The result
                         // is an array with [lon, lat, color] repeated.
 			function getColors() {
-				var colorMarkersArray = [];
-				colorMarkersArray = colorMarkers.getLayers();
+				var colorMarkersArray = colorMarkers.getLayers();
 				var res = [];
 				//a new array to hold only the circle layers
 
-				for ( i = 0; i < colorMarkersArray.length; i++) {
-					if (colorMarkersArray[i].options.color != undefined) {
-						var circle = colorMarkersArray[i];
+				for (var i = 0; i < colorMarkersArray.length; i++) {
+					var circle = colorMarkersArray[i];
+                                        if (typeof circle.options.color !== 'undefined') {
 						res.push(circle._latlng.lng);
 						res.push(circle._latlng.lat);
 						res.push(circle.options.color);
@@ -17249,7 +17248,9 @@
 				//initializes the color picker and links it to the jQuery color picker class
 				//provides a button for deleting the marker & circleMarker pair
 				//onClick function calls deleteMarkers, which takes in the leaflet IDs of the layers to be deleted
-				var popupContent = "<input type='text' class='custom'/><br><br><input type='button' value='Delete' onClick='deleteMarkers(" + marker._leaflet_id + "," + circleMarker._leaflet_id + ")' />";
+				var popupContent = "<input type='text' class='custom' />\n\
+                                <br><br>\n\
+                                <input type='button' value='Delete' onClick='deleteMarkers(" + marker._leaflet_id + "," + circleMarker._leaflet_id + ")' />";
 				
 				//Set popup options
 				var popupOptions = {
@@ -17259,7 +17260,6 @@
 
 				//bind a popup to the marker
 				marker.bindPopup(popupContent, popupOptions).openPopup();
-					
 				marker.on('click', function() {
 					openColorPicker(circleMarker);
 				});
@@ -17267,27 +17267,24 @@
 				//Get the marker position on the start of movement
 				//Set the circle marker to the marker position
 				marker.on('movestart', function() {
-					var moveStartPosition = marker.getLatLng();
-					circleMarker.setLatLng(moveStartPosition);
-				});
-				
+					circleMarker.setLatLng(marker.getLatLng());
+				});				
 
 				//Get the marker position during movement
 				//Set the circle marker position to the marker position during movement
 				marker.on('move', function() {
-					var movePosition = marker.getLatLng();
-					circleMarker.setLatLng(movePosition);
+					circleMarker.setLatLng(marker.getLatLng());
 				});
 
 				//Get the marker position at the end of movement
 				//Set the circle marker to the marker position when the movement ends
 				marker.on('moveend', function() {
-					var endPosition = marker.getLatLng();
-					circleMarker.setLatLng(endPosition);
+					circleMarker.setLatLng(marker.getLatLng());
                                         if (typeof java !== 'undefined') {
                                             java.colorPointChanged();
                                         }
 				});
+                                
 				return circleMarker;
 			}
                         
@@ -17299,15 +17296,15 @@
 			function setColors(pointsStr) {
                                 clearColorPoints();
                                 canAddColorPoints = true;
-				var latLng, circleMarker, parameters = pointsStr.split(',');
-				for ( i = 0; i < parameters.length; i += 3) {
-                                    var lat = parseFloat(parameters[i + 1]);
-                                    var lon = parseFloat(parameters[i]);
+				var i, lat, lon, latLng, pt, parameters = pointsStr.split(',');
+				for (i = 0; i < parameters.length; i += 3) {
+                                    lat = parseFloat(parameters[i + 1]);
+                                    lon = parseFloat(parameters[i]);
                                     if (!isNaN(lat) && !isNaN(lon)) {
 					latLng = L.latLng(lat, lon);
-					circleMarker = createPoint(latLng);
+					pt = createPoint(latLng);
 					// replace leading 0x and alpha hexadecimal value with #
-					circleMarker.setStyle({
+					pt.setStyle({
 							color : "#" + parameters[i + 2].trim().substring(4)
 						});
                                     }
@@ -17325,7 +17322,10 @@
 			
 			var osm = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                                 maxZoom : 22,
-				attribution : 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+				attribution : 'Map data &copy; \n\
+                        <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, \n\
+                        <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, \n\
+                        Imagery &copy; <a href="http://cloudmade.com">CloudMade</a>'
 			});
 			
 			// use custom map protocol to have map tiles rendered on the fly
@@ -17347,7 +17347,7 @@
 			//Makes a transparent (invisible) marker that is located on top of the circle marker
 			var myIcon = L.icon({
 				iconUrl : base64Img, // 'markerClear.png',
-				iconAnchor : [10, 10],
+				iconAnchor : [10, 10]
 			});
 
 			//Set marker options
@@ -17375,7 +17375,7 @@
                                 if (typeof java !== 'undefined') {
                                     java.colorPointChanged();
                                 }
-                            }				
+                            }
 			});
                       
 			var baseMaps = {
@@ -17384,7 +17384,7 @@
 
 			var overlayMaps = {
 				"Tileset" : new_tiles,
-				"Color Markers" : colorMarkers,
+				"Color Markers" : colorMarkers
 			};
 
 			L.control.layers(baseMaps, overlayMaps, {
