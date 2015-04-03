@@ -6,56 +6,72 @@ import javax.xml.bind.annotation.XmlAccessorType;
 
 /**
  *
- * @author darbyshj
+ * @author Jane Darbyshire and Bernie Jenny, Oregon State University
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class IDWPoint {
 
-    //color values for the point (0-255)
-
+    // RGB color values for the point (0-255)
     private int r;
     private int g;
     private int b;
-
+    
+    // first attribute
     private double attribute1; //ex: precipitation
+    
+    // second attribute
     private double attribute2; //ex: elevation
 
+    // longitude of the point
     private double lon = Double.NaN;
+    
+    // latitude of the point
     private double lat = Double.NaN;
 
+    /**
+     * Returns a string description with lon/lat, RGB, and the two attributes.
+     * @return The description.
+     */
+    @Override
     public String toString() {
         return lon + " " + lat + " " + r + " " + g + " " + b + " " + attribute1 + " " + attribute2;
     }
+    
 
     /**
-     * @return the r
+     * Returns the red value.
+     * @return the red value
      */
     public double getR() {
         return r;
     }
 
     /**
-     * @param r the r to set
+     * Set the red value.
+     * @param r the red to set
      */
     public void setR(int r) {
         this.r = r;
     }
 
     /**
-     * @return the g
+     * Returns the green value
+     * @return the green value
      */
     public double getG() {
         return g;
     }
 
     /**
-     * @param g the g to set
+     * Set the green value.
+     * @param g the green to set
      */
     public void setG(int g) {
         this.g = g;
     }
 
     /**
+     * Returns the blue value.
      * @return the b
      */
     public double getB() {
@@ -63,16 +79,25 @@ public class IDWPoint {
     }
 
     /**
-     * @param b the b to set
+     * Set blue value.
+     * @param b the blue to set
      */
     public void setB(int b) {
         this.b = b;
     }
 
+    /**
+     * Returns the current RGB color as a Color object.
+     * @return 
+     */
     public Color getColor() {
         return new Color(r, g, b);
     }
 
+    /**
+     * The the RGB color.
+     * @param rgb 
+     */
     public void setColor(Color rgb) {
         this.r = rgb.getRed();
         this.g = rgb.getGreen();
@@ -107,25 +132,34 @@ public class IDWPoint {
         this.attribute2 = attribute2;
     }
 
+    /**
+     * Set longitude and latitude of the point.
+     * @param lon Longitude
+     * @param lat Latitude
+     */
     public void setLonLat(double lon, double lat) {
         this.lon = lon;
         this.lat = lat;
     }
 
     /**
-     * @return the lon
+     * @return the longitude
      */
     public double getLon() {
         return lon;
     }
 
     /**
-     * @return the lat
+     * @return the latitude
      */
     public double getLat() {
         return lat;
     }
 
+    /**
+     * Returns true if the longitude and latitude values are defined.
+     * @return True if longitude and latitude are defined, false otherwise.
+     */
     public boolean isLonLatDefined() {
         return !(Double.isNaN(lon) || Double.isNaN(lat));
     }
