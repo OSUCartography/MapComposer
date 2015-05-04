@@ -42,7 +42,7 @@ public class IDWPoint {
      * Returns the red value.
      * @return the red value
      */
-    public double getR() {
+    public int getR() {
         return r;
     }
 
@@ -58,7 +58,7 @@ public class IDWPoint {
      * Returns the green value
      * @return the green value
      */
-    public double getG() {
+    public int getG() {
         return g;
     }
 
@@ -74,7 +74,7 @@ public class IDWPoint {
      * Returns the blue value.
      * @return the b
      */
-    public double getB() {
+    public int getB() {
         return b;
     }
 

@@ -20,16 +20,18 @@ import javax.xml.bind.annotation.XmlTransient;
 public class IDWGridTileRenderer implements TileRenderer {
 
     private static final int LUT_SIZE = 256;
-    
+
     private ArrayList<IDWPoint> points = new ArrayList<>();
     private double exponentP = 1.3;
+    private boolean useIDW = false;
 
     @XmlTransient
     private int[][] lut;
+
     {
         updateLUT();
     }
-    
+
     public IDWGridTileRenderer() {
         initPoints();
     }
@@ -92,6 +94,15 @@ public class IDWGridTileRenderer implements TileRenderer {
         }
     }
 
+    private double gaussianWeight(double d) {
+        double K = exponentP / 10000 /*0.0002*/ * 255 * 255 / 3;
+        return Math.exp(-K * d * d);
+    }
+
+    private double inverseDistanceWeight(double d) {
+        return 1. / Math.pow(d, exponentP);
+    }
+
     public int interpolateValue(double attr1AtPixel, double attr2AtPixel) {
 
         double wTot = 0;
@@ -108,7 +119,7 @@ public class IDWGridTileRenderer implements TileRenderer {
             double d2 = attr2Point - attr2AtPixel;
             double distance = Math.sqrt(d1 * d1 + d2 * d2);
 
-            double w = 1 / Math.pow(distance, exponentP);
+            double w = useIDW ? inverseDistanceWeight(distance) : gaussianWeight(distance);
             weightedSumR += point.getR() * w;
             weightedSumG += point.getG() * w;
             weightedSumB += point.getB() * w;
@@ -238,6 +249,21 @@ public class IDWGridTileRenderer implements TileRenderer {
             }
         }
         return img;
+    }
+
+    /**
+     * @return the useIDW
+     */
+    public boolean isUseIDW() {
+        return useIDW;
+    }
+
+    /**
+     * @param useIDW the useIDW to set
+     */
+    public void setUseIDW(boolean useIDW) {
+        this.useIDW = useIDW;
+        updateLUT();
     }
 
 }

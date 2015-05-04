@@ -568,6 +568,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
         javax.swing.JPanel idwButtonPanel = new javax.swing.JPanel();
         idwTileSetsButton = new javax.swing.JButton();
         idwApplyButton = new javax.swing.JButton();
+        idwRadioButton = new javax.swing.JRadioButton();
+        gaussRadioButton = new javax.swing.JRadioButton();
         idwTileSetsPanel = new javax.swing.JPanel();
         javax.swing.JLabel grid1URLLabel = new javax.swing.JLabel();
         grid1URLTextField = new javax.swing.JTextField();
@@ -581,6 +583,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         gradationGraph = new edu.oregonstate.carto.mapcomposer.gui.GradationGraph();
         loadCurveFileButton = new javax.swing.JButton();
         resetCurveFileButton = new javax.swing.JButton();
+        interpolationMethodButtonGroup = new javax.swing.ButtonGroup();
         layersPanel = new javax.swing.JPanel();
         Icon folderIcon = UIManager.getDefaults().getIcon("FileView.directoryIcon");
         int iconH = folderIcon.getIconHeight();
@@ -809,7 +812,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         idwColorPanel.add(idwExponentSlider, gridBagConstraints);
@@ -817,7 +820,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         idwExponentSliderLabel.setText("Exponent");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         idwColorPanel.add(idwExponentSliderLabel, gridBagConstraints);
@@ -826,7 +829,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         idwExponentValueLabel.setText("1.3");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         idwColorPanel.add(idwExponentValueLabel, gridBagConstraints);
 
@@ -834,7 +837,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         jLabel9.setText("Click to add points. Click and drag to move points.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
@@ -844,7 +847,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
         jLabel10.setText("Hit the delete key to remove the selected point.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         idwColorPanel.add(jLabel10, gridBagConstraints);
@@ -893,9 +896,38 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 4;
         idwColorPanel.add(idwButtonPanel, gridBagConstraints);
+
+        interpolationMethodButtonGroup.add(idwRadioButton);
+        idwRadioButton.setText("Inverse Distance");
+        idwRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idwRadioButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        idwColorPanel.add(idwRadioButton, gridBagConstraints);
+
+        interpolationMethodButtonGroup.add(gaussRadioButton);
+        gaussRadioButton.setSelected(true);
+        gaussRadioButton.setText("Gaussian Weight");
+        gaussRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idwRadioButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        idwColorPanel.add(gaussRadioButton, gridBagConstraints);
 
         idwTileSetsPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -2502,6 +2534,17 @@ public class MapComposerPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_visibleCheckBoxActionPerformed
 
+    private void idwRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idwRadioButtonActionPerformed
+        Layer layer = getSelectedMapLayer();
+        if (layer != null) {
+            final IDWGridTileRenderer idwRenderer = layer.getIdwTileRenderer();
+            idwRenderer.setUseIDW(idwRadioButton.isSelected());
+            idwPanel.repaint();
+            idwPreview.repaint();
+            reloadMapTiles();
+        }
+    }//GEN-LAST:event_idwRadioButtonActionPerformed
+
     /**
      * Updates the value of the texture scale slider
      *
@@ -2576,6 +2619,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
             this.grid2TMSCheckBox.setEnabled(on);
             this.grid2LoadDirectoryPathButton.setEnabled(on);
             this.idwExponentSlider.setEnabled(on);
+            this.idwRadioButton.setEnabled(on);
+            this.gaussRadioButton.setEnabled(on);
             this.idwPreview.setEnabled(on);
             this.textureSelectionButton.setEnabled(on);
             this.textureClearButton.setEnabled(on);
@@ -2663,6 +2708,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
             grid2TMSCheckBox.setSelected(selectedLayer.getGrid2TileSet().isTMSSchema());
             int exp = (int) Math.round(selectedLayer.getIdwTileRenderer().getExponentP() * 10);
             idwExponentSlider.setValue(exp);
+            idwRadioButton.setSelected(selectedLayer.getIdwTileRenderer().isUseIDW());
             idwPreview.setIdw(selectedLayer.getIdwTileRenderer());
 
             // texture
@@ -2775,6 +2821,8 @@ public class MapComposerPanel extends javax.swing.JPanel {
                 layer.setIDWGridTileURLTemplates(url1, url2);
                 layer.getGrid1TileSet().setTMSSchema(grid1TMSCheckBox.isSelected());
                 layer.getGrid2TileSet().setTMSSchema(grid2TMSCheckBox.isSelected());
+                layer.getIdwTileRenderer().setExponentP(idwExponentSlider.getValue() / 10d);
+                layer.getIdwTileRenderer().setUseIDW(idwRadioButton.isSelected());
                 break;
         }
 
@@ -2904,6 +2952,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel extentPanel;
     private javax.swing.JLabel gaussBlurLabel;
     private javax.swing.JSlider gaussBlurSlider;
+    private javax.swing.JRadioButton gaussRadioButton;
     private edu.oregonstate.carto.mapcomposer.gui.GradationGraph gradationGraph;
     private javax.swing.JButton grid1LoadDirectoryPathButton;
     private javax.swing.JCheckBox grid1TMSCheckBox;
@@ -2919,9 +2968,11 @@ public class MapComposerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel idwHorizontalLabel;
     private edu.oregonstate.carto.mapcomposer.gui.IDWPanel idwPanel;
     private edu.oregonstate.carto.mapcomposer.gui.IDWPreview idwPreview;
+    private javax.swing.JRadioButton idwRadioButton;
     private javax.swing.JButton idwTileSetsButton;
     private javax.swing.JPanel idwTileSetsPanel;
     private edu.oregonstate.carto.mapcomposer.gui.RotatedLabel idwVerticalLabel;
+    private javax.swing.ButtonGroup interpolationMethodButtonGroup;
     private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel9;
