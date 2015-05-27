@@ -87,6 +87,7 @@ public class BinaryGridReader {
             fb.get(row);
         }
 
+        // FIXME: cell size
         return new Grid(grid, 1);
     }
     

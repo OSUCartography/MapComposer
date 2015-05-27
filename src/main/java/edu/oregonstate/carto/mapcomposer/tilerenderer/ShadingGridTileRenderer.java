@@ -27,7 +27,10 @@ public class ShadingGridTileRenderer implements TileRenderer {
             Grid mergedGrid = ((GridTile) tile).createMegaTile();
             
             ShaderOperator shader = new ShaderOperator();
+            // FIXME factor 10 for compensating wrong cell size
+            shader.setVerticalExaggeration(10);
             Grid shading = shader.operate(mergedGrid);
+            
             ColorizerOperator op = new ColorizerOperator(ColorizerOperator.ColorVisualization.GRAY_SHADING);
             op.operate(shading, mergedGrid, img, 0, 0);
             

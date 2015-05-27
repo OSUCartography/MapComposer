@@ -1039,3 +1039,254 @@ Command-line arguments:  -os win32 -ws win32 -arch x86
 !ENTRY com.aptana.php.debug.epl 4 150 2015-03-03 10:26:18.137
 !MESSAGE Incompatible debugger version.
 The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-12 19:26:36.681
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-15 20:48:39.187
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-18 00:51:25.369
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-18 06:13:35.403
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-18 15:27:25.120
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-18 21:35:04.789
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-18 21:35:04.836
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-18 21:35:04.866
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-18 21:35:05.076
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-18 21:35:05.291
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-18 21:35:05.413
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-18 21:35:06.513
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-18 21:35:14.513
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-18 21:35:14.749
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-18 21:35:18.510
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-19 12:40:03.962
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-19 12:40:12.515
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-19 12:40:12.538
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-19 12:40:12.560
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-19 12:40:12.583
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-19 12:40:12.607
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-19 12:40:12.635
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-19 12:40:13.926
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-19 12:40:21.933
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-19 12:40:22.126
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-19 12:40:25.932
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-21 12:50:17.009
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-21 20:55:45.897
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-21 20:56:11.050
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-22 03:01:15.850
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 02:06:52.956
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 02:06:53.009
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 02:06:53.038
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 02:06:53.056
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 02:06:53.128
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 02:06:53.147
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 02:06:55.116
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 02:07:02.108
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 02:07:02.245
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 02:07:06.107
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:00:10.440
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:00:24.377
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 10:00:33.757
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 10:00:34.063
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:00:34.349
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:00:34.633
+!MESSAGE Socket error (length is negative): possibly Server is SSL, Client is not.
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 10:00:34.799
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 10:00:34.987
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 10:00:36.387
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:00:43.362
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 10:00:51.148
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:00:54.427
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 10:01:14.014
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 0 2015-03-23 10:01:14.226
+!MESSAGE (Build 3.6.1.201410201044) [ERROR] com.aptana.php.debug/debug Unexpected Exception: Listener thread still listening
+!STACK 0
+java.lang.NegativeArraySizeException
+	at org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession.readResponse(DBGpSession.java:490)
+	at org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession.<init>(DBGpSession.java:91)
+	at org2.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon.startConnectionThread(XDebugCommunicationDaemon.java:166)
+	at org2.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon$ReceiverThread.run(AbstractDebuggerCommunicationDaemon.java:244)
+	at java.lang.Thread.run(Unknown Source)
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 10:37:36.839
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:37:37.105
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse : 
+org.xml.sax.SAXParseException; lineNumber: 1; columnNumber: 1; Premature end of file.
+	at com.sun.org.apache.xerces.internal.parsers.DOMParser.parse(Unknown Source)
+	at com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl.parse(Unknown Source)
+	at javax.xml.parsers.DocumentBuilder.parse(Unknown Source)
+	at org2.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse.parseResponse(DBGpResponse.java:207)
+	at org2.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse.parseResponse(DBGpResponse.java:193)
+	at org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession.<init>(DBGpSession.java:94)
+	at org2.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon.startConnectionThread(XDebugCommunicationDaemon.java:166)
+	at org2.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon$ReceiverThread.run(AbstractDebuggerCommunicationDaemon.java:244)
+	at java.lang.Thread.run(Unknown Source)
+
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:37:37.108
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Init response not received. XML=[B@37df8e
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:37:43.184
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 0 2015-03-23 10:38:13.453
+!MESSAGE (Build 3.6.1.201410201044) [ERROR] com.aptana.php.debug/debug Unexpected Exception: Listener thread still listening
+!STACK 0
+java.lang.NegativeArraySizeException
+	at org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession.readResponse(DBGpSession.java:490)
+	at org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession.<init>(DBGpSession.java:91)
+	at org2.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon.startConnectionThread(XDebugCommunicationDaemon.java:166)
+	at org2.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon$ReceiverThread.run(AbstractDebuggerCommunicationDaemon.java:244)
+	at java.lang.Thread.run(Unknown Source)
+
+!ENTRY com.aptana.php.debug.epl 4 150 2015-03-23 10:38:17.401
+!MESSAGE Incompatible debugger version.
+The remote debugger version might not match the expected protocol version (2006040705).
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:38:21.489
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:38:21.501
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:42:06.323
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init
+
+!ENTRY com.aptana.php.debug.epl 4 4 2015-03-23 10:47:58.438
+!MESSAGE class org2.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession : Unexpected null from readResponse waiting for Init

@@ -2459,7 +2459,7 @@ public class MapComposerPanel extends javax.swing.JPanel {
                         try {
                             for (IDWPoint p : pointsOnMap) {
                                 // FIXME TODO
-                                int z = 10;
+                                int z = 8;
 
                                 double lon = p.getLon();
                                 double lat = p.getLat();
